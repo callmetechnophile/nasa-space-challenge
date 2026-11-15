@@ -28,7 +28,7 @@ export default function PlanetXPage() {
             <span>UNRESOLVED DYNAMICAL HYPOTHESIS · STATUS: NOT CONFIRMED</span>
           </div>
 
-          <h1 className="font-aeruno text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-slate-100 leading-[1.08] [text-wrap:balance]">
+          <h1 className="font-aeruno text-4xl sm:text-6xl lg:text-7xl font-bold tracking-normal text-slate-100 leading-[1.08] [text-wrap:balance]">
             A World Beyond Neptune?
           </h1>
 
@@ -53,7 +53,7 @@ export default function PlanetXPage() {
             <div className="text-xs font-mono uppercase tracking-wider text-cyan-400">
               Section A · Scientific Clarification & History
             </div>
-            <h2 className="font-aeruno text-3xl sm:text-5xl font-bold tracking-tight text-slate-100 max-w-3xl leading-[1.12] [text-wrap:balance]">
+            <h2 className="font-aeruno text-3xl sm:text-5xl font-bold tracking-normal text-slate-100 max-w-3xl leading-[1.12] [text-wrap:balance]">
               Distinguishing Historical Planet X from Modern Planet Nine
             </h2>
 
@@ -74,7 +74,7 @@ export default function PlanetXPage() {
             <div className="text-xs font-mono uppercase tracking-wider text-cyan-400">
               Section B · Interactive Orbital Geometry
             </div>
-            <h2 className="font-aeruno text-3xl sm:text-5xl font-bold tracking-tight text-slate-100 max-w-3xl leading-[1.12] [text-wrap:balance]">
+            <h2 className="font-aeruno text-3xl sm:text-5xl font-bold tracking-normal text-slate-100 max-w-3xl leading-[1.12] [text-wrap:balance]">
               The Solar System Beyond Neptune
             </h2>
             <p className="text-sm sm:text-base text-slate-300 max-w-[65ch] leading-relaxed [text-wrap:pretty]">
@@ -92,7 +92,7 @@ export default function PlanetXPage() {
             <div className="text-xs font-mono uppercase tracking-wider text-cyan-400">
               Section C · Dynamical Motivation & Caveats
             </div>
-            <h2 className="font-aeruno text-3xl sm:text-5xl font-bold tracking-tight text-slate-100 max-w-3xl leading-[1.12] [text-wrap:balance]">
+            <h2 className="font-aeruno text-3xl sm:text-5xl font-bold tracking-normal text-slate-100 max-w-3xl leading-[1.12] [text-wrap:balance]">
               Why Do Astronomers Suspect It?
             </h2>
 
@@ -140,7 +140,7 @@ export default function PlanetXPage() {
               <div className="text-xs font-mono uppercase tracking-wider text-cyan-400 mb-1">
                 Section D · Observational Challenges
               </div>
-              <h2 className="font-aeruno text-3xl sm:text-5xl font-bold tracking-tight text-slate-100 max-w-3xl leading-[1.12] [text-wrap:balance]">
+              <h2 className="font-aeruno text-3xl sm:text-5xl font-bold tracking-normal text-slate-100 max-w-3xl leading-[1.12] [text-wrap:balance]">
                 How Could We Find It?
               </h2>
               <p className="text-sm text-slate-300 max-w-[65ch] leading-relaxed mt-2 [text-wrap:pretty]">
@@ -182,7 +182,7 @@ export default function PlanetXPage() {
             <div className="text-xs font-mono uppercase tracking-wider text-cyan-400">
               Section E · Evidence & Scientific Caution
             </div>
-            <h2 className="font-aeruno text-3xl sm:text-5xl font-bold tracking-tight text-slate-100 max-w-3xl leading-[1.12] [text-wrap:balance]">
+            <h2 className="font-aeruno text-3xl sm:text-5xl font-bold tracking-normal text-slate-100 max-w-3xl leading-[1.12] [text-wrap:balance]">
               A Hypothesis Is Not a Discovery
             </h2>
             <p className="text-sm sm:text-base text-slate-300 max-w-[65ch] leading-relaxed [text-wrap:pretty]">

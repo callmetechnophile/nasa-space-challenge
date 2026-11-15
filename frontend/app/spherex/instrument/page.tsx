@@ -33,7 +33,7 @@ export default function SpherexInstrumentPage() {
             <span>OPTICAL & CRYOGENIC ARCHITECTURE</span>
           </div>
 
-          <h1 className="font-aeruno text-4xl sm:text-6xl font-bold tracking-tight text-slate-100 leading-[1.08] [text-wrap:balance]">
+          <h1 className="font-aeruno text-4xl sm:text-6xl font-bold tracking-normal text-slate-100 leading-[1.08] [text-wrap:balance]">
             Precision Slitless Infrared Spectroscopy
           </h1>
 
@@ -47,7 +47,7 @@ export default function SpherexInstrumentPage() {
           <div className="text-xs font-mono uppercase tracking-wider text-cyan-400">
             Interactive Subsystem Inspection
           </div>
-          <h2 className="font-aeruno text-2xl sm:text-4xl font-bold tracking-tight text-slate-100">
+          <h2 className="font-aeruno text-2xl sm:text-4xl font-bold tracking-normal text-slate-100">
             3D Spacecraft & Instrument CAD Architecture
           </h2>
           <SpacecraftViewer />
@@ -60,7 +60,7 @@ export default function SpherexInstrumentPage() {
               <div className="text-xs font-mono uppercase tracking-wider text-cyan-400 mb-1">
                 Hardware Engineering
               </div>
-              <h2 className="font-aeruno text-3xl sm:text-5xl font-bold tracking-tight text-slate-100 max-w-3xl leading-[1.12] [text-wrap:balance]">
+              <h2 className="font-aeruno text-3xl sm:text-5xl font-bold tracking-normal text-slate-100 max-w-3xl leading-[1.12] [text-wrap:balance]">
                 Subsystem Specifications & Physics
               </h2>
             </div>

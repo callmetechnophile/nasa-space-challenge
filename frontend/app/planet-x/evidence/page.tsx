@@ -201,7 +201,7 @@ export default function PlanetXEvidencePage() {
             <span>OBSERVATIONAL RESEARCH ARCHIVE & PUBLICATION RECORD</span>
           </div>
 
-          <h1 className="font-aeruno text-4xl sm:text-6xl font-bold tracking-tight text-slate-100 leading-[1.08] [text-wrap:balance]">
+          <h1 className="font-aeruno text-4xl sm:text-6xl font-bold tracking-normal text-slate-100 leading-[1.08] [text-wrap:balance]">
             Planet Nine: The Scientific Evidence
           </h1>
 
@@ -258,7 +258,7 @@ export default function PlanetXEvidencePage() {
             <div className="text-xs font-mono uppercase tracking-wider text-cyan-400 mb-1">
               Peer-Reviewed Record
             </div>
-            <h2 className="font-aeruno text-2xl sm:text-4xl font-bold tracking-tight text-slate-100 [text-wrap:balance]">
+            <h2 className="font-aeruno text-2xl sm:text-4xl font-bold tracking-normal text-slate-100 [text-wrap:balance]">
               Chronological Research Timeline (1906–2026)
             </h2>
             <div className="pt-2">

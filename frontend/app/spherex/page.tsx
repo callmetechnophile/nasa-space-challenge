@@ -30,7 +30,7 @@ export default function SpherexMissionPage() {
             <span>NASA ASTROPHYSICS MID-SCALE EXPLORER (MIDEX)</span>
           </div>
 
-          <h1 className="font-aeruno text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-slate-100 leading-[1.08] [text-wrap:balance]">
+          <h1 className="font-aeruno text-4xl sm:text-6xl lg:text-7xl font-bold tracking-normal text-slate-100 leading-[1.08] [text-wrap:balance]">
             Mapping the Universe in Infrared.
           </h1>
 
@@ -49,7 +49,7 @@ export default function SpherexMissionPage() {
             <div className="text-xs font-mono uppercase tracking-wider text-cyan-400">
               Section A · Mission Overview & Scientific Rationale
             </div>
-            <h2 className="font-aeruno text-3xl sm:text-5xl font-bold tracking-tight text-slate-100 max-w-3xl leading-[1.12] [text-wrap:balance]">
+            <h2 className="font-aeruno text-3xl sm:text-5xl font-bold tracking-normal text-slate-100 max-w-3xl leading-[1.12] [text-wrap:balance]">
               An All-Sky Infrared Spectroscopic Map
             </h2>
 
@@ -89,7 +89,7 @@ export default function SpherexMissionPage() {
             <div className="text-xs font-mono uppercase tracking-wider text-cyan-400">
               Section B · Spacecraft Architecture
             </div>
-            <h2 className="font-aeruno text-3xl sm:text-5xl font-bold tracking-tight text-slate-100 max-w-3xl leading-[1.12] [text-wrap:balance]">
+            <h2 className="font-aeruno text-3xl sm:text-5xl font-bold tracking-normal text-slate-100 max-w-3xl leading-[1.12] [text-wrap:balance]">
               Passive Cryogenic Engineering in Orbit
             </h2>
             <p className="text-sm sm:text-base text-slate-300 max-w-[65ch] leading-relaxed [text-wrap:pretty]">
@@ -116,7 +116,7 @@ export default function SpherexMissionPage() {
             <div className="text-xs font-mono uppercase tracking-wider text-cyan-400">
               Section C · Observation Mechanics
             </div>
-            <h2 className="font-aeruno text-3xl sm:text-5xl font-bold tracking-tight text-slate-100 max-w-3xl leading-[1.12] [text-wrap:balance]">
+            <h2 className="font-aeruno text-3xl sm:text-5xl font-bold tracking-normal text-slate-100 max-w-3xl leading-[1.12] [text-wrap:balance]">
               How SPHEREx Sees the Sky
             </h2>
             <p className="text-sm sm:text-base text-slate-300 max-w-[65ch] leading-relaxed [text-wrap:pretty]">
@@ -134,7 +134,7 @@ export default function SpherexMissionPage() {
             <div className="text-xs font-mono uppercase tracking-wider text-cyan-400">
               Section D · The Six Focal Plane Arrays
             </div>
-            <h2 className="font-aeruno text-3xl sm:text-5xl font-bold tracking-tight text-slate-100 max-w-3xl leading-[1.12] [text-wrap:balance]">
+            <h2 className="font-aeruno text-3xl sm:text-5xl font-bold tracking-normal text-slate-100 max-w-3xl leading-[1.12] [text-wrap:balance]">
               Six Detectors. 102 Spectral Channels.
             </h2>
             <p className="text-sm sm:text-base text-slate-300 max-w-[65ch] leading-relaxed [text-wrap:pretty]">
@@ -162,7 +162,7 @@ export default function SpherexMissionPage() {
               <div className="text-xs font-mono uppercase tracking-wider text-cyan-400 mb-1">
                 Section E · Primary Science Objectives
               </div>
-              <h2 className="font-aeruno text-3xl sm:text-5xl font-bold tracking-tight text-slate-100 max-w-3xl leading-[1.12] [text-wrap:balance]">
+              <h2 className="font-aeruno text-3xl sm:text-5xl font-bold tracking-normal text-slate-100 max-w-3xl leading-[1.12] [text-wrap:balance]">
                 Three Pillars of Astronomical Investigation
               </h2>
             </div>

@@ -55,9 +55,14 @@
   font-family: var(--font-corpta), 'Corpta', sans-serif;
 }
 
-.font-aeruno {
+.font-aeruno,
+h1.font-aeruno,
+h2.font-aeruno,
+h3.font-aeruno,
+h4.font-aeruno {
   font-family: var(--font-aeruno), 'Aeruno', sans-serif;
-  word-spacing: 0.22em;
+  word-spacing: 0.5em;
+  letter-spacing: normal;
 }
 
 .font-serif,

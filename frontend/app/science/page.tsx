@@ -168,7 +168,7 @@ export default function ScienceMethodologyPage() {
             <span>ASTRONOMICAL METHODS & OBSERVATIONAL PHYSICS</span>
           </div>
 
-          <h1 className="font-aeruno text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-slate-100 leading-[1.08] [text-wrap:balance]">
+          <h1 className="font-aeruno text-4xl sm:text-6xl lg:text-7xl font-bold tracking-normal text-slate-100 leading-[1.08] [text-wrap:balance]">
             Science &amp; Methodology
           </h1>
 
@@ -188,7 +188,7 @@ export default function ScienceMethodologyPage() {
               <div className="text-xs font-mono uppercase tracking-wider text-cyan-400 mb-1">
                 Core Foundations
               </div>
-              <h2 className="font-aeruno text-3xl sm:text-5xl font-bold tracking-tight text-slate-100 max-w-3xl leading-[1.12] [text-wrap:balance]">
+              <h2 className="font-aeruno text-3xl sm:text-5xl font-bold tracking-normal text-slate-100 max-w-3xl leading-[1.12] [text-wrap:balance]">
                 How Modern Astronomy Decodes the Sky
               </h2>
             </div>

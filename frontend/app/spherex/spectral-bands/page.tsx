@@ -129,7 +129,7 @@ export default function SpherexSpectralBandsPage() {
             <span>102 CONTIGUOUS INFRARED CHANNELS (0.75 – 5.00 µm)</span>
           </div>
 
-          <h1 className="font-aeruno text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-slate-100 leading-[1.08] [text-wrap:balance]">
+          <h1 className="font-aeruno text-4xl sm:text-6xl lg:text-7xl font-bold tracking-normal text-slate-100 leading-[1.08] [text-wrap:balance]">
             One Universe. 102 Infrared Windows.
           </h1>
 
@@ -169,7 +169,7 @@ export default function SpherexSpectralBandsPage() {
               <div className="text-xs font-mono uppercase tracking-wider text-cyan-400 mb-1">
                 Focal Plane Allocation
               </div>
-              <h2 className="font-aeruno text-3xl sm:text-5xl font-bold tracking-tight text-slate-100 max-w-3xl leading-[1.12] [text-wrap:balance]">
+              <h2 className="font-aeruno text-3xl sm:text-5xl font-bold tracking-normal text-slate-100 max-w-3xl leading-[1.12] [text-wrap:balance]">
                 Six Detectors with 17 Channels Each
               </h2>
               <p className="text-sm sm:text-base text-slate-300 max-w-[65ch] leading-relaxed mt-2 [text-wrap:pretty]">
@@ -213,7 +213,7 @@ export default function SpherexSpectralBandsPage() {
               <div className="text-xs font-mono uppercase tracking-wider text-cyan-400 mb-1">
                 Astrophysical Chemistry
               </div>
-              <h2 className="font-aeruno text-3xl sm:text-5xl font-bold tracking-tight text-slate-100 max-w-3xl leading-[1.12] [text-wrap:balance]">
+              <h2 className="font-aeruno text-3xl sm:text-5xl font-bold tracking-normal text-slate-100 max-w-3xl leading-[1.12] [text-wrap:balance]">
                 Primary Diagnostic Spectral Signatures
               </h2>
               <p className="text-sm text-slate-300 max-w-[65ch] leading-relaxed mt-2 [text-wrap:pretty]">

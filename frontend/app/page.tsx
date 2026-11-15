@@ -101,7 +101,7 @@ export default function SkyTraceLandingPage() {
             <div className="text-xs font-mono uppercase tracking-wider text-cyan-400">
               Act II · The Electromagnetic Horizon
             </div>
-            <h2 className="font-aeruno text-3xl sm:text-5xl font-bold tracking-tight text-slate-100 max-w-3xl leading-[1.12] [text-wrap:balance]">
+            <h2 className="font-aeruno text-3xl sm:text-5xl font-bold tracking-normal text-slate-100 max-w-3xl leading-[1.12] [text-wrap:balance]">
               There is more to the universe than visible light.
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-slate-300 leading-relaxed text-sm sm:text-base pt-2">
@@ -126,7 +126,7 @@ export default function SkyTraceLandingPage() {
             <div className="text-xs font-mono uppercase tracking-wider text-cyan-400">
               Act III · Temporal Astronomy
             </div>
-            <h2 className="font-aeruno text-3xl sm:text-5xl font-bold tracking-tight text-slate-100 max-w-3xl leading-[1.12] [text-wrap:balance]">
+            <h2 className="font-aeruno text-3xl sm:text-5xl font-bold tracking-normal text-slate-100 max-w-3xl leading-[1.12] [text-wrap:balance]">
               One position. Different moments in time.
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-slate-300 leading-relaxed text-sm sm:text-base pt-2">
@@ -151,7 +151,7 @@ export default function SkyTraceLandingPage() {
             <div className="text-xs font-mono uppercase tracking-wider text-cyan-400">
               Act IV · 102 Spectral Channels
             </div>
-            <h2 className="font-aeruno text-3xl sm:text-5xl font-bold tracking-tight text-slate-100 max-w-3xl leading-[1.12] [text-wrap:balance]">
+            <h2 className="font-aeruno text-3xl sm:text-5xl font-bold tracking-normal text-slate-100 max-w-3xl leading-[1.12] [text-wrap:balance]">
               Every wavelength tells another part of the story.
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-slate-300 leading-relaxed text-sm sm:text-base pt-2">
@@ -176,7 +176,7 @@ export default function SkyTraceLandingPage() {
             <div className="text-xs font-mono uppercase tracking-wider text-cyan-400">
               Act V · The Scientific Workflow
             </div>
-            <h2 className="font-aeruno text-3xl sm:text-5xl font-bold tracking-tight text-slate-100 max-w-3xl leading-[1.12] [text-wrap:balance]">
+            <h2 className="font-aeruno text-3xl sm:text-5xl font-bold tracking-normal text-slate-100 max-w-3xl leading-[1.12] [text-wrap:balance]">
               The next question is yours.
             </h2>
             <p className="text-slate-300 leading-relaxed text-sm sm:text-base max-w-prose pt-2 [text-wrap:pretty]">
@@ -198,7 +198,7 @@ export default function SkyTraceLandingPage() {
               <span>ACT VI · INVESTIGATION PORTAL</span>
             </div>
 
-            <h2 className="font-aeruno text-4xl sm:text-6xl font-bold tracking-tight text-slate-100 leading-[1.1] [text-wrap:balance]">
+            <h2 className="font-aeruno text-4xl sm:text-6xl font-bold tracking-normal text-slate-100 leading-[1.1] [text-wrap:balance]">
               The sky is waiting to be investigated.
             </h2>
 
