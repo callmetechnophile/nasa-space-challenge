@@ -234,7 +234,7 @@ export default function CelestialExplorerMilestone2() {
           </div>}
           {activity === "integrations" && <div className="astro-sidebar-content">
             <div className="astro-tree-workspace"><Layers3 size={14}/> EXTERNAL CATALOGUES</div>
-            {["Gaia DR3","WISE","Aladin / CDS"].map((name) => <div className="astro-extension-row" key={name}><GlobeItem/><span>{name}</span><span className="astro-extension-state">AVAILABLE TO CONNECT</span></div>)}
+            {["Gaia DR3","WISE","Aladin / CDS"].map((name) => <div className="astro-extension-row" key={name}><GlobeItem/><span>{name}</span><span className="astro-extension-state">NOT CONFIGURED</span></div>)}
             <div className="astro-sidebar-note">These are integration targets, not active layers in this workspace yet. Existing SPHEREx image-layer controls remain connected to the current backend.</div>
           </div>}
           <div className="astro-sidebar-bottom">
@@ -289,14 +289,14 @@ export default function CelestialExplorerMilestone2() {
 
           <div className={terminalOpen ? "astro-terminal open" : "astro-terminal closed"}>
             <div className="astro-terminal-tabs">
-              <button className={terminalTab === "problems" ? "active" : ""} onClick={() => setTerminalTab("problems")}>PROBLEMS <span>0</span></button>
+              <button className={terminalTab === "problems" ? "active" : ""} onClick={() => setTerminalTab("problems")}>PROBLEMS</button>
               <button className={terminalTab === "output" ? "active" : ""} onClick={() => setTerminalTab("output")}>OUTPUT</button>
-              <button className={terminalTab === "terminal" ? "active" : ""} onClick={() => setTerminalTab("terminal")}>TERMINAL</button>
+              <button className={terminalTab === "terminal" ? "active" : ""} onClick={() => setTerminalTab("terminal")}>CONSOLE</button>
               <div className="astro-terminal-spacer"/>
               <button className="astro-mini-icon" onClick={() => setTerminalOpen(false)} title="Hide terminal"><PanelBottom size={13}/></button>
             </div>
             {terminalOpen && <div className="astro-terminal-body">
-              {terminalTab === "terminal" ? <><div><span className="term-prompt">astro@workspace</span><span className="term-path">:~/spherex-research$</span> <span className="term-command">astro status</span></div><div className="term-output">Workspace initialized <span>·</span> Next.js / Three.js <span>·</span> API-backed scientific modules</div><div className="term-cursor-row"><span className="term-prompt">astro@workspace</span><span className="term-path">:~/spherex-research$</span><b/></div></> : terminalTab === "output" ? <div className="term-output">Backend services provide archive, FITS inspection, spectral and temporal processing. See the API response for operation-specific provenance.</div> : <div className="term-output">No frontend diagnostics reported by this panel. This is not a substitute for build or runtime tests.</div>}
+              {terminalTab === "terminal" ? <><div><span className="term-prompt">workspace</span><span className="term-path"> / service map</span></div><div className="term-output">Configured API routes: /spherex · /spectral · /temporal</div><div className="term-output">This panel is read-only. Arbitrary shell or Python execution is not exposed by this frontend.</div></> : terminalTab === "output" ? <div className="term-output">Backend services provide archive, FITS inspection, spectral and temporal processing. See the API response for operation-specific provenance.</div> : <div className="term-output">Frontend runtime diagnostics are not connected to this panel. Run the project lint, build and browser tests to verify the current checkout.</div>}
             </div>}
           </div>
         </main>

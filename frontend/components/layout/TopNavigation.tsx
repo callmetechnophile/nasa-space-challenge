@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   AudioLines, Atom, ChevronDown, Clock3, Compass, Database, Info, Search, ShieldCheck,
 } from "lucide-react";
@@ -17,6 +17,18 @@ export function TopNavigation() {
   const activeTab = useSkyStore((s) => s.activeTab);
   const setActiveTab = useSkyStore((s) => s.setActiveTab);
   const [searchOpen, setSearchOpen] = useState(false);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        setSearchOpen((open) => !open);
+      }
+      if (event.key === "Escape") setSearchOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
 
   return (
     <header className="astro-titlebar">
