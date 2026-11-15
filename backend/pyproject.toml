@@ -1,7 +1,7 @@
 [project]
-name = "backend"
+name = "skytrace"
 version = "0.1.0"
-description = "Add your description here"
+description = "A scientific astronomy development environment for exploring and analyzing SPHEREx observations."
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [

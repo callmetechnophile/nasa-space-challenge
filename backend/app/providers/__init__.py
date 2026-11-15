@@ -1,4 +1,4 @@
-"""Data providers package for SPHEREx 3D Temporal Sky Explorer."""
+"""Data providers package for SkyTrace."""
 
 from app.providers.base import BaseDataProvider
 from app.providers.sample_provider import SampleDataProvider

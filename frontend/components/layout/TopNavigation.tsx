@@ -34,10 +34,10 @@ export function TopNavigation() {
     <header className="astro-titlebar">
       <div className="astro-brand">
         <div className="astro-brand-mark"><Atom size={16} /></div>
-        <span className="astro-brand-name">ASTRO<span>CODE</span></span>
+        <span className="astro-brand-name font-corpta tracking-wider text-sm">SkyTrace</span>
         <span className="astro-title-divider" />
         <button className="astro-project-switch" onClick={() => setActiveTab("sky")}>
-          spherex-research <ChevronDown size={12} />
+          skytrace <ChevronDown size={12} />
         </button>
       </div>
 

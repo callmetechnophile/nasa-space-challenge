@@ -1,6 +1,6 @@
-# SPHEREx — 3D Temporal Sky Explorer
-### NASA Space Apps Challenge 2026
-Interactive 3D celestial sphere, temporal observation comparator, and 102-band near-infrared spectroscopy for NASA's SPHEREx mission.
+# SkyTrace
+### A Scientific Astronomy Development Environment for SPHEREx Observations
+NASA Space Apps Challenge 2026 · Interactive 3D celestial sphere, temporal observation comparator, and 102-band near-infrared spectroscopy for NASA's SPHEREx mission.
 
 ---
 
@@ -14,7 +14,7 @@ Interactive 3D celestial sphere, temporal observation comparator, and 102-band n
 
 ## 🌌 Overview
 
-The **SPHEREx — 3D Temporal Sky Explorer** is a scientific astronomical exploration environment built for NASA's Spectro-Photometer for the History of the Universe, Epoch of Reionization, and Ices Explorer (SPHEREx) mission.
+**SkyTrace** is a scientific astronomy development environment built for exploring and analyzing observations from NASA's Spectro-Photometer for the History of the Universe, Epoch of Reionization, and Ices Explorer (SPHEREx) mission.
 
 Unlike conventional dashboards or decorative animations, this application couples an interactive 3D WebGL celestial sphere with an Astropy-driven scientific image processing and difference imaging pipeline. Users can freely navigate the sky in verified celestial coordinates (ICRS), observe temporal changes across 6-month survey passes, and inspect near-infrared spectra across all 102 Linear Variable Filter (LVF) channels from 0.75 to 5.00 µm.
 

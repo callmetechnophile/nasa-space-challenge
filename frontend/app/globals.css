@@ -1,4 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap');
 @import "tailwindcss";
+@import "katex/dist/katex.min.css";
+
+@font-face {
+  font-family: 'Corpta';
+  src: url('/fonts/corpta.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Aeruno';
+  src: url('/fonts/aeruno.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 
 :root {
   --astro-bg: #17191e;
@@ -11,26 +29,148 @@
   --astro-green: #79cba0;
   --background: var(--astro-bg);
   --foreground: var(--astro-text);
+  --font-corpta-fallback: 'Corpta', sans-serif;
+  --font-aeruno-fallback: 'Aeruno', sans-serif;
+  --font-brand: "CORPTA", serif;
+  --font-display: "AERUNO", sans-serif;
+  --font-body: "Times New Roman", Times, serif;
+  --font-math: "Cambria Math", "STIX Two Math", "Latin Modern Math", serif;
+  --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-code: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-corpta: var(--font-corpta), var(--font-corpta-fallback);
+  --font-aeruno: var(--font-aeruno), var(--font-aeruno-fallback);
+  --font-serif: "Times New Roman", Times, serif;
+  --font-editorial: "Times New Roman", Times, serif;
+  --font-math: "Cambria Math", "STIX Two Math", "Latin Modern Math", serif;
+}
+
+.font-corpta {
+  font-family: var(--font-corpta), 'Corpta', sans-serif;
+}
+
+.font-aeruno {
+  font-family: var(--font-aeruno), 'Aeruno', sans-serif;
+}
+
+.font-serif,
+.font-times,
+.font-editorial,
+.font-editorial-body {
+  font-family: "Times New Roman", Times, serif;
+}
+
+/* =========================================================================
+   CAMBRIA MATH — MATHEMATICAL EXPRESSIONS & SCIENTIFIC FORMULAS
+   ========================================================================= */
+.math-inline,
+.math-display,
+.scientific-equation,
+.math-value,
+.scientific-formula,
+math,
+math *,
+.katex,
+.katex * {
+  font-family: var(--font-math) !important;
+  font-weight: 400;
+  letter-spacing: normal;
+}
+
+.math-inline {
+  display: inline-block;
+  vertical-align: baseline;
+  padding: 0 1px;
+}
+
+.math-display {
+  display: block;
+  margin: 16px auto;
+  text-align: center;
+  overflow-x: auto;
+  font-size: 1.15em;
+  line-height: 1.8;
+}
+
+.scientific-equation {
+  padding: 8px 12px;
+  background: transparent;
+}
+
+/* =========================================================================
+   PUBLIC WEBSITE EDITORIAL TYPOGRAPHY — TIMES NEW ROMAN FOR ALL PARAGRAPHS
+   ========================================================================= */
+.skytrace-public p:not(.font-mono):not(.font-sans):not(.font-corpta):not(.font-aeruno):not(.astro-ide-root *):not(button *):not(nav *),
+p.font-editorial-body,
+.editorial-paragraph {
+  font-family: "Times New Roman", Times, serif !important;
+  font-size: 16.5px;
+  line-height: 1.82;
+  font-weight: 400;
+  letter-spacing: normal;
+  color: #cbd5e1;
+}
+
+@media (min-width: 768px) {
+  .skytrace-public p:not(.font-mono):not(.font-sans):not(.font-corpta):not(.font-aeruno):not(.astro-ide-root *):not(button *):not(nav *),
+  p.font-editorial-body,
+  .editorial-paragraph {
+    font-size: 18px;
+    line-height: 1.85;
+  }
+}
+
+.skytrace-public p.text-hero-lead,
+.skytrace-public p.text-lead {
+  font-size: 17.5px;
+}
+
+@media (min-width: 768px) {
+  .skytrace-public p.text-hero-lead,
+  .skytrace-public p.text-lead {
+    font-size: 19px;
+  }
+}
+
+/* Paragraph spacing between contiguous text paragraphs */
+.skytrace-public p + p {
+  margin-top: 18px;
 }
 
 * { box-sizing: border-box; }
-html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
-body { background: var(--astro-bg); color: var(--astro-text); font-family: Arial, Helvetica, sans-serif; }
+html, body { width: 100%; min-height: 100%; margin: 0; }
+body { background: #02040a; color: var(--astro-text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
 button { font: inherit; cursor: pointer; }
 button:focus-visible, input:focus-visible { outline: 1px solid var(--astro-accent); outline-offset: 1px; }
+
+/* Custom themed scrollbars */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #040814;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 4px;
+  border: 1px solid #0f172a;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #38bdf844;
+}
 
 .astro-ide-root { height: 100dvh; width: 100vw; display: flex; flex-direction: column; overflow: hidden; background: var(--astro-bg); color: #d9dee7; font-size: 12px; }
 .astro-titlebar { position: relative; z-index: 80; height: 42px; flex: 0 0 42px; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 0 12px; background: #17191e; border-bottom: 1px solid #30343d; }
 .astro-brand, .astro-title-actions { display: flex; align-items: center; gap: 10px; min-width: 230px; }
 .astro-brand-mark { width: 24px; height: 24px; border-radius: 5px; display: grid; place-items: center; background: #263746; color: #83c7eb; }
-.astro-brand-name { font-size: 12px; font-weight: 800; letter-spacing: .12em; color: #e3e8ef; }
+.astro-brand-name { font-size: 13px; font-weight: 700; letter-spacing: .08em; color: #e3e8ef; }
 .astro-brand-name span { color: #8bbbd8; }
 .astro-title-divider { width: 1px; height: 18px; background: #343943; }
 .astro-project-switch { display: flex; align-items: center; gap: 6px; border: 0; background: transparent; color: #aeb6c3; font-size: 11px; }
@@ -154,7 +294,7 @@ kbd { padding: 1px 5px; border: 1px solid #414752; border-radius: 3px; backgroun
 @media (max-width: 760px) {
   .astro-titlebar { gap: 5px; padding: 0 7px; }
   .astro-brand { min-width: 0; }
-  .astro-brand-name { font-size: 10px; }
+  .astro-brand-name { font-size: 11px; }
   .astro-project-switch, .astro-title-divider, .astro-demo-pill, .astro-command-search span, .astro-title-actions { display: none; }
   .astro-command-search { width: 35px; justify-content: center; margin-left: auto; }
   .astro-command-search kbd { display: none; }
