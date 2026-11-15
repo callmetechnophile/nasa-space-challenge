@@ -6,6 +6,7 @@ Interactive 3D celestial sphere, temporal observation comparator, and 102-band n
 
 ## 📋 Documentation & Audit Trail
 
+- 📜 **[Verifiable Development Timeline](DEVELOPMENT_TIMELINE.md)**: Full milestone chronology, evidence classification, and provenance audit.
 - 📊 **[Project Status & Verification](PROJECT_STATUS.md)**: Engineering milestones, test results, and documented scientific caveats.
 - 📐 **[System Architecture](ARCHITECTURE.md)**: Technical design and data flow specifications.
 
