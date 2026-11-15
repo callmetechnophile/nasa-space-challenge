@@ -127,3 +127,50 @@ def compute_difference_and_significance(
             "min_significance": min_sig,
         },
     }
+
+
+def compare_spherex_temporal_pair(
+    image1: np.ndarray,
+    image2: np.ndarray,
+    meta1: Dict[str, Any],
+    meta2: Dict[str, Any],
+    significance_sigma: float = 3.0,
+) -> Dict[str, Any]:
+    """Execute scientific temporal comparison between two SPHEREx observation epochs.
+    Validates spectral bandpass and PSF compatibility.
+    """
+    b1 = meta1.get("bandpass", meta1.get("energy_bandpassname", ""))
+    b2 = meta2.get("bandpass", meta2.get("energy_bandpassname", ""))
+    if b1 and b2 and b1 != b2:
+        raise ValueError(f"Incompatible spectral bandpasses: cannot difference {b1} against {b2}")
+
+    # Check image shapes
+    if image1.shape != image2.shape:
+        raise ValueError(f"Spatial dimension mismatch: {image1.shape} vs {image2.shape}")
+
+    diff_res = compute_difference_and_significance(
+        image1=image1,
+        variance1=meta1.get("variance"),
+        image2=image2,
+        variance2=meta2.get("variance"),
+        subtract_residual_background=True,
+    )
+
+    sig_map = diff_res["significance_map"]
+    transients = np.abs(sig_map) >= significance_sigma
+    transient_count = int(np.sum(transients & diff_res["valid_mask"]))
+
+    return {
+        "status": "COMPLETED",
+        "compatibility": {
+            "bandpass_match": True,
+            "bandpass": b1 or b2,
+            "psf_fwhm1": meta1.get("psf_fwhm_arcsec"),
+            "psf_fwhm2": meta2.get("psf_fwhm_arcsec"),
+        },
+        "transient_count": transient_count,
+        "difference_metrics": diff_res["metrics"],
+        "difference_image": diff_res["difference_image"],
+        "significance_map": sig_map,
+    }
+

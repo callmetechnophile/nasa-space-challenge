@@ -23,6 +23,17 @@ from astropy.wcs import WCS
 import numpy as np
 
 from app.models.spherex_observation import SpherexObservationRecord
+from app.services.spherex_tap import (
+    SpherexTapAdapter,
+    construct_spherex_tap_query,
+    STATE_ARCHIVE_QUERY_FAILED,
+    STATE_ARCHIVE_QUERY_TIMEOUT,
+    STATE_ARCHIVE_QUERY_SUCCESS_NO_RESULTS,
+    STATE_NO_SPATIAL_COVERAGE,
+    STATE_INSUFFICIENT_TEMPORAL_COVERAGE,
+    STATE_SUFFICIENT_TEMPORAL_COVERAGE,
+    STATE_UNVERIFIED,
+)
 from app.astronomy.spectral_compatibility import (
     LVFWavelengthModel,
     evaluate_spectral_compatibility,
@@ -39,29 +50,34 @@ DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../dat
 CACHE_DIR = os.path.join(DATA_DIR, "cache", "queries")
 os.makedirs(CACHE_DIR, exist_ok=True)
 
-# Canonical Discovery States (Phase 2 Failure Taxonomy)
-STATE_ARCHIVE_QUERY_FAILED = "ARCHIVE_QUERY_FAILED"
-STATE_ARCHIVE_QUERY_TIMEOUT = "ARCHIVE_QUERY_TIMEOUT"
-STATE_ARCHIVE_QUERY_SUCCESS_NO_RESULTS = "ARCHIVE_QUERY_SUCCESS_NO_RESULTS"
-STATE_NO_SPATIAL_COVERAGE = "NO_SPATIAL_COVERAGE"
-STATE_INSUFFICIENT_TEMPORAL_COVERAGE = "INSUFFICIENT_TEMPORAL_COVERAGE"
-STATE_SUFFICIENT_TEMPORAL_COVERAGE = "SUFFICIENT_TEMPORAL_COVERAGE"
-STATE_UNVERIFIED = "UNVERIFIED"
-
-# Release cataloging
+# Release cataloging prioritizing DR1, DR1 Deep, QR3, QR3 Deep (superseding QR2)
 SPHEREx_RELEASES = {
     "dr1": {
         "collection": "spherex_dr1",
-        "name": "Data Release 1 (DR1)",
+        "name": "Data Release 1 (DR1) Wide",
         "surveys": "Surveys 1 & 2",
         "description": "Reprocessed with improved QR3 calibrations",
         "supersedes": ["spherex_qr2"],
     },
+    "dr1_deep": {
+        "collection": "spherex_dr1_deep",
+        "name": "Data Release 1 (DR1) Deep",
+        "surveys": "Deep Fields (Surveys 1 & 2)",
+        "description": "Deep survey fields reprocessed with improved calibrations",
+        "supersedes": ["spherex_qr2"],
+    },
     "qr3": {
         "collection": "spherex_qr3",
-        "name": "Quick Release 3 (QR3)",
+        "name": "Quick Release 3 (QR3) Wide",
         "surveys": "Surveys 3 & 4",
         "description": "Quick-release science pipeline for second mission year",
+        "supersedes": ["spherex_qr2"],
+    },
+    "qr3_deep": {
+        "collection": "spherex_qr3_deep",
+        "name": "Quick Release 3 (QR3) Deep",
+        "surveys": "Deep Fields (Surveys 3 & 4)",
+        "description": "Quick-release deep survey fields",
         "supersedes": ["spherex_qr2"],
     },
 }
@@ -545,6 +561,118 @@ class SpherexDiscoveryService:
 
     def __init__(self, data_dir: str = DATA_DIR):
         self.data_dir = data_dir
+        self.tap_adapter = SpherexTapAdapter()
+
+    def list_available_spherex_collections(self) -> List[str]:
+        """Discover available collections dynamically with Astroquery or fallback to prioritized releases.
+        Prioritizes: spherex_dr1, spherex_dr1_deep, spherex_qr3, spherex_qr3_deep.
+        Discontinues treating QR2 as a current searchable collection.
+        """
+        try:
+            from astroquery.ipac.irsa import Irsa
+            cols = Irsa.list_collections(servicetype="SIA", filter="spherex")
+            if cols:
+                # Exclude obsolete QR2 releases
+                active = [c for c in cols if "qr2" not in c.lower()]
+                if active:
+                    return active
+        except Exception as exc:
+            logger.debug("Dynamic Irsa.list_collections returned: %s. Using prioritized defaults.", exc)
+
+        return ["spherex_dr1", "spherex_dr1_deep", "spherex_qr3", "spherex_qr3_deep"]
+
+    async def query_archive_tap(
+        self,
+        ra: float,
+        dec: float,
+        cutout_size_deg: float = 0.05,
+        bandpass: Optional[str] = None,
+        limit: Optional[int] = None,
+    ) -> Dict[str, Any]:
+        """Execute official Caltech-IPAC IRSA TAP query."""
+        return await self.tap_adapter.query_spatial_tap(
+            ra_deg=ra,
+            dec_deg=dec,
+            cutout_size_deg=cutout_size_deg,
+            bandpass=bandpass,
+            limit=limit,
+        )
+
+    async def discover_dual_archive(
+        self,
+        ra: float,
+        dec: float,
+        radius_deg: float = 0.5,
+        fov_deg: Optional[float] = None,
+        cutout_size_deg: float = 0.05,
+        collections: Optional[List[str]] = None,
+        bandpass: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """Execute dual-adapter archive discovery using both TAP and SIA.
+        Preserves individual adapter provenance and deduplicates by artifact URI / obs ID.
+        """
+        search_radius = fov_deg if fov_deg is not None else radius_deg
+        active_colls = collections or ["spherex_dr1", "spherex_qr3"]
+
+        # Run TAP query
+        tap_result = await self.query_archive_tap(
+            ra=ra,
+            dec=dec,
+            cutout_size_deg=cutout_size_deg,
+            bandpass=bandpass,
+        )
+
+        # Run SIA queries across collections
+        sia_results = {}
+        for c in active_colls:
+            sia_res = await self.query_archive_collection_direct(
+                collection=c,
+                ra=ra,
+                dec=dec,
+                radius_deg=search_radius,
+            )
+            sia_results[c] = sia_res
+
+        # Deduplicate records by observation identifier or artifact URI
+        dedup_records = {}
+        # Add TAP records
+        for rec in tap_result.get("records", []):
+            key = rec.get("obs_id") or rec.get("artifact_uri") or rec.get("cutout_url")
+            if key:
+                dedup_records[key] = {
+                    "obs_id": rec.get("obs_id", key),
+                    "mjd_obs": rec.get("mjd_obs", 0.0),
+                    "access_url": rec.get("cutout_url"),
+                    "artifact_uri": rec.get("artifact_uri"),
+                    "bandpass": rec.get("bandpass", rec.get("energy_bandpassname")),
+                    "adapter": "TAP",
+                }
+
+        # Add SIA records
+        for c, s_res in sia_results.items():
+            for rec in s_res.get("records", []):
+                key = rec.get("obs_id") or rec.get("access_url") or rec.get("artifact_uri")
+                if key and key not in dedup_records:
+                    dedup_records[key] = {
+                        "obs_id": rec.get("obs_id", key),
+                        "mjd_obs": rec.get("mjd_obs", 0.0),
+                        "access_url": rec.get("access_url"),
+                        "collection": c,
+                        "observation_date": rec.get("date_obs"),
+                        "adapter": "SIA",
+                    }
+
+        dedup_list = list(dedup_records.values())
+        return {
+            "target_ra_deg": ra,
+            "target_dec_deg": dec,
+            "search_radius_deg": search_radius,
+            "tap_query": tap_result,
+            "sia_queries": sia_results,
+            "deduplicated_records_count": len(dedup_records),
+            "deduplicated_records": dedup_list,
+            "observations": dedup_list,
+        }
 
     async def query_archive_collection_direct(
         self,
