@@ -296,18 +296,46 @@ export function AstroWorkspace() {
             {activeTab === "about" && <AboutMissionModal/>}
           </section>
 
-          <div className={terminalOpen ? "astro-terminal open" : "astro-terminal closed"}>
+          <section className={terminalOpen ? "astro-terminal open" : "astro-terminal closed"} aria-label="Workspace bottom panel">
             <div className="astro-terminal-tabs">
-              <button className={terminalTab === "problems" ? "active" : ""} onClick={() => setTerminalTab("problems")}>PROBLEMS</button>
-              <button className={terminalTab === "output" ? "active" : ""} onClick={() => setTerminalTab("output")}>OUTPUT</button>
-              <button className={terminalTab === "terminal" ? "active" : ""} onClick={() => setTerminalTab("terminal")}>CONSOLE</button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={terminalTab === "problems"}
+                className={terminalTab === "problems" ? "active" : ""}
+                onClick={() => { setTerminalTab("problems"); setTerminalOpen(true); }}
+              >PROBLEMS</button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={terminalTab === "output"}
+                className={terminalTab === "output" ? "active" : ""}
+                onClick={() => { setTerminalTab("output"); setTerminalOpen(true); }}
+              >OUTPUT</button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={terminalTab === "terminal"}
+                className={terminalTab === "terminal" ? "active" : ""}
+                onClick={() => { setTerminalTab("terminal"); setTerminalOpen(true); }}
+              >CONSOLE</button>
               <div className="astro-terminal-spacer"/>
-              <button className="astro-mini-icon" onClick={() => setTerminalOpen(false)} title="Hide terminal"><PanelBottom size={13}/></button>
+              <button
+                type="button"
+                className="astro-mini-icon astro-terminal-toggle"
+                onClick={() => setTerminalOpen((open) => !open)}
+                title={terminalOpen ? "Collapse bottom panel" : "Expand bottom panel"}
+                aria-label={terminalOpen ? "Collapse bottom panel" : "Expand bottom panel"}
+                aria-expanded={terminalOpen}
+                aria-controls="astro-terminal-body"
+              >
+                <PanelBottom size={13} />
+              </button>
             </div>
-            {terminalOpen && <div className="astro-terminal-body">
+            {terminalOpen && <div id="astro-terminal-body" className="astro-terminal-body">
               {terminalTab === "terminal" ? <><div><span className="term-prompt">workspace</span><span className="term-path"> / service map</span></div><div className="term-output">Configured API routes: /spherex · /spectral · /temporal</div><div className="term-output">This panel is read-only. Arbitrary shell or Python execution is not exposed by this frontend.</div></> : terminalTab === "output" ? <div className="term-output">Backend services provide archive, FITS inspection, spectral and temporal processing. See the API response for operation-specific provenance.</div> : <div className="term-output">Frontend runtime diagnostics are not connected to this panel. Run the project lint, build and browser tests to verify the current checkout.</div>}
             </div>}
-          </div>
+          </section>
         </main>
 
         {inspectorOpen && <aside className="astro-inspector">
