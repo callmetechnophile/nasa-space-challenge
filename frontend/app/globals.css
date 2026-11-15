@@ -57,6 +57,7 @@
 
 .font-aeruno {
   font-family: var(--font-aeruno), 'Aeruno', sans-serif;
+  word-spacing: 0.22em;
 }
 
 .font-serif,

@@ -32,7 +32,7 @@ export default function SkyTraceLandingPage() {
             </div>
 
             {/* Aeruno Display Headline */}
-            <h1 className="font-aeruno text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-slate-100 max-w-4xl mx-auto leading-[1.08] [text-wrap:balance]">
+            <h1 className="font-aeruno text-4xl sm:text-6xl lg:text-7xl font-bold tracking-normal [word-spacing:0.55em] text-slate-100 max-w-4xl mx-auto leading-[1.08] [text-wrap:balance]">
               The universe leaves a trace.
             </h1>
 
