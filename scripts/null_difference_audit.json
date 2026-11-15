@@ -1,0 +1,50 @@
+{
+  "null_4_0_sigma": {
+    "experiment_type": "SIMULATION_BASED_NULL_TEST",
+    "noise_model": "Independent zero-mean Gaussian (white)",
+    "generator": "numpy.random.default_rng",
+    "random_seed": 12345,
+    "spatial_covariance_modeled": false,
+    "threshold_sigma": 4.0,
+    "n_frames": 50,
+    "frame_shape": [
+      256,
+      256
+    ],
+    "total_valid_pixels": 3276800,
+    "total_solid_angle_deg2": 9.719150617283951,
+    "min_area_pixels": 3,
+    "detected_candidates": 0,
+    "observed_density_deg2": 0.0,
+    "poisson_95_upper_bound_count": 2.9957322735539895,
+    "poisson_95_upper_bound_density_deg2": 0.3082298434830879,
+    "full_frame_solid_angle_deg2": 12.34351111111111,
+    "poisson_95_upper_bound_per_full_frame": 3.8046384978095342,
+    "astrophysical_false_positives_constrained": false,
+    "caveat": "White Gaussian noise underestimates real false-positive rate because real data contain spatial covariance from pixel resampling, flat-field residuals, and 1/f detector noise."
+  },
+  "null_5_0_sigma": {
+    "experiment_type": "SIMULATION_BASED_NULL_TEST",
+    "noise_model": "Independent zero-mean Gaussian (white)",
+    "generator": "numpy.random.default_rng",
+    "random_seed": 54321,
+    "spatial_covariance_modeled": false,
+    "threshold_sigma": 5.0,
+    "n_frames": 50,
+    "frame_shape": [
+      256,
+      256
+    ],
+    "total_valid_pixels": 3276800,
+    "total_solid_angle_deg2": 9.719150617283951,
+    "min_area_pixels": 3,
+    "detected_candidates": 0,
+    "observed_density_deg2": 0.0,
+    "poisson_95_upper_bound_count": 2.9957322735539895,
+    "poisson_95_upper_bound_density_deg2": 0.3082298434830879,
+    "full_frame_solid_angle_deg2": 12.34351111111111,
+    "poisson_95_upper_bound_per_full_frame": 3.8046384978095342,
+    "astrophysical_false_positives_constrained": false,
+    "caveat": "White Gaussian noise underestimates real false-positive rate because real data contain spatial covariance from pixel resampling, flat-field residuals, and 1/f detector noise."
+  }
+}

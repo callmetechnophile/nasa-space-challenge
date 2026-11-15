@@ -21,6 +21,8 @@ def extract_change_candidates(
     significance_threshold: float = 3.5,
     min_area_pixels: int = 3,
     max_area_pixels: int = 2000,
+    psf_kernel: Optional[np.ndarray] = None,
+    variance_map: Optional[np.ndarray] = None,
 ) -> Dict[str, Any]:
     """Extract statistically significant change candidates from a significance map.
 
@@ -80,7 +82,35 @@ def extract_change_candidates(
             # Peak significance and peak flux
             peak_sig = float(np.max(significance_map[comp_pixels])) if polarity == "POSITIVE" else float(np.min(significance_map[comp_pixels]))
             peak_flux = float(np.max(difference_image[comp_pixels])) if polarity == "POSITIVE" else float(np.min(difference_image[comp_pixels]))
-            integrated_flux = float(np.sum(difference_image[comp_pixels]))
+            isophotal_flux = float(np.sum(difference_image[comp_pixels]))
+            integrated_flux = isophotal_flux
+
+            # Optimal PSF-fitting flux estimator (if PSF model is provided)
+            psf_flux = None
+            psf_flux_err = None
+            if psf_kernel is not None:
+                kh, kw = psf_kernel.shape
+                ky, kx = kh // 2, kw // 2
+                ix, iy = int(round(xc)), int(round(yc))
+                ny_img, nx_img = difference_image.shape
+                y0, y1 = iy - ky, iy - ky + kh
+                x0, x1 = ix - kx, ix - kx + kw
+                if y0 >= 0 and y1 <= ny_img and x0 >= 0 and x1 <= nx_img:
+                    d_patch = difference_image[y0:y1, x0:x1]
+                    p_norm = psf_kernel / np.sum(psf_kernel)
+                    if variance_map is not None:
+                        v_patch = variance_map[y0:y1, x0:x1].copy()
+                        v_valid = v_patch > 0
+                        v_med = float(np.median(v_patch[v_valid])) if np.any(v_valid) else 1.0
+                        v_patch[~v_valid] = v_med
+                    else:
+                        v_patch = np.ones_like(d_patch)
+
+                    denom = float(np.sum((p_norm ** 2) / v_patch))
+                    if denom > 0:
+                        psf_flux = float(np.sum((d_patch * p_norm) / v_patch) / denom)
+                        psf_flux_err = float(1.0 / np.sqrt(denom))
+                        integrated_flux = psf_flux
 
             # World coordinates
             ra_deg, dec_deg = None, None
@@ -111,6 +141,9 @@ def extract_change_candidates(
                 "significance_peak": round(peak_sig, 3),
                 "peak_flux_mjy_sr": round(peak_flux, 4),
                 "integrated_flux_mjy_sr": round(integrated_flux, 4),
+                "isophotal_flux_mjy_sr": round(isophotal_flux, 4),
+                "psf_flux_mjy_sr": round(psf_flux, 4) if psf_flux is not None else None,
+                "psf_flux_err_mjy_sr": round(psf_flux_err, 4) if psf_flux_err is not None else None,
                 "area_pixels": area,
                 "warnings": warnings,
                 "scientific_status": DISCLAIMER_LABEL,

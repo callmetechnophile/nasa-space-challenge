@@ -1,0 +1,211 @@
+{
+  "target_fits": "data/spherex/level2_2025W44_2B_0322_4D1_spx_l2b-v20-2025-307.fits",
+  "date_obs": "2025-10-31T19:02:05.151",
+  "matching_criteria": {
+    "pixel_scale_arcsec": 6.2,
+    "pointing_sigma_arcsec": 1.0,
+    "centroiding_sigma_arcsec": 0.5,
+    "strict_radius_arcsec": 3.8,
+    "loose_radius_arcsec": 6.2,
+    "detection_snr_threshold": 3.5
+  },
+  "internal_wcs_precision": {
+    "test_pixel": [
+      1024.0,
+      1024.0
+    ],
+    "roundtrip_pixel_residual": 8.747239945328758e-12,
+    "roundtrip_arcsec_residual": 5.42328876610383e-11
+  },
+  "stars": [
+    {
+      "source_id": "3048921849182310144",
+      "ref_ra": 132.74812,
+      "ref_dec": -5.62145,
+      "ref_epoch": "J2016.0",
+      "pmra": -12.45,
+      "pmdec": 3.82,
+      "parallax": 2.14,
+      "radial_velocity": 18.2,
+      "g_mag": 13.42,
+      "prop_ra": 132.74808583188292,
+      "prop_dec": -5.621439566705688,
+      "pred_pix_1based": [
+        1034.4827504292566,
+        1039.1996256508455
+      ],
+      "meas_pix_1based": [
+        1037.4040841724259,
+        1042.3471967290486
+      ],
+      "pixel_residual": 4.294344482143929,
+      "meas_ra": 132.74479219424313,
+      "meas_dec": -5.615027347944089,
+      "dra_cosdec_arcsec": -11.80007254523586,
+      "ddec_arcsec": 23.083987541756912,
+      "separation_arcsec": 25.925156241513537,
+      "peak_snr": 16.132603641346204,
+      "detection_status": "DETECTED",
+      "match_classification": "CONFUSED_OR_BLENDED"
+    },
+    {
+      "source_id": "3048922192780182528",
+      "ref_ra": 132.78145,
+      "ref_dec": -5.67891,
+      "ref_epoch": "J2016.0",
+      "pmra": -4.81,
+      "pmdec": -8.92,
+      "parallax": 1.45,
+      "radial_velocity": -5.4,
+      "g_mag": 12.18,
+      "prop_ra": 132.78143679798896,
+      "prop_dec": -5.6789343625705815,
+      "pred_pix_1based": [
+        1006.1616626072779,
+        1011.5314368493935
+      ],
+      "meas_pix_1based": [
+        1002.8863505421408,
+        1008.5817405373798
+      ],
+      "pixel_residual": 4.407763316824026,
+      "meas_ra": 132.78541879822376,
+      "meas_dec": -5.6851729746590225,
+      "dra_cosdec_arcsec": 14.26484395297481,
+      "ddec_arcsec": -22.459003518387632,
+      "separation_arcsec": 26.606209951058325,
+      "peak_snr": 16.631814764584295,
+      "detection_status": "DETECTED",
+      "match_classification": "CONFUSED_OR_BLENDED"
+    },
+    {
+      "source_id": "3048921471225528320",
+      "ref_ra": 132.71258,
+      "ref_dec": -5.6412,
+      "ref_epoch": "J2016.0",
+      "pmra": 2.15,
+      "pmdec": -1.4,
+      "parallax": 0.88,
+      "radial_velocity": null,
+      "g_mag": 14.85,
+      "prop_ra": 132.71258590072122,
+      "prop_dec": -5.6412038237215345,
+      "pred_pix_1based": [
+        1050.9184226946497,
+        1022.7710501150015
+      ],
+      "meas_pix_1based": [
+        1050.0214036930715,
+        1020.7703714859376
+      ],
+      "pixel_residual": 2.1925688281066726,
+      "meas_ra": 132.71308304141837,
+      "meas_dec": -5.644864655902882,
+      "dra_cosdec_arcsec": 1.7810389014051198,
+      "ddec_arcsec": -13.178995852852182,
+      "separation_arcsec": 13.298797360426951,
+      "peak_snr": 5.892977043630105,
+      "detection_status": "DETECTED",
+      "match_classification": "ASTROMETRIC_MISMATCH"
+    },
+    {
+      "source_id": "3048922536377749504",
+      "ref_ra": 132.81023,
+      "ref_dec": -5.63214,
+      "ref_epoch": "J2016.0",
+      "pmra": -18.72,
+      "pmdec": 14.11,
+      "parallax": 3.82,
+      "radial_velocity": 42.1,
+      "g_mag": 11.6,
+      "prop_ra": 132.81017862344623,
+      "prop_dec": -5.63210146240918,
+      "pred_pix_1based": [
+        998.0792628751335,
+        1042.2934068152965
+      ],
+      "meas_pix_1based": [
+        998.8080421159123,
+        1043.9890633204773
+      ],
+      "pixel_residual": 1.845635436740378,
+      "meas_ra": 132.809809434939,
+      "meas_dec": -5.629013082780089,
+      "dra_cosdec_arcsec": -1.322662592499296,
+      "ddec_arcsec": 11.118166664726914,
+      "separation_arcsec": 11.196565349069061,
+      "peak_snr": 1.629393092907971,
+      "detection_status": "NOT_DETECTED",
+      "match_classification": "UNMATCHED_BELOW_THRESHOLD"
+    },
+    {
+      "source_id": "3048923017413988352",
+      "ref_ra": 132.7654,
+      "ref_dec": -5.6945,
+      "ref_epoch": "J2016.0",
+      "pmra": -7.3,
+      "pmdec": -6.15,
+      "parallax": 1.12,
+      "radial_velocity": null,
+      "g_mag": 15.22,
+      "prop_ra": 132.7653799631428,
+      "prop_dec": -5.6945167970622315,
+      "pred_pix_1based": [
+        1012.4698029058499,
+        1000.3398375368358
+      ],
+      "meas_pix_1based": [
+        1011.107716663826,
+        1000.1743542688382
+      ],
+      "pixel_residual": 1.3721019068195985,
+      "meas_ra": 132.76756335117284,
+      "meas_dec": -5.695375653281057,
+      "dra_cosdec_arcsec": 7.821407388944394,
+      "ddec_arcsec": -3.0918823877723156,
+      "separation_arcsec": 8.41035426122021,
+      "peak_snr": 8.165535700854427,
+      "detection_status": "DETECTED",
+      "match_classification": "ASTROMETRIC_MISMATCH"
+    },
+    {
+      "source_id": "3048921986621257728",
+      "ref_ra": 132.73589,
+      "ref_dec": -5.68112,
+      "ref_epoch": "J2016.0",
+      "pmra": -1.15,
+      "pmdec": 4.88,
+      "parallax": 1.95,
+      "radial_velocity": 12.0,
+      "g_mag": 13.9,
+      "prop_ra": 132.73588684358316,
+      "prop_dec": -5.681106671602253,
+      "pred_pix_1based": [
+        1031.175739558982,
+        1003.5970729308469
+      ],
+      "meas_pix_1based": [
+        1030.9506537899094,
+        1003.4714148797658
+      ],
+      "pixel_residual": 0.2577858592718411,
+      "meas_ra": 132.73619872361306,
+      "meas_dec": -5.681409512353264,
+      "dra_cosdec_arcsec": 1.117253370048021,
+      "ddec_arcsec": -1.090226703641406,
+      "separation_arcsec": 1.5610409033293309,
+      "peak_snr": 2.491717462884355,
+      "detection_status": "NOT_DETECTED",
+      "match_classification": "UNMATCHED_BELOW_THRESHOLD"
+    }
+  ],
+  "summary": {
+    "total_sources": 6,
+    "detected_count": 4,
+    "matched_strict_count": 0,
+    "matched_loose_count": 0,
+    "classification": "INSUFFICIENT_REFERENCE_SAMPLE",
+    "statistical_inference_valid": false,
+    "rationale": "Sample size N=0 valid astrometric matches within justified 3-sigma radius (3.8 arcsec) or loose 1-pixel radius (6.2 arcsec). Valid matches N < 5. No statistical inference permitted."
+  }
+}

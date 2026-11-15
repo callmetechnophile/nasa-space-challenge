@@ -1,4 +1,4 @@
-"""Pydantic data schemas for SPHEREx 3D Temporal Sky Explorer.
+"""Pydantic data schemas for SkyTrace (SPHEREx exploration platform).
 Strictly separates verified scientific data, local sample data, and explicitly labeled simulation data.
 """
 

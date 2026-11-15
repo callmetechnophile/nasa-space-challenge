@@ -1,4 +1,4 @@
-"""SPHEREx — 3D Temporal Sky Explorer Backend Application.
+"""SkyTrace Backend Application.
 Provides astronomical coordinate engines, multi-epoch observations, 102-band infrared spectroscopy,
 and scientific difference imaging.
 """
@@ -22,9 +22,9 @@ from app.api.temporal_routes import router as temporal_router
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
 
 app = FastAPI(
-    title="SPHEREx 3D Temporal Sky Explorer API",
+    title="SkyTrace API",
     version="1.0.0",
-    description="Scientific astronomical backend for NASA's SPHEREx mission data exploration.",
+    description="A scientific astronomy development environment for exploring and analyzing SPHEREx observations.",
 )
 
 # CORS configuration
@@ -60,7 +60,7 @@ app.include_router(temporal_router, prefix="/api/v1")
 def root_info():
     return {
         "mission": "SPHEREx — Spectro-Photometer for the History of the Universe, Epoch of Reionization, and Ices Explorer",
-        "system": "3D Temporal Sky Explorer Backend",
+        "system": "SkyTrace Backend",
         "version": "1.0.0",
         "status": "ONLINE",
         "documentation": "/docs",
