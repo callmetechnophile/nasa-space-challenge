@@ -14,6 +14,11 @@ MEMORY="${AZURE_MEMORY:-1.0Gi}"
 MIN_REPLICAS="${AZURE_MIN_REPLICAS:-0}"
 MAX_REPLICAS="${AZURE_MAX_REPLICAS:-2}"
 SUBSCRIPTION_ID="${AZURE_SUBSCRIPTION_ID:-}"
+ALLOWED_ORIGINS="${AZURE_ALLOWED_ORIGINS:-}"
+ENV_ARGS=()
+if [[ -n "$ALLOWED_ORIGINS" ]]; then
+  ENV_ARGS+=(--env-vars "ALLOWED_ORIGINS=$ALLOWED_ORIGINS")
+fi
 
 if ! command -v az >/dev/null 2>&1; then
   echo "ERROR: Azure CLI (az) is not installed. Install it first: https://learn.microsoft.com/cli/azure/install-azure-cli"
