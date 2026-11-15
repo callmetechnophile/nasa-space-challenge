@@ -176,3 +176,40 @@ kbd { padding: 1px 5px; border: 1px solid #414752; border-radius: 3px; backgroun
   .astro-canvas-top-right { width: 72%; }
   .astro-statusbar > div:first-child span:nth-child(2) { display: none; }
 }
+
+/* Bring legacy scientific panels into the editor's restrained IDE visual system. */
+.astro-canvas [class*="bg-[#050b1a]"],
+.astro-canvas [class*="bg-[#040816]"],
+.astro-canvas [class*="bg-[#060c1d]"] {
+  background-color: #20242b !important;
+  border-color: #39414c !important;
+  box-shadow: 0 5px 16px #0005 !important;
+}
+.astro-canvas [class*="bg-[#071026]"],
+.astro-canvas [class*="bg-[#09152e]"],
+.astro-canvas [class*="bg-[#02040b]"],
+.astro-canvas [class*="bg-[#02050f]"] {
+  background-color: #252b34 !important;
+}
+.astro-canvas [class*="border-cyan-950"],
+.astro-canvas [class*="border-cyan-900"] {
+  border-color: #3b4652 !important;
+}
+.astro-canvas [class*="rounded-xl"],
+.astro-canvas [class*="rounded-2xl"] { border-radius: 5px !important; }
+.astro-canvas [class*="shadow-2xl"] { box-shadow: 0 5px 16px #0005 !important; }
+.astro-canvas [class*="backdrop-blur"] { backdrop-filter: none !important; }
+.astro-canvas-top-right label,
+.astro-canvas-top-left label { color: #aab4c2 !important; }
+.astro-canvas input {
+  border-radius: 4px !important;
+  background: #171b21 !important;
+  border-color: #424b58 !important;
+}
+.astro-canvas button { transition: background-color .12s ease, color .12s ease, border-color .12s ease; }
+.astro-canvas button:focus-visible { outline: 1px solid #79b9dc; outline-offset: 1px; }
+.astro-canvas [class*="text-cyan-100"],
+.astro-canvas [class*="text-cyan-200"] { color: #d4e2ed !important; }
+.astro-canvas [class*="bg-cyan-500"] { background-color: #477d9e !important; }
+.astro-canvas [class*="text-slate-950"] { color: #f1f5f9 !important; }
+.astro-canvas [class*="border-cyan-500"] { border-color: #6398b7 !important; }

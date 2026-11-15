@@ -31,7 +31,7 @@ export function TopNavigation() {
 
       <button className="astro-command-search" onClick={() => setSearchOpen((v) => !v)}>
         <Search size={13} />
-        <span>Search files, coordinates, datasets, commands</span>
+        <span>Open a workspace or command</span>
         <kbd>⌘ K</kbd>
       </button>
 

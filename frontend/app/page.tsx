@@ -233,9 +233,9 @@ export default function CelestialExplorerMilestone2() {
             <div className="astro-sidebar-note">Scientific execution remains in the existing backend services.</div>
           </div>}
           {activity === "integrations" && <div className="astro-sidebar-content">
-            <div className="astro-tree-workspace"><Layers3 size={14}/> CATALOGUE LAYERS</div>
-            {["Gaia DR3","WISE","Aladin / CDS"].map((name) => <div className="astro-extension-row" key={name}><GlobeItem/><span>{name}</span><span className="astro-extension-state">SOURCE</span></div>)}
-            <div className="astro-sidebar-note">External overlays are managed through image-layer integrations when configured.</div>
+            <div className="astro-tree-workspace"><Layers3 size={14}/> EXTERNAL CATALOGUES</div>
+            {["Gaia DR3","WISE","Aladin / CDS"].map((name) => <div className="astro-extension-row" key={name}><GlobeItem/><span>{name}</span><span className="astro-extension-state">AVAILABLE TO CONNECT</span></div>)}
+            <div className="astro-sidebar-note">These are integration targets, not active layers in this workspace yet. Existing SPHEREx image-layer controls remain connected to the current backend.</div>
           </div>}
           <div className="astro-sidebar-bottom">
             <div className="astro-pane-heading">OUTLINE</div>
@@ -330,7 +330,7 @@ export default function CelestialExplorerMilestone2() {
       </div>
 
       <footer className="astro-statusbar">
-        <div><span><GitBranch size={12}/> docs/verifiable-development-timeline</span><span><CircleDot size={11}/> Workspace ready</span><span className="astro-status-demo"><i/> DEMONSTRATION MODE</span></div>
+        <div><span><GitBranch size={12}/> feat/astro-ide-redesign</span><span><CircleDot size={11}/> Workspace ready</span><span className="astro-status-demo"><i/> DEMONSTRATION MODE</span></div>
         <div><span>RA {storeRa.toFixed(4)}°</span><span>DEC {storeDec.toFixed(4)}°</span><span>FOV {currentFov.toFixed(2)}°</span><span>CHANNEL {selectedChannel}/102</span><span>ARRAY {bands.find((b) => b.channel_index === selectedChannel)?.array_index ?? "—"}</span></div>
       </footer>
     </div>
