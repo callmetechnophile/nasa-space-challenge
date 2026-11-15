@@ -13,7 +13,7 @@ export function AboutMissionModal() {
         <div className="flex items-center space-x-2">
           <Info className="w-5 h-5 text-cyan-400" />
           <h2 className="text-base font-bold text-cyan-100 font-sans">
-            SPHEREx — 3D Temporal Sky Explorer Architecture
+            SkyTrace — SPHEREx Astronomy Development Environment
           </h2>
           <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800">
             NASA Space Apps Challenge 2026

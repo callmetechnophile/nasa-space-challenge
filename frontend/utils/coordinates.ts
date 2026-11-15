@@ -1,5 +1,5 @@
 /**
- * SPHEREx 3D Sky Explorer — Astronomical Coordinate Engine (Milestones 1 & 2)
+ * SkyTrace — Astronomical Coordinate Engine (Milestones 1 & 2)
  * 
  * Standards & Conventions:
  * - International Celestial Reference System (ICRS)

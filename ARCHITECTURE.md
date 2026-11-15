@@ -1,4 +1,4 @@
-# SPHEREx — 3D Temporal Sky Explorer
+# SkyTrace
 ## Technical Architecture & Scientific Systems Specification
 **NASA Space Apps Challenge 2026**
 
@@ -6,7 +6,7 @@
 
 ### 1. Executive Summary
 
-The **SPHEREx — 3D Temporal Sky Explorer** is a full-stack astronomical exploration application developed for NASA's Spectro-Photometer for the History of the Universe, Epoch of Reionization, and Ices Explorer (SPHEREx) mission.
+**SkyTrace** is a full-stack scientific astronomy development environment developed for exploring and analyzing observations from NASA's Spectro-Photometer for the History of the Universe, Epoch of Reionization, and Ices Explorer (SPHEREx) mission.
 
 Unlike static dashboards or decorative simulations, this system implements an interactive 3D WebGL celestial sphere coupled with an Astropy-driven scientific image processing and difference imaging backend. It enables researchers, students, and astronomers to navigate the sky in verified celestial coordinates (ICRS), evaluate temporal infrared changes over 6-month survey passes, and inspect near-infrared spectroscopy across all 102 Linear Variable Filter (LVF) spectral channels spanning 0.75 to 5.00 µm.
 
