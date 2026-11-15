@@ -1,0 +1,18 @@
+{
+  "product_filename": "level2_2025W44_2B_0322_4D1_spx_l2b-v20-2025-307.fits",
+  "product_identifier": "level2_2025W44_2B_0322_4D1_spx_l2b-v20-2025-307",
+  "file_size_bytes": 71634240,
+  "file_size_mb": 68.32,
+  "sha256_checksum": "36b330b5ed45161383aedc7e9199619c6ca1873e213a5fdc8ff027274190caf6",
+  "archive_access_url": "https://irsa.ipac.caltech.edu/ibe/data/spherex/qr2/level2/2025W44_2B/l2b-v20-2025-307/1/level2_2025W44_2B_0322_4D1_spx_l2b-v20-2025-307.fits",
+  "archive_service": "NASA/IPAC Infrared Science Archive (IRSA)",
+  "protocol": "IVOA Simple Image Access Version 2.0 (SIA2)",
+  "survey_collection": "spherex_qr2",
+  "detector_channel": "Detector 1 (Bandpass SPHEREx-D1)",
+  "observation_timestamp": "2025-11-04T03:32:59.610",
+  "pointing_center": {
+    "ra_deg": 132.763132073,
+    "dec_deg": -5.65674041974
+  },
+  "target_enclosure": "WISE 0855-0714 (RA=133.795129, Dec=-7.245147)"
+}

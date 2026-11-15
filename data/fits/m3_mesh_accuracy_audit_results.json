@@ -1,0 +1,82 @@
+[
+  {
+    "fixture": "1_standard_1024_tan.fits",
+    "status": "PASS",
+    "tested_points": 121,
+    "max_angular_error_arcsec": 0.01115558662147259,
+    "rms_angular_error_arcsec": 0.006040155355805125,
+    "max_radial_error_units": 9.555502714420072e-06,
+    "max_uv_error": 1.5700924586837752e-16,
+    "grid_density": "8x8"
+  },
+  {
+    "fixture": "2_rotated_tan.fits",
+    "status": "PASS",
+    "tested_points": 121,
+    "max_angular_error_arcsec": 0.014099999140415185,
+    "rms_angular_error_arcsec": 0.006486915146724335,
+    "max_radial_error_units": 1.2514760115323043e-05,
+    "max_uv_error": 5.551115123125783e-17,
+    "grid_density": "8x8"
+  },
+  {
+    "fixture": "3_nonsquare.fits",
+    "status": "PASS",
+    "tested_points": 121,
+    "max_angular_error_arcsec": 0.010086344436796181,
+    "rms_angular_error_arcsec": 0.006494609391885141,
+    "max_radial_error_units": 9.53280594728767e-06,
+    "max_uv_error": 1.2412670766236366e-16,
+    "grid_density": "8x8"
+  },
+  {
+    "fixture": "4_negative_pixel_scale.fits",
+    "status": "PASS",
+    "tested_points": 121,
+    "max_angular_error_arcsec": 0.013418240488879867,
+    "rms_angular_error_arcsec": 0.006539210234660894,
+    "max_radial_error_units": 1.0247673557728376e-05,
+    "max_uv_error": 5.551115123125783e-17,
+    "grid_density": "8x8"
+  },
+  {
+    "fixture": "5_cd_matrix.fits",
+    "status": "PASS",
+    "tested_points": 121,
+    "max_angular_error_arcsec": 0.011314313148782637,
+    "rms_angular_error_arcsec": 0.00592992884860368,
+    "max_radial_error_units": 7.1492791988703175e-06,
+    "max_uv_error": 1.1443916996305594e-16,
+    "grid_density": "16x16"
+  },
+  {
+    "fixture": "6_pc_matrix.fits",
+    "status": "PASS",
+    "tested_points": 121,
+    "max_angular_error_arcsec": 0.013936946682953344,
+    "rms_angular_error_arcsec": 0.005775867618483639,
+    "max_radial_error_units": 1.2862355006859616e-05,
+    "max_uv_error": 5.551115123125783e-17,
+    "grid_density": "8x8"
+  },
+  {
+    "fixture": "7_ra_wraparound.fits",
+    "status": "PASS",
+    "tested_points": 121,
+    "max_angular_error_arcsec": 0.013573851385885394,
+    "rms_angular_error_arcsec": 0.008068315816527163,
+    "max_radial_error_units": 7.628796595327003e-06,
+    "max_uv_error": 1.1443916996305594e-16,
+    "grid_density": "16x16"
+  },
+  {
+    "fixture": "10_nan_pixels.fits",
+    "status": "PASS",
+    "tested_points": 121,
+    "max_angular_error_arcsec": 0.012857850632370679,
+    "rms_angular_error_arcsec": 0.0059028780639705115,
+    "max_radial_error_units": 1.2786625291028031e-05,
+    "max_uv_error": 5.551115123125783e-17,
+    "grid_density": "8x8"
+  }
+]

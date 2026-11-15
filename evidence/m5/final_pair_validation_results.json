@@ -1,0 +1,218 @@
+{
+  "footprint": {
+    "target_point": {
+      "ra": 45.0,
+      "dec": 0.0,
+      "px1": 2358.958711172112,
+      "py1": 326.7836852253192,
+      "in1": false,
+      "px2": 2358.4413061466075,
+      "py2": 326.8766100480638,
+      "in2": false
+    },
+    "corners_epoch1": [
+      [
+        48.97609354162565,
+        0.7108500683306398
+      ],
+      [
+        45.67375318956774,
+        -0.3707204671631879
+      ],
+      [
+        44.69795768406003,
+        2.9727638671965613
+      ],
+      [
+        48.0327787398729,
+        4.07012003139554
+      ]
+    ],
+    "corners_epoch2": [
+      [
+        48.97545942006649,
+        0.7102635126944237
+      ],
+      [
+        45.673101920843365,
+        -0.3711557116799333
+      ],
+      [
+        44.69724040365461,
+        2.972412175560072
+      ],
+      [
+        48.03205550960083,
+        4.069482845191152
+      ]
+    ],
+    "pointing_sep_arcsec": 3.7656320624249435,
+    "overlap_fraction": 0.9901960784313726,
+    "overlap_area_deg2": 12.222496296296297,
+    "x_range": [
+      21,
+      2021
+    ],
+    "y_range": [
+      1,
+      2021
+    ]
+  },
+  "spectral": {
+    "sampled_points": [
+      {
+        "region": "North-East Region",
+        "ra": 45.5,
+        "dec": 0.5,
+        "ep1_x": 1994.24,
+        "ep1_y": 519.36,
+        "ep2_x": 1993.75,
+        "ep2_y": 519.53,
+        "lam1_um": 1.01307,
+        "lam2_um": 1.01303,
+        "rel_diff_pct": 0.00416,
+        "bandwidth_um": 0.02693,
+        "verdict": "PASS"
+      },
+      {
+        "region": "Far North-East",
+        "ra": 46.0,
+        "dec": 1.0,
+        "ep1_x": 1630.34,
+        "ep1_y": 710.19,
+        "ep2_x": 1629.89,
+        "ep2_y": 710.38,
+        "lam1_um": 0.96835,
+        "lam2_um": 0.9683,
+        "rel_diff_pct": 0.0045,
+        "bandwidth_um": 0.0249,
+        "verdict": "PASS"
+      },
+      {
+        "region": "Epoch 1 Pointing Center",
+        "ra": 46.844,
+        "dec": 1.832,
+        "ep1_x": 1020.31,
+        "ep1_y": 1021.56,
+        "ep2_x": 1019.91,
+        "ep2_y": 1021.73,
+        "lam1_um": 0.9042,
+        "lam2_um": 0.90417,
+        "rel_diff_pct": 0.00322,
+        "bandwidth_um": 0.02298,
+        "verdict": "PASS"
+      },
+      {
+        "region": "Epoch 2 Pointing Center",
+        "ra": 46.843,
+        "dec": 1.831,
+        "ep1_x": 1021.04,
+        "ep1_y": 1021.18,
+        "ep2_x": 1020.64,
+        "ep2_y": 1021.35,
+        "lam1_um": 0.90427,
+        "lam2_um": 0.90424,
+        "rel_diff_pct": 0.00324,
+        "bandwidth_um": 0.02299,
+        "verdict": "PASS"
+      },
+      {
+        "region": "Mid-East Region",
+        "ra": 45.8,
+        "dec": 0.8,
+        "ep1_x": 1775.79,
+        "ep1_y": 634.07,
+        "ep2_x": 1775.32,
+        "ep2_y": 634.25,
+        "lam1_um": 0.98576,
+        "lam2_um": 0.98572,
+        "rel_diff_pct": 0.00436,
+        "bandwidth_um": 0.02567,
+        "verdict": "PASS"
+      },
+      {
+        "region": "North-Central",
+        "ra": 46.2,
+        "dec": 1.2,
+        "ep1_x": 1485.05,
+        "ep1_y": 786.03,
+        "ep2_x": 1484.61,
+        "ep2_y": 786.21,
+        "lam1_um": 0.95154,
+        "lam2_um": 0.9515,
+        "rel_diff_pct": 0.00406,
+        "bandwidth_um": 0.02419,
+        "verdict": "PASS"
+      }
+    ],
+    "max_rel_diff_pct": 0.004662118612731254,
+    "mean_rel_diff_pct": 0.004038677211571434,
+    "pct_compliant_2pct": 100.0,
+    "pct_compliant_0_1pct": 100.0
+  },
+  "metadata": {
+    "Product 1 File": "level2_2026W31_2A_0034_3D1_spx_l2b-v27-2026-224.fits",
+    "Product 2 File": "level2_2026W32_2A_0338_1D1_spx_l2b-v27-2026-223.fits",
+    "DATE-OBS (Ep1 vs Ep2)": "2026-07-30T16:45:42.423 vs 2026-08-07T18:32:33.391",
+    "MJD-OBS (Ep1 vs Ep2)": "61251.698408 vs 61259.772609",
+    "Time Delta (Days / Hours)": "8.0742 days (193.78 h)",
+    "EXPIDN (Visit / Exp ID)": "202631201003431 vs 202632201033811",
+    "DETECTOR": "Band 1 vs Band 1",
+    "PIPEVER / VERSION": "7.0.5 vs 7.0.5",
+    "DATE (Pipeline File Gen)": "2026-08-13T07:19:12.891 vs 2026-08-12T04:20:23.445",
+    "TIMESYS": "UTC vs UTC",
+    "BUNIT (Flux Units)": "MJy / sr vs MJy / sr",
+    "MJD-BEG to MJD-END (Ep1)": "61251.698408 to 61251.699740",
+    "MJD-BEG to MJD-END (Ep2)": "61259.772609 to 61259.773941"
+  },
+  "psf": {
+    "num_bins": 441,
+    "kernel_shape": [
+      33,
+      33
+    ],
+    "fwhm_epoch1": 5.617733744434477,
+    "fwhm_epoch2": 5.617733744434477,
+    "fwhm_diff_pct": 0.0,
+    "l1_diff": 0.0,
+    "convolvability": "APPROVED_WITHOUT_DECONVOLUTION"
+  },
+  "pair_counts": {
+    "SPHEREx-D1": {
+      "records": 59,
+      "visits": 29,
+      "broad_pairs": 236,
+      "tight_pairs": 4
+    },
+    "SPHEREx-D2": {
+      "records": 62,
+      "visits": 34,
+      "broad_pairs": 248,
+      "tight_pairs": 4
+    },
+    "SPHEREx-D3": {
+      "records": 60,
+      "visits": 32,
+      "broad_pairs": 235,
+      "tight_pairs": 4
+    },
+    "SPHEREx-D4": {
+      "records": 57,
+      "visits": 29,
+      "broad_pairs": 218,
+      "tight_pairs": 3
+    },
+    "SPHEREx-D5": {
+      "records": 62,
+      "visits": 34,
+      "broad_pairs": 248,
+      "tight_pairs": 4
+    },
+    "SPHEREx-D6": {
+      "records": 61,
+      "visits": 32,
+      "broad_pairs": 240,
+      "tight_pairs": 4
+    }
+  }
+}

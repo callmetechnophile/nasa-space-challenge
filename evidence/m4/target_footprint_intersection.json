@@ -1,0 +1,38 @@
+[
+  {
+    "target_name": "WISE 0855-0714",
+    "coordinates_deg": [
+      133.795129,
+      -7.245147
+    ],
+    "angular_distance_from_center_deg": 1.89,
+    "geometrically_inside_footprint": true,
+    "detector_pixel_coordinate": [
+      176.16004962514597,
+      266.03747513733873
+    ],
+    "coverage_status": "TARGET_COVERAGE_CONFIRMED"
+  },
+  {
+    "target_name": "Barnard's Star",
+    "coordinates_deg": [
+      269.452083,
+      4.693361
+    ],
+    "angular_distance_from_center_deg": 136.86,
+    "geometrically_inside_footprint": false,
+    "detector_pixel_coordinate": null,
+    "coverage_status": "TARGET_COVERAGE_NOT_CONFIRMED"
+  },
+  {
+    "target_name": "Epsilon Indi B",
+    "coordinates_deg": [
+      330.84,
+      -56.79
+    ],
+    "angular_distance_from_center_deg": 115.83,
+    "geometrically_inside_footprint": false,
+    "detector_pixel_coordinate": null,
+    "coverage_status": "TARGET_COVERAGE_NOT_CONFIRMED"
+  }
+]

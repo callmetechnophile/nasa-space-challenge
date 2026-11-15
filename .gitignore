@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+
+# Next.js build output
+.next/
+frontend/.next/
+out/
+frontend/out/
+build/
+frontend/build/
+.vercel/
+*.tsbuildinfo
+next-env.d.ts
+
+# Python build & cache
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+.venv/
+venv/
+
+# Pytest & coverage
+.pytest_cache/
+.coverage
+
+# Environment files
+.env.local
+.env.*.local
+frontend/.env.local
+frontend/.env.*.local
+
+# Runtime API cache
+data/spherex/cache/
+
+# OS files
+.DS_Store
+Thumbs.db

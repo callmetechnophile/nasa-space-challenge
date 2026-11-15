@@ -1,0 +1,201 @@
+{
+  "pair_target": "Equatorial Corridor",
+  "product_1": "level2_2026W31_2A_0034_3D1_spx_l2b-v27-2026-224.fits",
+  "product_2": "level2_2026W32_2A_0338_1D1_spx_l2b-v27-2026-223.fits",
+  "pointing_separation_arcsec": 3.766,
+  "pointing_separation_pixels": 0.607,
+  "time_baseline_days": 8.0742,
+  "time_baseline_hours": 193.78,
+  "products": [
+    {
+      "target": "Equatorial Corridor (Epoch 1)",
+      "obs_id": "2026W31_2A_0034_3",
+      "filename": "level2_2026W31_2A_0034_3D1_spx_l2b-v27-2026-224.fits",
+      "file_path": "D:\\nasa\\data\\spherex\\level2_2026W31_2A_0034_3D1_spx_l2b-v27-2026-224.fits",
+      "file_size_bytes": 65488320,
+      "sha256": "b920109af38753669179ed249ea704f16ae7e6742ae6ab44abf20f2a29e7dac1",
+      "hdus": [
+        {
+          "index": 0,
+          "name": "PRIMARY",
+          "type": "PrimaryHDU",
+          "shape": null,
+          "dtype": null
+        },
+        {
+          "index": 1,
+          "name": "IMAGE",
+          "type": "ImageHDU",
+          "shape": [
+            2040,
+            2040
+          ],
+          "dtype": ">f4"
+        },
+        {
+          "index": 2,
+          "name": "FLAGS",
+          "type": "CompImageHDU",
+          "shape": [
+            2040,
+            2040
+          ],
+          "dtype": "int32"
+        },
+        {
+          "index": 3,
+          "name": "VARIANCE",
+          "type": "ImageHDU",
+          "shape": [
+            2040,
+            2040
+          ],
+          "dtype": ">f4"
+        },
+        {
+          "index": 4,
+          "name": "ZODI",
+          "type": "ImageHDU",
+          "shape": [
+            2040,
+            2040
+          ],
+          "dtype": ">f4"
+        },
+        {
+          "index": 5,
+          "name": "EPSF",
+          "type": "BinTableHDU",
+          "shape": [
+            441
+          ],
+          "dtype": "(numpy.record, [('BINX', '>i4'), ('BINY', '>i4'), ('XCENTER', '>f4'), ('YCENTER', '>f4'), ('XWIDTH', '>f4'), ('YWIDTH', '>f4'), ('NSTAR', '>i4'), ('NEFF_MEAN', '>f4'), ('CWAVE', '>f4'), ('CBAND', '>f4'), ('EPSF', '>f8', (33, 33))])"
+        },
+        {
+          "index": 6,
+          "name": "WCS-WAVE",
+          "type": "BinTableHDU",
+          "shape": [
+            1
+          ],
+          "dtype": "(numpy.record, [('X', '>i4', (9,)), ('Y', '>i4', (9,)), ('VALUES', '>f4', (9, 9, 2))])"
+        }
+      ],
+      "wcs": {
+        "crval1": 46.8444173119,
+        "crval2": 1.83220066859,
+        "crpix1": 1020.5,
+        "crpix2": 1020.5,
+        "cdelt1": 1.0,
+        "cdelt2": 1.0,
+        "ctype1": "RA---TAN-SIP",
+        "ctype2": "DEC--TAN-SIP"
+      },
+      "time_metadata": {
+        "date_obs": "2026-07-30T16:45:42.423",
+        "mjd_obs": 61251.698407674,
+        "tel_time": NaN,
+        "exptime": NaN,
+        "date_file": "None",
+        "telescop": "None",
+        "detector": "None",
+        "version": "7.0.5"
+      }
+    },
+    {
+      "target": "Equatorial Corridor (Epoch 2)",
+      "obs_id": "2026W32_2A_0338_1",
+      "filename": "level2_2026W32_2A_0338_1D1_spx_l2b-v27-2026-223.fits",
+      "file_path": "D:\\nasa\\data\\spherex\\level2_2026W32_2A_0338_1D1_spx_l2b-v27-2026-223.fits",
+      "file_size_bytes": 65488320,
+      "sha256": "60c423814b38c19943b7b4b15e09b7ac6e9557c078ca35a74bf13d250ccf3c3e",
+      "hdus": [
+        {
+          "index": 0,
+          "name": "PRIMARY",
+          "type": "PrimaryHDU",
+          "shape": null,
+          "dtype": null
+        },
+        {
+          "index": 1,
+          "name": "IMAGE",
+          "type": "ImageHDU",
+          "shape": [
+            2040,
+            2040
+          ],
+          "dtype": ">f4"
+        },
+        {
+          "index": 2,
+          "name": "FLAGS",
+          "type": "CompImageHDU",
+          "shape": [
+            2040,
+            2040
+          ],
+          "dtype": "int32"
+        },
+        {
+          "index": 3,
+          "name": "VARIANCE",
+          "type": "ImageHDU",
+          "shape": [
+            2040,
+            2040
+          ],
+          "dtype": ">f4"
+        },
+        {
+          "index": 4,
+          "name": "ZODI",
+          "type": "ImageHDU",
+          "shape": [
+            2040,
+            2040
+          ],
+          "dtype": ">f4"
+        },
+        {
+          "index": 5,
+          "name": "EPSF",
+          "type": "BinTableHDU",
+          "shape": [
+            441
+          ],
+          "dtype": "(numpy.record, [('BINX', '>i4'), ('BINY', '>i4'), ('XCENTER', '>f4'), ('YCENTER', '>f4'), ('XWIDTH', '>f4'), ('YWIDTH', '>f4'), ('NSTAR', '>i4'), ('NEFF_MEAN', '>f4'), ('CWAVE', '>f4'), ('CBAND', '>f4'), ('EPSF', '>f8', (33, 33))])"
+        },
+        {
+          "index": 6,
+          "name": "WCS-WAVE",
+          "type": "BinTableHDU",
+          "shape": [
+            1
+          ],
+          "dtype": "(numpy.record, [('X', '>i4', (9,)), ('Y', '>i4', (9,)), ('VALUES', '>f4', (9, 9, 2))])"
+        }
+      ],
+      "wcs": {
+        "crval1": 46.8438440271,
+        "crval2": 1.83132556004,
+        "crpix1": 1020.5,
+        "crpix2": 1020.5,
+        "cdelt1": 1.0,
+        "cdelt2": 1.0,
+        "ctype1": "RA---TAN-SIP",
+        "ctype2": "DEC--TAN-SIP"
+      },
+      "time_metadata": {
+        "date_obs": "2026-08-07T18:32:33.391",
+        "mjd_obs": 61259.772608692,
+        "tel_time": NaN,
+        "exptime": NaN,
+        "date_file": "None",
+        "telescop": "None",
+        "detector": "None",
+        "version": "7.0.5"
+      }
+    }
+  ]
+}

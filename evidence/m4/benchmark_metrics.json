@@ -1,0 +1,67 @@
+{
+  "hardware": {
+    "os": "Windows 11 (10.0.29704)",
+    "cpu": "AMD64 Family 25 Model 117 Stepping 2, AuthenticAMD",
+    "cpu_logical_cores": 16,
+    "python_version": "3.13.9",
+    "astropy_version": "8.0.2",
+    "numpy_version": "2.5.4",
+    "pillow_version": "13.0.0"
+  },
+  "dataset": {
+    "filename": "level2_2025W44_2B_0322_4D1_spx_l2b-v20-2025-307.fits",
+    "dimensions": [2040, 2040],
+    "dtype": "float32 (>f4)",
+    "uncompressed_bytes": 16646400,
+    "file_size_bytes": 71634240
+  },
+  "benchmarks_seconds": {
+    "repetitions": 10,
+    "fits_mef_parsing": {
+      "min": 0.038,
+      "median": 0.043,
+      "mean": 0.049,
+      "p95": 0.068,
+      "max": 0.081
+    },
+    "wcs_sip_mesh_generation_16x16": {
+      "min": 0.002,
+      "median": 0.002,
+      "mean": 0.002,
+      "p95": 0.003,
+      "max": 0.003
+    },
+    "asinh_percentile_stretch": {
+      "min": 0.272,
+      "median": 0.280,
+      "mean": 0.280,
+      "p95": 0.292,
+      "max": 0.298
+    },
+    "png_compression_pillow": {
+      "min": 3.179,
+      "median": 3.289,
+      "mean": 3.289,
+      "p95": 3.354,
+      "max": 3.371
+    },
+    "total_end_to_end_latency": {
+      "min": 3.494,
+      "median": 3.619,
+      "mean": 3.620,
+      "p95": 3.694,
+      "max": 3.702
+    }
+  },
+  "rendering_fps": {
+    "browser": "Microsoft Edge (Headless)",
+    "backend_gl": "ANGLE SwiftShader CPU software emulation",
+    "measured_fps": {
+      "min": 0.3,
+      "median": 6.0,
+      "mean": 5.7,
+      "max": 17.5
+    },
+    "hardware_display_target": "60.0 FPS (VSYNC on native GPU)"
+  }
+}

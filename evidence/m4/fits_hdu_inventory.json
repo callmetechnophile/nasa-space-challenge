@@ -1,0 +1,83 @@
+[
+  {
+    "index": 0,
+    "name": "PRIMARY",
+    "type": "PrimaryHDU",
+    "shape": null,
+    "dtype": null,
+    "bunit": "N/A",
+    "header_cards_count": 5
+  },
+  {
+    "index": 1,
+    "name": "IMAGE",
+    "type": "ImageHDU",
+    "shape": [
+      2040,
+      2040
+    ],
+    "dtype": ">f4",
+    "bunit": "MJy / sr",
+    "header_cards_count": 237
+  },
+  {
+    "index": 2,
+    "name": "FLAGS",
+    "type": "ImageHDU",
+    "shape": [
+      2040,
+      2040
+    ],
+    "dtype": ">i4",
+    "bunit": "",
+    "header_cards_count": 146
+  },
+  {
+    "index": 3,
+    "name": "VARIANCE",
+    "type": "ImageHDU",
+    "shape": [
+      2040,
+      2040
+    ],
+    "dtype": ">f4",
+    "bunit": "MJy2 / sr2",
+    "header_cards_count": 119
+  },
+  {
+    "index": 4,
+    "name": "ZODI",
+    "type": "ImageHDU",
+    "shape": [
+      2040,
+      2040
+    ],
+    "dtype": ">f4",
+    "bunit": "MJy / sr",
+    "header_cards_count": 119
+  },
+  {
+    "index": 5,
+    "name": "PSF",
+    "type": "ImageHDU",
+    "shape": [
+      121,
+      101,
+      101
+    ],
+    "dtype": ">f4",
+    "bunit": "",
+    "header_cards_count": 509
+  },
+  {
+    "index": 6,
+    "name": "WCS-WAVE",
+    "type": "BinTableHDU",
+    "shape": [
+      1
+    ],
+    "dtype": "(numpy.record, [('X', '>i4', (9,)), ('Y', '>i4', (9,)), ('VALUES', '>f4', (9, 9, 2))])",
+    "bunit": "N/A",
+    "header_cards_count": 18
+  }
+]

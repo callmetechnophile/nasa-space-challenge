@@ -1,0 +1,162 @@
+[
+  {
+    "fixture": "1_standard_1024_tan.fits",
+    "status": "PASS",
+    "dimensions": "1024x1024",
+    "crval": [
+      180.0,
+      20.0
+    ],
+    "crpix": [
+      512.5,
+      512.5
+    ],
+    "points_tested": 100,
+    "stable_max_angular_error_arcsec": 1.8124708789024768e-10,
+    "stable_rms_angular_error_arcsec": 6.592922728078778e-11,
+    "legacy_acos_max_angular_error_arcsec": 0.003073585126505738,
+    "legacy_acos_rms_angular_error_arcsec": 0.0009719529582174898,
+    "max_ra_diff_cos_dec_deg": 2.6731700760535797e-14,
+    "max_dec_diff_deg": 1.7763568394002505e-14
+  },
+  {
+    "fixture": "2_rotated_tan.fits",
+    "status": "PASS",
+    "dimensions": "512x512",
+    "crval": [
+      60.0,
+      -15.0
+    ],
+    "crpix": [
+      256.5,
+      256.5
+    ],
+    "points_tested": 100,
+    "stable_max_angular_error_arcsec": 1.0144723058457132e-10,
+    "stable_rms_angular_error_arcsec": 4.69231641967219e-11,
+    "legacy_acos_max_angular_error_arcsec": 0.003073585126505738,
+    "legacy_acos_rms_angular_error_arcsec": 0.001304011731303792,
+    "max_ra_diff_cos_dec_deg": 2.0593944475285963e-14,
+    "max_dec_diff_deg": 2.1316282072803006e-14
+  },
+  {
+    "fixture": "3_nonsquare.fits",
+    "status": "PASS",
+    "dimensions": "800x400",
+    "crval": [
+      45.0,
+      30.0
+    ],
+    "crpix": [
+      400.5,
+      200.5
+    ],
+    "points_tested": 100,
+    "stable_max_angular_error_arcsec": 1.1732755402583628e-10,
+    "stable_rms_angular_error_arcsec": 5.6175042861688e-11,
+    "legacy_acos_max_angular_error_arcsec": 0.00434670577101264,
+    "legacy_acos_rms_angular_error_arcsec": 0.0013745490554998242,
+    "max_ra_diff_cos_dec_deg": 1.8458749437034573e-14,
+    "max_dec_diff_deg": 2.4868995751603507e-14
+  },
+  {
+    "fixture": "4_negative_pixel_scale.fits",
+    "status": "PASS",
+    "dimensions": "512x512",
+    "crval": [
+      120.0,
+      10.0
+    ],
+    "crpix": [
+      256.5,
+      256.5
+    ],
+    "points_tested": 100,
+    "stable_max_angular_error_arcsec": 1.124783725708934e-10,
+    "stable_rms_angular_error_arcsec": 6.183727134923135e-11,
+    "legacy_acos_max_angular_error_arcsec": 0.003073585126505738,
+    "legacy_acos_rms_angular_error_arcsec": 0.0010647211200991908,
+    "max_ra_diff_cos_dec_deg": 2.799843864687488e-14,
+    "max_dec_diff_deg": 1.5987211554602254e-14
+  },
+  {
+    "fixture": "5_cd_matrix.fits",
+    "status": "PASS",
+    "dimensions": "512x512",
+    "crval": [
+      210.0,
+      -30.0
+    ],
+    "crpix": [
+      256.5,
+      256.5
+    ],
+    "points_tested": 100,
+    "stable_max_angular_error_arcsec": 1.6866898607316668e-10,
+    "stable_rms_angular_error_arcsec": 8.402885821413456e-11,
+    "legacy_acos_max_angular_error_arcsec": 0.00434670577101264,
+    "legacy_acos_rms_angular_error_arcsec": 0.001267271612591058,
+    "max_ra_diff_cos_dec_deg": 4.9200209830943815e-14,
+    "max_dec_diff_deg": 2.4868995751603507e-14
+  },
+  {
+    "fixture": "6_pc_matrix.fits",
+    "status": "PASS",
+    "dimensions": "512x512",
+    "crval": [
+      300.0,
+      45.0
+    ],
+    "crpix": [
+      256.5,
+      256.5
+    ],
+    "points_tested": 100,
+    "stable_max_angular_error_arcsec": 2.8058333517493024e-10,
+    "stable_rms_angular_error_arcsec": 1.1461870068965073e-10,
+    "legacy_acos_max_angular_error_arcsec": 0.00434670577101264,
+    "legacy_acos_rms_angular_error_arcsec": 0.000869341154202528,
+    "max_ra_diff_cos_dec_deg": 4.031045779046219e-14,
+    "max_dec_diff_deg": 2.1316282072803006e-14
+  },
+  {
+    "fixture": "7_ra_wraparound.fits",
+    "status": "PASS",
+    "dimensions": "512x512",
+    "crval": [
+      359.99,
+      0.0
+    ],
+    "crpix": [
+      256.5,
+      256.5
+    ],
+    "points_tested": 100,
+    "stable_max_angular_error_arcsec": 1.89530588502466e-10,
+    "stable_rms_angular_error_arcsec": 5.298999045952846e-11,
+    "legacy_acos_max_angular_error_arcsec": 0.003073585126505738,
+    "legacy_acos_rms_angular_error_arcsec": 0.0016263883756242362,
+    "max_ra_diff_cos_dec_deg": 5.6843375251659205e-14,
+    "max_dec_diff_deg": 1.3489209749195652e-14
+  },
+  {
+    "fixture": "10_nan_pixels.fits",
+    "status": "PASS",
+    "dimensions": "512x512",
+    "crval": [
+      75.0,
+      -25.0
+    ],
+    "crpix": [
+      256.5,
+      256.5
+    ],
+    "points_tested": 100,
+    "stable_max_angular_error_arcsec": 1.2134430945864654e-10,
+    "stable_rms_angular_error_arcsec": 5.0734921844467944e-11,
+    "legacy_acos_max_angular_error_arcsec": 0.003073585126505738,
+    "legacy_acos_rms_angular_error_arcsec": 0.0006147170253011475,
+    "max_ra_diff_cos_dec_deg": 2.5768737264210318e-14,
+    "max_dec_diff_deg": 2.1316282072803006e-14
+  }
+]

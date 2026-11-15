@@ -1,0 +1,117 @@
+{
+  "baselineInfo": {
+    "activeBuffers": 0,
+    "activeTextures": 0,
+    "mem": {
+      "usedJSHeapMB": 13,
+      "totalJSHeapMB": 21
+    }
+  },
+  "snapshots": [
+    {
+      "cycle": 20,
+      "totalBuffersCreated": 112,
+      "totalBuffersDeleted": 100,
+      "activeBuffers": 12,
+      "activeImageBuffers": 0,
+      "totalTexturesCreated": 20,
+      "totalTexturesDeleted": 20,
+      "activeTextures": 0,
+      "activeImageTextures": 0,
+      "contextLossCount": 0,
+      "mem": {
+        "usedJSHeapMB": 18,
+        "totalJSHeapMB": 46
+      },
+      "elapsedSec": "50.4"
+    },
+    {
+      "cycle": 40,
+      "totalBuffersCreated": 212,
+      "totalBuffersDeleted": 200,
+      "activeBuffers": 12,
+      "activeImageBuffers": 0,
+      "totalTexturesCreated": 40,
+      "totalTexturesDeleted": 40,
+      "activeTextures": 0,
+      "activeImageTextures": 0,
+      "contextLossCount": 0,
+      "mem": {
+        "usedJSHeapMB": 24,
+        "totalJSHeapMB": 46
+      },
+      "elapsedSec": "95.8"
+    },
+    {
+      "cycle": 60,
+      "totalBuffersCreated": 312,
+      "totalBuffersDeleted": 300,
+      "activeBuffers": 12,
+      "activeImageBuffers": 0,
+      "totalTexturesCreated": 60,
+      "totalTexturesDeleted": 60,
+      "activeTextures": 0,
+      "activeImageTextures": 0,
+      "contextLossCount": 0,
+      "mem": {
+        "usedJSHeapMB": 18,
+        "totalJSHeapMB": 32
+      },
+      "elapsedSec": "147.1"
+    },
+    {
+      "cycle": 80,
+      "totalBuffersCreated": 412,
+      "totalBuffersDeleted": 400,
+      "activeBuffers": 12,
+      "activeImageBuffers": 0,
+      "totalTexturesCreated": 80,
+      "totalTexturesDeleted": 80,
+      "activeTextures": 0,
+      "activeImageTextures": 0,
+      "contextLossCount": 0,
+      "mem": {
+        "usedJSHeapMB": 17,
+        "totalJSHeapMB": 45
+      },
+      "elapsedSec": "195.2"
+    },
+    {
+      "cycle": 100,
+      "totalBuffersCreated": 512,
+      "totalBuffersDeleted": 500,
+      "activeBuffers": 12,
+      "activeImageBuffers": 0,
+      "totalTexturesCreated": 100,
+      "totalTexturesDeleted": 100,
+      "activeTextures": 0,
+      "activeImageTextures": 0,
+      "contextLossCount": 0,
+      "mem": {
+        "usedJSHeapMB": 32,
+        "totalJSHeapMB": 47
+      },
+      "elapsedSec": "243.2"
+    }
+  ],
+  "finalReport": {
+    "totalBuffersCreated": 512,
+    "totalBuffersDeleted": 500,
+    "netActiveBuffers": 12,
+    "imageLayerBuffersCreated": 500,
+    "imageLayerBuffersDeleted": 500,
+    "netActiveImageBuffers": 0,
+    "totalTexturesCreated": 100,
+    "totalTexturesDeleted": 100,
+    "netActiveTextures": 0,
+    "imageLayerTexturesCreated": 100,
+    "imageLayerTexturesDeleted": 100,
+    "netActiveImageTextures": 0,
+    "contextLossCount": 0,
+    "remainingBufDetails": [],
+    "mem": {
+      "usedJSHeapMB": 32,
+      "totalJSHeapMB": 47
+    }
+  }
+}

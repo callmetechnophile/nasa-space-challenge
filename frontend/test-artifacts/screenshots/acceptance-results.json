@@ -1,0 +1,72 @@
+[
+  {
+    "testId": "T01",
+    "name": "RA Decimal Input",
+    "status": "PASS",
+    "evidence": "Target HUD locked to RA 133.795129°. URL updated to http://localhost:3000/?ra=133.795129&dec=0.000000&fov=60",
+    "defect": "None"
+  },
+  {
+    "testId": "T02",
+    "name": "RA Sexagesimal Input",
+    "status": "PASS",
+    "evidence": "08h 55m 10.831s converted to 133.795129° within 0.001 arcsecond precision",
+    "defect": "None"
+  },
+  {
+    "testId": "T03",
+    "name": "Dec Decimal Input",
+    "status": "PASS",
+    "evidence": "Negative sign preserved (-7.245147°). URL updated with dec=-7.245147",
+    "defect": "None"
+  },
+  {
+    "testId": "T04",
+    "name": "Dec Sexagesimal Input",
+    "status": "PASS",
+    "evidence": "-07° 14′ 42.53″ accurately converted with negative sign preserved (-7.245147°)",
+    "defect": "None"
+  },
+  {
+    "testId": "T05",
+    "name": "WISE 0855 Camera Navigation",
+    "status": "PASS",
+    "evidence": "Camera smoothly navigated to (133.795129°, -7.245147°). Target locked badge displayed. Screenshot captured.",
+    "defect": "None"
+  },
+  {
+    "testId": "T06",
+    "name": "Coordinate Marker",
+    "status": "PASS",
+    "evidence": "Reticle marker dynamically re-anchors to 0°, 90°, 180°, 270° on celestial sphere without drift. Screenshot captured.",
+    "defect": "None"
+  },
+  {
+    "testId": "T07",
+    "name": "Field of View Controls",
+    "status": "PASS",
+    "evidence": "Tested 60°, 30°, 10°, 5°, 1°, 0.5°, 0.1°. Camera projection matrix updated accurately. Screenshot captured for 0.5° FOV.",
+    "defect": "None"
+  },
+  {
+    "testId": "T08",
+    "name": "URL Navigation & Deep-linking",
+    "status": "PASS",
+    "evidence": "Parsed query params (?ra=133.795129&dec=-7.245147&fov=0.5). Restored target and 0.5° FOV. Invalid URLs safely rejected.",
+    "defect": "None"
+  },
+  {
+    "testId": "T09",
+    "name": "Browser History Navigation",
+    "status": "PASS",
+    "evidence": "Sequential search history A -> B -> C correctly traversed via Back/Back/Forward without duplicate history entries.",
+    "defect": "None"
+  },
+  {
+    "testId": "T10",
+    "name": "M1 Controls & Rendering Regression",
+    "status": "PASS",
+    "evidence": "OrbitControls, Zoom In/Out, Reset View, layer toggles, and canvas gestures all intact with 0 uncaught console errors.",
+    "defect": "None"
+  }
+]
