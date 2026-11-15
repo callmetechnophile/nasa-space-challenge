@@ -4,7 +4,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import {
   Activity, AudioLines, ChevronDown, ChevronRight, CircleDot, Clock3, Database,
   FileCode2, FileImage, Files, Folder, FolderOpen, GitBranch, Layers3,
-  PanelBottom, PanelRight, Settings2, ShieldCheck, Telescope, X, Workflow,
+  ChevronUp, PanelBottom, PanelRight, Settings2, ShieldCheck, Telescope, X, Workflow,
 } from "lucide-react";
 import { TopNavigation } from "@/components/layout/TopNavigation";
 import { CelestialSphere } from "@/components/celestial/CelestialSphere";
@@ -329,7 +329,7 @@ export function AstroWorkspace() {
                 aria-expanded={terminalOpen}
                 aria-controls="astro-terminal-body"
               >
-                <PanelBottom size={13} />
+                {terminalOpen ? <ChevronDown size={13} /> : <ChevronUp size={13} />}
               </button>
             </div>
             {terminalOpen && <div id="astro-terminal-body" className="astro-terminal-body">
