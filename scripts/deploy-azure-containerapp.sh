@@ -64,6 +64,7 @@ Container App : $APP_NAME
 Environment   : $ENVIRONMENT
 Compute       : $CPU vCPU / $MEMORY
 Scale         : $MIN_REPLICAS-$MAX_REPLICAS replicas
+Allowed CORS  : ${ALLOWED_ORIGINS:-not set (localhost + *.vercel.app only)}
 Source        : $REPO_ROOT/backend
 
 Cost note: Container Apps Consumption includes monthly free usage grants, but
@@ -100,7 +101,8 @@ az containerapp up \
   --environment "$ENVIRONMENT" \
   --source ./backend \
   --ingress external \
-  --target-port 8000
+  --target-port 8000 \
+  "${ENV_ARGS[@]}"
 
 echo "Applying compute and scale-to-zero settings..."
 az containerapp update \
