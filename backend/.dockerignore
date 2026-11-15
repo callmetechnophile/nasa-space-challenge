@@ -1,0 +1,17 @@
+# Source-control and Python caches
+/.git
+/.venv
+/__pycache__
+/.pytest_cache
+/**/*.pyc
+/**/*.pyo
+
+# Root-level test and audit tooling (application modules under app/ are retained)
+/tests
+/test_*.py
+/run_*.py
+/audit_*.py
+/probe_*.py
+/*.md
+/pyproject.toml
+/uv.lock
