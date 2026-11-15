@@ -4,6 +4,13 @@ Interactive 3D celestial sphere, temporal observation comparator, and 102-band n
 
 ---
 
+## 📋 Documentation & Audit Trail
+
+- 📊 **[Project Status & Verification](PROJECT_STATUS.md)**: Engineering milestones, test results, and documented scientific caveats.
+- 📐 **[System Architecture](ARCHITECTURE.md)**: Technical design and data flow specifications.
+
+---
+
 ## 🌌 Overview
 
 The **SPHEREx — 3D Temporal Sky Explorer** is a scientific astronomical exploration environment built for NASA's Spectro-Photometer for the History of the Universe, Epoch of Reionization, and Ices Explorer (SPHEREx) mission.
