@@ -10,10 +10,10 @@ import {
   DisplayStretchType,
 } from "@/types/astronomicalImage";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api/v1";
+import { getApiBaseUrl } from "./apiConfig";
 
 export async function fetchSampleImages(): Promise<SampleImageInfo[]> {
-  const res = await fetch(`${API_BASE_URL}/images/samples`);
+  const res = await fetch(`${getApiBaseUrl()}/images/samples`);
   if (!res.ok) {
     throw new Error(`Failed to fetch sample images: HTTP ${res.status}`);
   }
@@ -27,7 +27,7 @@ export async function loadSampleImageLayer(
   contrast: number = 1.0,
   radius: number = 98.0
 ): Promise<AstronomicalImageLayerData> {
-  const url = new URL(`${API_BASE_URL}/images/sample/${sampleId}`);
+  const url = new URL(`${getApiBaseUrl()}/images/sample/${sampleId}`);
   url.searchParams.set("stretch", stretch);
   url.searchParams.set("brightness", brightness.toString());
   url.searchParams.set("contrast", contrast.toString());
@@ -55,7 +55,7 @@ export async function uploadFitsImageLayer(
   formData.append("contrast", contrast.toString());
   formData.append("radius", radius.toString());
 
-  const res = await fetch(`${API_BASE_URL}/images/process-fits`, {
+  const res = await fetch(`${getApiBaseUrl()}/images/process-fits`, {
     method: "POST",
     body: formData,
   });
@@ -73,7 +73,7 @@ export async function updateImageDisplayStretch(
   brightness: number = 1.0,
   contrast: number = 1.0
 ): Promise<string> {
-  const res = await fetch(`${API_BASE_URL}/images/re-stretch`, {
+  const res = await fetch(`${getApiBaseUrl()}/images/re-stretch`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({

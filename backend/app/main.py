@@ -6,6 +6,7 @@ and scientific difference imaging.
 from __future__ import annotations
 
 import logging
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -31,10 +32,14 @@ ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
 ]
+_env_origins = os.getenv("ALLOWED_ORIGINS")
+if _env_origins:
+    ALLOWED_ORIGINS.extend([origin.strip() for origin in _env_origins.split(",") if origin.strip()])
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

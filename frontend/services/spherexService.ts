@@ -15,14 +15,14 @@ import {
   SpherexCacheStatus,
 } from "../types/spherex";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api/v1";
+import { getApiBaseUrl } from "./apiConfig";
 
 export class SpherexService {
   /**
    * Search NASA/IPAC IRSA SIA2 archive for real SPHEREx observations.
    */
   static async searchObservations(request: SpherexSearchRequest): Promise<SpherexSearchResponse> {
-    const response = await fetch(`${API_BASE_URL}/spherex/search`, {
+    const response = await fetch(`${getApiBaseUrl()}/spherex/search`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(request),
@@ -40,7 +40,7 @@ export class SpherexService {
    * Stream download a real SPHEREx FITS product to server storage.
    */
   static async downloadProduct(request: SpherexDownloadRequest): Promise<SpherexDownloadResponse> {
-    const response = await fetch(`${API_BASE_URL}/spherex/download`, {
+    const response = await fetch(`${getApiBaseUrl()}/spherex/download`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(request),
@@ -58,7 +58,7 @@ export class SpherexService {
    * Inspect all extensions and header cards of a cached SPHEREx MEF file.
    */
   static async inspectProduct(filename: string): Promise<SpherexMefInspection> {
-    const response = await fetch(`${API_BASE_URL}/spherex/inspect/${encodeURIComponent(filename)}`);
+    const response = await fetch(`${getApiBaseUrl()}/spherex/inspect/${encodeURIComponent(filename)}`);
 
     if (!response.ok) {
       const err = await response.json().catch(() => ({ detail: response.statusText }));
@@ -72,7 +72,7 @@ export class SpherexService {
    * Process a real SPHEREx FITS file into a 3D spherical mesh and texture layer payload.
    */
   static async loadLayer(request: SpherexLayerLoadRequest): Promise<SpherexLayerPayload> {
-    const response = await fetch(`${API_BASE_URL}/spherex/load-layer`, {
+    const response = await fetch(`${getApiBaseUrl()}/spherex/load-layer`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(request),
@@ -90,7 +90,7 @@ export class SpherexService {
    * Fetch current cache inventory and storage limits.
    */
   static async getCacheStatus(): Promise<SpherexCacheStatus> {
-    const response = await fetch(`${API_BASE_URL}/spherex/status`);
+    const response = await fetch(`${getApiBaseUrl()}/spherex/status`);
 
     if (!response.ok) {
       throw new Error(`Failed to fetch cache status: ${response.statusText}`);

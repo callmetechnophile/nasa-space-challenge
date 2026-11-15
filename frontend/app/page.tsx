@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, useEffect } from "react";
 import {
-  AudioLines, ChevronDown, ChevronRight, CircleDot, Clock3, Database,
+  Activity, AudioLines, ChevronDown, ChevronRight, CircleDot, Clock3, Database,
   FileCode2, FileImage, Files, Folder, FolderOpen, GitBranch, Layers3,
   PanelBottom, PanelRight, Settings2, ShieldCheck, Telescope, X, Workflow,
 } from "lucide-react";

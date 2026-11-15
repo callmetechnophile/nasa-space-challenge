@@ -6,11 +6,12 @@ import {
   SpectralMeasurement,
   DifferenceAnalysisResult,
 } from "../types/astronomy";
+import { getApiBaseUrl } from "./apiConfig";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api/v1";
+
 
 export async function parseCoordinates(ra: string, dec: string): Promise<CoordinateResponse> {
-  const resp = await fetch(`${API_BASE_URL}/coordinates/parse`, {
+  const resp = await fetch(`${getApiBaseUrl()}/coordinates/parse`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ ra, dec }),
@@ -23,13 +24,13 @@ export async function parseCoordinates(ra: string, dec: string): Promise<Coordin
 }
 
 export async function fetchValidationTargets(): Promise<AstronomicalTargetDetail[]> {
-  const resp = await fetch(`${API_BASE_URL}/targets`);
+  const resp = await fetch(`${getApiBaseUrl()}/targets`);
   if (!resp.ok) throw new Error("Failed to fetch validation targets");
   return resp.json();
 }
 
 export async function fetchTargetById(id: string): Promise<AstronomicalTargetDetail> {
-  const resp = await fetch(`${API_BASE_URL}/targets/${id}`);
+  const resp = await fetch(`${getApiBaseUrl()}/targets/${id}`);
   if (!resp.ok) throw new Error(`Target ${id} not found`);
   return resp.json();
 }
@@ -46,13 +47,13 @@ export async function fetchObservations(params: {
   if (params.dec !== undefined) query.set("dec", params.dec.toString());
   if (params.channel) query.set("channel", params.channel.toString());
 
-  const resp = await fetch(`${API_BASE_URL}/observations?${query.toString()}`);
+  const resp = await fetch(`${getApiBaseUrl()}/observations?${query.toString()}`);
   if (!resp.ok) throw new Error("Failed to fetch observations");
   return resp.json();
 }
 
 export async function fetchSpectralBands(): Promise<SpectralBand[]> {
-  const resp = await fetch(`${API_BASE_URL}/spectral/bands`);
+  const resp = await fetch(`${getApiBaseUrl()}/spectral/bands`);
   if (!resp.ok) throw new Error("Failed to fetch spectral bands");
   return resp.json();
 }
@@ -67,7 +68,7 @@ export async function fetchSpectralProfile(params: {
   if (params.ra !== undefined) query.set("ra", params.ra.toString());
   if (params.dec !== undefined) query.set("dec", params.dec.toString());
 
-  const resp = await fetch(`${API_BASE_URL}/spectral/profile?${query.toString()}`);
+  const resp = await fetch(`${getApiBaseUrl()}/spectral/profile?${query.toString()}`);
   if (!resp.ok) throw new Error("Failed to fetch spectral profile");
   return resp.json();
 }
@@ -81,7 +82,7 @@ export async function runDifferenceAnalysis(payload: {
   channel?: number;
   sigma_threshold?: number;
 }): Promise<DifferenceAnalysisResult> {
-  const resp = await fetch(`${API_BASE_URL}/images/difference`, {
+  const resp = await fetch(`${getApiBaseUrl()}/images/difference`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -118,7 +119,7 @@ export function getCutoutUrl(params: {
   if (params.colormap) query.set("colormap", params.colormap);
   if (params.fov_arcmin) query.set("fov_arcmin", params.fov_arcmin.toString());
 
-  return `${API_BASE_URL}/images/cutout?${query.toString()}`;
+  return `${getApiBaseUrl()}/images/cutout?${query.toString()}`;
 }
 
 export function getFitsUrl(params: {
@@ -135,17 +136,17 @@ export function getFitsUrl(params: {
   if (params.epoch) query.set("epoch", params.epoch);
   if (params.channel) query.set("channel", params.channel.toString());
 
-  return `${API_BASE_URL}/images/fits?${query.toString()}`;
+  return `${getApiBaseUrl()}/images/fits?${query.toString()}`;
 }
 
 export async function fetchTemporalObservations(): Promise<any> {
-  const resp = await fetch(`${API_BASE_URL}/temporal/observations`);
+  const resp = await fetch(`${getApiBaseUrl()}/temporal/observations`);
   if (!resp.ok) throw new Error("Failed to fetch temporal observations");
   return resp.json();
 }
 
 export async function fetchBenchmarkPairs(): Promise<any> {
-  const resp = await fetch(`${API_BASE_URL}/temporal/benchmark-pairs`);
+  const resp = await fetch(`${getApiBaseUrl()}/temporal/benchmark-pairs`);
   if (!resp.ok) throw new Error("Failed to fetch benchmark pairs");
   return resp.json();
 }
@@ -158,7 +159,7 @@ export async function runM5TemporalCompare(payload: {
   grid_size?: number;
   subtract_background?: boolean;
 }): Promise<any> {
-  const resp = await fetch(`${API_BASE_URL}/temporal/compare`, {
+  const resp = await fetch(`${getApiBaseUrl()}/temporal/compare`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -182,7 +183,7 @@ export async function discoverTimeSeries(params: {
   if (params.fov_deg !== undefined) query.set("fov_deg", params.fov_deg.toString());
   if (params.release) query.set("release", params.release);
 
-  const resp = await fetch(`${API_BASE_URL}/temporal/discovery?${query.toString()}`);
+  const resp = await fetch(`${getApiBaseUrl()}/temporal/discovery?${query.toString()}`);
   if (!resp.ok) {
     const err = await resp.json().catch(() => ({ detail: "Discovery query failed" }));
     throw new Error(err.detail || "Time-series discovery failed");
@@ -192,8 +193,8 @@ export async function discoverTimeSeries(params: {
 
 export async function fetchM6TargetValidation(slug?: string): Promise<any> {
   const url = slug
-    ? `${API_BASE_URL}/targets/m6-validation/${slug}`
-    : `${API_BASE_URL}/targets/m6-validation`;
+    ? `${getApiBaseUrl()}/targets/m6-validation/${slug}`
+    : `${getApiBaseUrl()}/targets/m6-validation`;
   const resp = await fetch(url);
   if (!resp.ok) throw new Error("Failed to fetch M6 validation data");
   return resp.json();
