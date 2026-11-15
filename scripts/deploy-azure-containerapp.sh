@@ -76,9 +76,9 @@ echo "Installing/updating the Azure Container Apps CLI extension..."
 az extension add --name containerapp --upgrade
 
 echo "Registering required Azure resource providers..."
-az provider register --namespace Microsoft.App
-az provider register --namespace Microsoft.OperationalInsights
-az provider register --namespace Microsoft.ContainerRegistry
+az provider register --namespace Microsoft.App --wait
+az provider register --namespace Microsoft.OperationalInsights --wait
+az provider register --namespace Microsoft.ContainerRegistry --wait
 
 echo "Creating or reusing resource group..."
 az group create \
