@@ -2,12 +2,11 @@
 
 import React, { useState, useCallback, useEffect } from "react";
 import {
-  Activity, AudioLines, ChevronDown, ChevronRight, CircleDot, Clock3,
-  Code2, Database, FileCode2, FileImage, Files, Folder, FolderOpen,
-  GitBranch, Layers3, PanelBottom, PanelLeft, PanelRight, Search,
-  Settings2, ShieldCheck, Terminal, Telescope, X, Workflow,
+  AudioLines, ChevronDown, ChevronRight, CircleDot, Clock3, Database,
+  FileCode2, FileImage, Files, Folder, FolderOpen, GitBranch, Layers3,
+  PanelBottom, PanelRight, Settings2, ShieldCheck, Telescope, X, Workflow,
 } from "lucide-react";
-import { TopNavigation, AstroWorkspaceTabs } from "@/components/layout/TopNavigation";
+import { TopNavigation } from "@/components/layout/TopNavigation";
 import { CelestialSphere } from "@/components/celestial/CelestialSphere";
 import { ViewControls } from "@/components/controls/ViewControls";
 import { StatusPanel } from "@/components/layout/StatusPanel";
@@ -22,7 +21,7 @@ import { SpectralExplorerPanel } from "@/components/spectral/SpectralExplorerPan
 import { ValidationTargetsView } from "@/components/targets/ValidationTargetsView";
 import { AboutMissionModal } from "@/components/layout/AboutMissionModal";
 
-type Activity = "explorer" | "data" | "analysis" | "integrations";
+type ActivityPaneKind = "explorer" | "data" | "analysis" | "integrations";
 type ExplorerFile = "sky" | "temporal" | "spectral" | "targets";
 
 export default function CelestialExplorerMilestone2() {
@@ -38,7 +37,7 @@ export default function CelestialExplorerMilestone2() {
   const [currentFov, setCurrentFov] = useState<number>(60);
   const [imageLayers, setImageLayers] = useState<ActiveImageLayerState[]>([]);
   const [telemetry, setTelemetry] = useState<CameraTelemetry | null>(null);
-  const [activity, setActivity] = useState<Activity>("explorer");
+  const [activity, setActivity] = useState<ActivityPaneKind>("explorer");
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [inspectorOpen, setInspectorOpen] = useState(true);
   const [terminalOpen, setTerminalOpen] = useState(true);

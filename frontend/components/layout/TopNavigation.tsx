@@ -2,8 +2,7 @@
 
 import React, { useState } from "react";
 import {
-  Activity, AudioLines, Atom, ChevronDown, Clock3, Command, Compass,
-  Database, FlaskConical, Info, PanelLeft, Search, ShieldCheck, Telescope,
+  AudioLines, Atom, ChevronDown, Clock3, Compass, Database, Info, Search, ShieldCheck,
 } from "lucide-react";
 import { useSkyStore } from "@/stores/useSkyStore";
 
