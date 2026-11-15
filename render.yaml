@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: spherex-backend
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.0
+      - key: ALLOWED_ORIGINS
+        value: "https://spherex-frontend.onrender.com,http://localhost:3000"
+
+  - type: web
+    name: spherex-frontend
+    runtime: node
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: NEXT_PUBLIC_API_URL
+        value: "https://spherex-backend.onrender.com/api/v1"
