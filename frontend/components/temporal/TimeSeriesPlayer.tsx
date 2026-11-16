@@ -21,6 +21,7 @@ import {
   CheckCircle2,
   AlertCircle,
   XCircle,
+  X,
 } from "lucide-react";
 
 export interface TargetPreset {
@@ -118,6 +119,25 @@ export function TimeSeriesPlayer() {
   const [playbackSpeed, setPlaybackSpeed] = useState<number>(1.0); // 0.5, 1, 2, 4, 5
   const [isLooping, setIsLooping] = useState<boolean>(true);
   const [archiveStatusNote, setArchiveStatusNote] = useState<string | null>(null);
+  const [isNoticeDismissed, setIsNoticeDismissed] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        return sessionStorage.getItem("skytrace_notice_dismissed") === "true";
+      } catch {
+        return false;
+      }
+    }
+    return false;
+  });
+
+  const handleDismissNotice = () => {
+    setIsNoticeDismissed(true);
+    if (typeof window !== "undefined") {
+      try {
+        sessionStorage.setItem("skytrace_notice_dismissed", "true");
+      } catch {}
+    }
+  };
 
   // Blink comparator mode
   const [isBlinkActive, setIsBlinkActive] = useState<boolean>(false);
@@ -323,15 +343,27 @@ export function TimeSeriesPlayer() {
   return (
     <div className="pt-2 space-y-3 font-sans text-xs">
       {/* 1. Mandatory Non-Discovery Notice Banner */}
-      <div className="bg-amber-950/40 border border-amber-500/60 rounded-lg p-2.5 text-amber-200 flex items-start space-x-2 text-[11px] leading-relaxed">
-        <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-        <div>
-          <strong className="font-semibold text-amber-300">
-            NOTICE: Observed Data | Processed Images | Synthetic Test Data | Change Candidates — NOT SCIENTIFICALLY CONFIRMED.
-          </strong>{" "}
-          Unverified candidates are not astronomical discoveries. Differences may arise from point spread variations, spectral gradients, or instrumental artifacts.
+      {!isNoticeDismissed && (
+        <div className="bg-amber-950/40 border border-amber-500/60 rounded-lg p-2.5 text-amber-200 flex items-start justify-between space-x-2 text-[11px] leading-relaxed transition-all">
+          <div className="flex items-start space-x-2">
+            <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+            <div>
+              <strong className="font-semibold text-amber-300">
+                NOTICE: Observed Data | Processed Images | Synthetic Test Data | Change Candidates — NOT SCIENTIFICALLY CONFIRMED.
+              </strong>{" "}
+              Unverified candidates are not astronomical discoveries. Differences may arise from point spread variations, spectral gradients, or instrumental artifacts.
+            </div>
+          </div>
+          <button
+            onClick={handleDismissNotice}
+            className="text-amber-400 hover:text-amber-100 hover:bg-amber-900/50 rounded p-1 transition-colors shrink-0"
+            title="Dismiss notice"
+            aria-label="Dismiss notice"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
         </div>
-      </div>
+      )}
 
       {/* 2. Target Presets Quick-Bar */}
       <div className="bg-[#09152e]/80 border border-cyan-950 rounded-lg p-2.5">
