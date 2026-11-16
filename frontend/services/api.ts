@@ -8,7 +8,29 @@ import {
 } from "../types/astronomy";
 import { getApiBaseUrl } from "./apiConfig";
 
+export interface M5ApiErrorDetails {
+  status: number;
+  stage: string;
+  category: string;
+  message: string;
+  filename?: string;
+}
 
+export class M5ComparisonError extends Error {
+  status: number;
+  stage: string;
+  category: string;
+  filename?: string;
+
+  constructor(details: M5ApiErrorDetails) {
+    super(details.message);
+    this.name = "M5ComparisonError";
+    this.status = details.status;
+    this.stage = details.stage;
+    this.category = details.category;
+    this.filename = details.filename;
+  }
+}
 
 export async function parseCoordinates(ra: string, dec: string): Promise<CoordinateResponse> {
   const resp = await fetch(`${getApiBaseUrl()}/coordinates/parse`, {
@@ -58,53 +80,73 @@ export async function fetchSpectralBands(): Promise<SpectralBand[]> {
   return resp.json();
 }
 
-export async function fetchSpectralProfile(params: {
+export async function fetchSpectralMeasurements(params: {
+  ra?: number | string;
+  dec?: number | string;
   target?: string;
-  ra?: number;
-  dec?: number;
+  mode?: string;
 }): Promise<SpectralMeasurement[]> {
   const query = new URLSearchParams();
   if (params.target) query.set("target", params.target);
   if (params.ra !== undefined) query.set("ra", params.ra.toString());
   if (params.dec !== undefined) query.set("dec", params.dec.toString());
+  if (params.mode) query.set("mode", params.mode);
 
   const resp = await fetch(`${getApiBaseUrl()}/spectral/profile?${query.toString()}`);
-  if (!resp.ok) throw new Error("Failed to fetch spectral profile");
+  if (!resp.ok) throw new Error("Failed to fetch spectral measurements");
   return resp.json();
 }
 
-export async function runDifferenceAnalysis(payload: {
-  target?: string;
-  ra?: number | string;
-  dec?: number | string;
-  epoch_ref: string;
-  epoch_cmp: string;
-  channel?: number;
-  sigma_threshold?: number;
-}): Promise<DifferenceAnalysisResult> {
-  const resp = await fetch(`${getApiBaseUrl()}/images/difference`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      target: payload.target,
-      ra: payload.ra,
-      dec: payload.dec,
-      epoch_ref: payload.epoch_ref,
-      epoch_cmp: payload.epoch_cmp,
-      channel: payload.channel || 50,
-      sigma_threshold: payload.sigma_threshold || 3.5,
-    }),
-  });
-  if (!resp.ok) throw new Error("Difference analysis execution failed");
+export const fetchSpectralProfile = fetchSpectralMeasurements;
+
+export async function fetchChannelDiagnostics(
+  channelIndex: number,
+  ra?: number,
+  dec?: number
+): Promise<any> {
+  const query = new URLSearchParams();
+  if (ra !== undefined) query.set("ra", ra.toString());
+  if (dec !== undefined) query.set("dec", dec.toString());
+  const resp = await fetch(`${getApiBaseUrl()}/spectral/diagnostics/${channelIndex}?${query.toString()}`);
+  if (!resp.ok) throw new Error(`Failed to fetch channel diagnostics for band ${channelIndex}`);
   return resp.json();
 }
+
+export async function fetchDifferenceAnalysis(params: {
+  refEpoch?: string;
+  targetEpoch?: string;
+  epoch_ref?: string;
+  epoch_cmp?: string;
+  target?: string;
+  channel?: number;
+  ra?: number;
+  dec?: number;
+  sigma_threshold?: number;
+}): Promise<DifferenceAnalysisResult> {
+  const query = new URLSearchParams();
+  const ref = params.refEpoch || params.epoch_ref || "";
+  const target = params.targetEpoch || params.epoch_cmp || "";
+  if (ref) query.set("ref", ref);
+  if (target) query.set("target", target);
+  if (params.target) query.set("target_id", params.target);
+  if (params.channel) query.set("channel", params.channel.toString());
+  if (params.ra !== undefined) query.set("ra", params.ra.toString());
+  if (params.dec !== undefined) query.set("dec", params.dec.toString());
+  if (params.sigma_threshold !== undefined) query.set("sigma_threshold", params.sigma_threshold.toString());
+
+  const resp = await fetch(`${getApiBaseUrl()}/analysis/difference?${query.toString()}`);
+  if (!resp.ok) throw new Error("Failed to run difference analysis");
+  return resp.json();
+}
+
+export const runDifferenceAnalysis = fetchDifferenceAnalysis;
 
 export function getCutoutUrl(params: {
   target?: string;
   ra?: number;
   dec?: number;
-  epoch?: string;
-  channel?: number;
+  epoch: string;
+  channel: number;
   stretch?: string;
   colormap?: string;
   fov_arcmin?: number;
@@ -113,11 +155,11 @@ export function getCutoutUrl(params: {
   if (params.target) query.set("target", params.target);
   if (params.ra !== undefined) query.set("ra", params.ra.toString());
   if (params.dec !== undefined) query.set("dec", params.dec.toString());
-  if (params.epoch) query.set("epoch", params.epoch);
-  if (params.channel) query.set("channel", params.channel.toString());
+  query.set("epoch", params.epoch);
+  query.set("channel", params.channel.toString());
   if (params.stretch) query.set("stretch", params.stretch);
   if (params.colormap) query.set("colormap", params.colormap);
-  if (params.fov_arcmin) query.set("fov_arcmin", params.fov_arcmin.toString());
+  if (params.fov_arcmin !== undefined) query.set("fov_arcmin", params.fov_arcmin.toString());
 
   return `${getApiBaseUrl()}/images/cutout?${query.toString()}`;
 }
@@ -164,10 +206,54 @@ export async function runM5TemporalCompare(payload: {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
+
   if (!resp.ok) {
-    const err = await resp.json().catch(() => ({ detail: "Comparison failed" }));
-    throw new Error(err.detail || "Temporal comparison execution failed");
+    let errBody: any = null;
+    try {
+      errBody = await resp.json();
+    } catch {
+      errBody = null;
+    }
+
+    const detail = errBody?.detail;
+    let message = "Temporal comparison execution failed";
+    let stage = "PIPELINE_EXECUTION";
+    let category = "PROCESSING_ERROR";
+    let filename: string | undefined = undefined;
+
+    if (typeof detail === "object" && detail !== null) {
+      message = detail.message || detail.detail || message;
+      stage = detail.stage || stage;
+      category = detail.category || category;
+      filename = detail.filename;
+    } else if (typeof detail === "string") {
+      message = detail;
+      if (resp.status === 404) {
+        stage = "FILE_INGESTION";
+        category = "MISSING_INPUT_FILE";
+      } else if (resp.status === 422) {
+        stage = "SCIENTIFIC_VALIDATION";
+        category = "SCIENTIFIC_INCOMPATIBILITY";
+      }
+    } else if (resp.status === 404) {
+      message = "Required observation files not found on server or archive.";
+      stage = "FILE_INGESTION";
+      category = "MISSING_INPUT_FILE";
+    } else if (resp.status === 502 || resp.status === 503) {
+      message = "Difference imaging backend service currently unavailable.";
+      stage = "SERVICE_GATEWAY";
+      category = "BACKEND_UNAVAILABLE";
+    }
+
+    throw new M5ComparisonError({
+      status: resp.status,
+      stage,
+      category,
+      message,
+      filename,
+    });
   }
+
   return resp.json();
 }
 
@@ -176,17 +262,24 @@ export async function discoverTimeSeries(params: {
   dec: number;
   fov_deg?: number;
   release?: string;
+  use_cache?: boolean;
+  force_refresh?: boolean;
+  signal?: AbortSignal;
 }): Promise<any> {
   const query = new URLSearchParams();
   query.set("ra", params.ra.toString());
   query.set("dec", params.dec.toString());
   if (params.fov_deg !== undefined) query.set("fov_deg", params.fov_deg.toString());
   if (params.release) query.set("release", params.release);
+  if (params.use_cache !== undefined) query.set("use_cache", params.use_cache.toString());
+  if (params.force_refresh !== undefined) query.set("force_refresh", params.force_refresh.toString());
 
-  const resp = await fetch(`${getApiBaseUrl()}/temporal/discovery?${query.toString()}`);
+  const resp = await fetch(`${getApiBaseUrl()}/temporal/discovery?${query.toString()}`, {
+    signal: params.signal,
+  });
   if (!resp.ok) {
-    const err = await resp.json().catch(() => ({ detail: "Discovery query failed" }));
-    throw new Error(err.detail || "Time-series discovery failed");
+    const err = await resp.json().catch(() => ({ detail: `Discovery query failed (HTTP ${resp.status})` }));
+    throw new Error(err.detail || `Time-series discovery failed (HTTP ${resp.status})`);
   }
   return resp.json();
 }
@@ -199,4 +292,3 @@ export async function fetchM6TargetValidation(slug?: string): Promise<any> {
   if (!resp.ok) throw new Error("Failed to fetch M6 validation data");
   return resp.json();
 }
-

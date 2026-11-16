@@ -7,6 +7,8 @@ from __future__ import annotations
 from typing import List, Dict, Any, Optional
 from pydantic import BaseModel, Field
 
+from app.models.provenance import ScientificDatasetProvenance, ProvenanceState
+
 
 class CoordinateRequest(BaseModel):
     ra: str | float = Field(..., description="RA in decimal degrees or sexagesimal HMS string")
@@ -42,6 +44,9 @@ class ObservationEpoch(BaseModel):
     quality_flags: List[str] = Field(default_factory=list, description="Detector and pipeline data quality flags")
     is_simulated: bool = Field(False, description="Explicit flag indicating if data is synthetic/simulated")
     data_provider: str = Field(..., description="Data provenance (e.g. NASA_IRSA, SAMPLE_ARCHIVE, SIMULATOR)")
+    provenance: Optional[ScientificDatasetProvenance] = Field(
+        None, description="Strict dataset provenance classification record"
+    )
 
 
 class SpectralMeasurement(BaseModel):
@@ -53,6 +58,10 @@ class SpectralMeasurement(BaseModel):
     flux_err_mjy: Optional[float] = None
     flux_is_available: bool = True
     key_features: str
+    is_simulated: bool = Field(False, description="Whether flux measurement is synthetically generated")
+    provenance_state: Optional[ProvenanceState] = Field(
+        None, description="Provenance classification for this spectral channel"
+    )
 
 
 class TransientCandidate(BaseModel):
@@ -67,6 +76,9 @@ class TransientCandidate(BaseModel):
     significance_sigma: float
     flag: str = "CANDIDATE_UNVERIFIED"
     quality_assessment: str
+    is_simulated_injection: bool = Field(
+        False, description="Explicit flag indicating candidate originates from controlled synthetic injection"
+    )
 
 
 class DifferenceAnalysisResult(BaseModel):
@@ -88,6 +100,9 @@ class DifferenceAnalysisResult(BaseModel):
     candidates_found: int
     candidates: List[TransientCandidate]
     algorithm_notes: str
+    provenance: Optional[ScientificDatasetProvenance] = Field(
+        None, description="Cryptographic and astronomical provenance for input observations and difference array"
+    )
 
 
 class CatalogCrossMatch(BaseModel):
@@ -125,3 +140,6 @@ class AstronomicalTargetDetail(BaseModel):
     available_epochs: List[ObservationEpoch]
     spectral_profile: List[SpectralMeasurement]
     catalog_crossmatches: List[CatalogCrossMatch]
+    provenance: Optional[ScientificDatasetProvenance] = Field(
+        None, description="Catalog provenance of the target coordinates and astrophysical classification"
+    )

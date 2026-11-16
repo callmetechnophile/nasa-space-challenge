@@ -1,0 +1,131 @@
+{
+  "timestamp": "2026-11-15T18:06:19.891Z",
+  "frontendUrl": "http://localhost:3000/workspace",
+  "backendUrl": "http://127.0.0.1:8000",
+  "browserInPageFetches": [
+    {
+      "endpoint": "/targets",
+      "status": 200,
+      "ok": true,
+      "count": 5
+    },
+    {
+      "endpoint": "/spectral/bands",
+      "status": 200,
+      "ok": true,
+      "count": 102
+    },
+    {
+      "endpoint": "/coordinates/parse",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "endpoint": "/images/sample/wise-0855",
+      "status": 200,
+      "ok": true,
+      "hasTexture": true
+    },
+    {
+      "endpoint": "/temporal/benchmark-pairs",
+      "status": 200,
+      "ok": true,
+      "count": 0
+    }
+  ],
+  "networkEventsCount": 18,
+  "responses": [
+    {
+      "type": "response",
+      "url": "http://127.0.0.1:8000/api/v1/images/samples",
+      "method": "GET",
+      "status": 200,
+      "statusText": "OK",
+      "corsHeader": "http://localhost:3000",
+      "bodyPreview": "[{\"id\":\"wise-0855\",\"title\":\"WISE 0855 Field (Infrared Brown Dwarf Region)\",\"provenance\":\"SYNTHETIC_DEMO (WCS-CALIBRATED)\",\"provenance_state\":\"SYNTHETI",
+      "time": 1794765973338
+    },
+    {
+      "type": "response",
+      "url": "http://127.0.0.1:8000/api/v1/spectral/bands",
+      "method": "GET",
+      "status": 200,
+      "statusText": "OK",
+      "corsHeader": "http://localhost:3000",
+      "bodyPreview": "[{\"channel_index\":1,\"array_index\":1,\"array_name\":\"Array 1\",\"wavelength_um\":0.7606,\"bandwidth_um\":0.01855,\"resolving_power_r\":41.0,\"key_features\":\"Pasc",
+      "time": 1794765973341
+    },
+    {
+      "type": "response",
+      "url": "http://127.0.0.1:8000/api/v1/targets",
+      "method": "GET",
+      "status": 200,
+      "statusText": "OK",
+      "corsHeader": "http://localhost:3000",
+      "bodyPreview": "[{\"id\":\"barnards-star\",\"name\":\"Barnard's Star\",\"designation\":\"GJ 699 / HIP 87937\",\"target_type\":\"High-Proper-Motion M Dwarf\",\"description\":\"Nearby red",
+      "time": 1794765973362
+    },
+    {
+      "type": "response",
+      "url": "http://127.0.0.1:8000/api/v1/images/cutout?target=wise-0855&epoch=EPOCH-PASS1-20250615&channel=50&stretch=asinh&colormap=astronomy&fov_arcmin=6",
+      "method": "GET",
+      "status": 200,
+      "statusText": "OK",
+      "corsHeader": "http://localhost:3000",
+      "bodyPreview": "�PNG\r\n\u001a\n\u0000\u0000\u0000\rIHDR\u0000\u0000\u0000�\u0000\u0000\u0000�\b\u0002\u0000\u0000\u0000c �U\u0000\u0000�/IDATx���is$Y�\u001d\b���\u0000b�ȥ\u0016��#)\u0014i�̗��dD�ˌ\f�l��*3#\u0002�/����sT��#��q>�\bQQ�\b����^��\u001c=�����ᗮ�m[V��n��~臾�m�\u001f����W�_����m�\u001d�",
+      "time": 1794765975248
+    },
+    {
+      "type": "response",
+      "url": "http://127.0.0.1:8000/api/v1/targets",
+      "method": "GET",
+      "status": 200,
+      "statusText": "OK",
+      "corsHeader": "http://localhost:3000",
+      "bodyPreview": "[{\"id\":\"barnards-star\",\"name\":\"Barnard's Star\",\"designation\":\"GJ 699 / HIP 87937\",\"target_type\":\"High-Proper-Motion M Dwarf\",\"description\":\"Nearby red",
+      "time": 1794765979621
+    },
+    {
+      "type": "response",
+      "url": "http://127.0.0.1:8000/api/v1/spectral/bands",
+      "method": "GET",
+      "status": 200,
+      "statusText": "OK",
+      "corsHeader": "http://localhost:3000",
+      "bodyPreview": "[{\"channel_index\":1,\"array_index\":1,\"array_name\":\"Array 1\",\"wavelength_um\":0.7606,\"bandwidth_um\":0.01855,\"resolving_power_r\":41.0,\"key_features\":\"Pasc",
+      "time": 1794765979626
+    },
+    {
+      "type": "response",
+      "url": "http://127.0.0.1:8000/api/v1/coordinates/parse",
+      "method": "POST",
+      "status": 200,
+      "statusText": "OK",
+      "corsHeader": "http://localhost:3000",
+      "bodyPreview": "{\"ra_deg\":133.7951,\"dec_deg\":-7.2451,\"ra_hms\":\"08h 55m 10.82s\",\"dec_dms\":\"-07° 14' 42.36\\\"\",\"cartesian_unit\":[-0.686556,0.716056,-0.126114],\"threejs_v",
+      "time": 1794765979646
+    },
+    {
+      "type": "response",
+      "url": "http://127.0.0.1:8000/api/v1/images/sample/wise-0855?stretch=asinh",
+      "method": "GET",
+      "status": 200,
+      "statusText": "OK",
+      "corsHeader": "http://localhost:3000",
+      "bodyPreview": "{\"layer_id\":\"wise-0855\",\"title\":\"WISE 0855 Field (Infrared Brown Dwarf Region)\",\"provenance\":\"SYNTHETIC_DEMO (WCS-CALIBRATED TEST FIXTURE)\",\"provenanc",
+      "time": 1794765979787
+    },
+    {
+      "type": "response",
+      "url": "http://127.0.0.1:8000/api/v1/temporal/benchmark-pairs",
+      "method": "GET",
+      "status": 200,
+      "statusText": "OK",
+      "corsHeader": "http://localhost:3000",
+      "bodyPreview": "{\"count\":4,\"pairs\":[{\"pair_id\":\"PAIR-EQUATORIAL-D1-8D-APPROVED\",\"detector\":\"SPHEREx-D1\",\"band\":\"0.75 - 1.12 µm\",\"separation_arcsec\":2.88,\"baseline_day",
+      "time": 1794765979793
+    }
+  ],
+  "consoleErrorsCount": 0,
+  "uncaughtErrorsCount": 0
+}

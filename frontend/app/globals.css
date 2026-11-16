@@ -174,18 +174,35 @@ button:focus-visible, input:focus-visible { outline: 1px solid var(--astro-accen
 
 .astro-ide-root { height: 100dvh; width: 100vw; display: flex; flex-direction: column; overflow: hidden; background: var(--astro-bg); color: #d9dee7; font-size: 12px; }
 .astro-titlebar { position: relative; z-index: 80; height: 42px; flex: 0 0 42px; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 0 12px; background: #17191e; border-bottom: 1px solid #30343d; }
-.astro-brand, .astro-title-actions { display: flex; align-items: center; gap: 10px; min-width: 230px; }
-.astro-brand-mark { width: 24px; height: 24px; border-radius: 5px; display: grid; place-items: center; background: #263746; color: #83c7eb; }
-.astro-brand-name { font-size: 13px; font-weight: 700; letter-spacing: .08em; color: #e3e8ef; }
+.astro-brand { display: flex; align-items: center; gap: 8px; min-width: 210px; }
+.astro-brand-link { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; cursor: pointer; user-select: none; border-radius: 6px; padding: 3px 6px; margin-left: -4px; transition: all 0.15s ease; outline: none; }
+.astro-brand-link:hover { background: rgba(255, 255, 255, 0.05); }
+.astro-brand-link:hover .astro-brand-name { color: #38bdf8; }
+.astro-brand-link:hover .astro-brand-mark { filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.4)); }
+.astro-brand-link:focus-visible { outline: 2px solid #38bdf8; outline-offset: 2px; }
+.astro-brand-mark { width: 24px; height: 24px; display: grid; place-items: center; flex-shrink: 0; transition: filter 0.2s ease; }
+.astro-brand-name { font-size: 13px; font-weight: 700; letter-spacing: .08em; color: #e3e8ef; transition: color 0.15s ease; }
 .astro-brand-name span { color: #8bbbd8; }
 .astro-title-divider { width: 1px; height: 18px; background: #343943; }
-.astro-project-switch { display: flex; align-items: center; gap: 6px; border: 0; background: transparent; color: #aeb6c3; font-size: 11px; }
+.astro-project-switch { display: flex; align-items: center; gap: 6px; border: 0; background: transparent; color: #aeb6c3; font-size: 11px; cursor: pointer; padding: 3px 6px; border-radius: 4px; transition: all 0.15s ease; outline: none; }
+.astro-project-switch:hover { color: #ffffff; background: rgba(255, 255, 255, 0.05); }
+.astro-project-switch:focus-visible { outline: 2px solid #38bdf8; outline-offset: 2px; }
 .astro-command-search { width: min(440px, 42vw); height: 26px; padding: 0 9px; display: flex; align-items: center; gap: 8px; border: 1px solid #343943; border-radius: 5px; color: #858e9d; background: #22252c; text-align: left; font-size: 11px; }
 .astro-command-search span { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 kbd { padding: 1px 5px; border: 1px solid #414752; border-radius: 3px; background: #292e37; color: #a9b2c0; font: 10px var(--font-geist-mono), monospace; }
 .astro-title-actions { justify-content: flex-end; gap: 9px; }
 .astro-demo-pill { display: flex; gap: 6px; align-items: center; color: #d8b77b; font: 9px var(--font-geist-mono), monospace; letter-spacing: .05em; }
 .astro-demo-pill span, .astro-status-demo i { width: 6px; height: 6px; border-radius: 50%; background: #d2a65f; }
+.astro-status-container { position: relative; display: inline-flex; align-items: center; }
+.astro-status-trigger { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px; background: #20242b; border: 1px solid #363c48; border-radius: 5px; color: #d1d7e0; font: 11px var(--font-geist-mono), monospace; font-weight: 600; letter-spacing: .05em; cursor: pointer; user-select: none; transition: all .15s ease; }
+.astro-status-trigger:hover { background: #282e38; border-color: #4a5464; color: #ffffff; }
+.astro-status-trigger.active { background: #1e293b; border-color: #0284c7; color: #38bdf8; box-shadow: 0 0 10px rgba(56, 189, 248, 0.2); }
+.astro-status-dot { width: 6px; height: 6px; border-radius: 50%; background: #10b981; box-shadow: 0 0 6px rgba(16, 185, 129, 0.85); flex-shrink: 0; }
+.astro-status-label { font-size: 11px; }
+.astro-status-chevron { transition: transform .15s ease; color: #8b95a5; }
+.astro-status-chevron.open { transform: rotate(180deg); color: #38bdf8; }
+.astro-status-popover { position: absolute; top: calc(100% + 8px); right: 0; width: 330px; max-width: calc(100vw - 20px); z-index: 100; animation: astroFadeSlideDown .15s cubic-bezier(0.16, 1, 0.3, 1); filter: drop-shadow(0 14px 32px rgba(0, 0, 0, 0.75)); }
+@keyframes astroFadeSlideDown { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
 .astro-title-icon, .astro-mini-icon { display: grid; place-items: center; border: 0; background: transparent; color: #9da6b4; padding: 5px; border-radius: 4px; }
 .astro-title-icon:hover, .astro-mini-icon:hover { background: #303640; color: #e1e6ed; }
 .astro-quick-menu { position: absolute; top: 36px; left: 50%; transform: translateX(-50%); width: min(460px, 90vw); padding: 7px; background: #20242b; border: 1px solid #454c58; border-radius: 7px; box-shadow: 0 14px 38px #0009; }
@@ -257,9 +274,9 @@ kbd { padding: 1px 5px; border: 1px solid #414752; border-radius: 3px; backgroun
 .astro-overlay-workspace.spectral > div { overflow: hidden; }
 .astro-overlay-workspace.targets > div { overflow-y: auto; }
 
-.astro-terminal { flex: 0 0 auto; background: #1c1f25; border-top: 1px solid #353b45; }
-.astro-terminal.open { height: 142px; }
-.astro-terminal.closed { height: 27px; }
+.astro-terminal { flex: 0 0 auto; background: #070b14; border-top: 1px solid #1e293b; }
+.astro-terminal.open { min-height: 200px; max-height: 480px; }
+.astro-terminal.closed { height: 28px !important; }
 .astro-terminal-tabs { height: 28px; display: flex; align-items: stretch; gap: 14px; padding: 0 10px; border-bottom: 1px solid #30343d; }
 .astro-terminal-tabs > button:not(.astro-mini-icon) { position: relative; border: 0; background: transparent; color: #858f9e; font: 9px var(--font-geist-mono), monospace; }
 .astro-terminal-tabs > button.active { color: #d8dee7; }
@@ -301,7 +318,11 @@ kbd { padding: 1px 5px; border: 1px solid #414752; border-radius: 3px; backgroun
   .astro-titlebar { gap: 5px; padding: 0 7px; }
   .astro-brand { min-width: 0; }
   .astro-brand-name { font-size: 11px; }
-  .astro-project-switch, .astro-title-divider, .astro-demo-pill, .astro-command-search span, .astro-title-actions { display: none; }
+  .astro-project-switch, .astro-title-divider, .astro-demo-pill, .astro-command-search span { display: none; }
+  .astro-title-actions { min-width: 0; gap: 6px; }
+  .astro-status-trigger { padding: 0 7px; height: 24px; font-size: 10px; }
+  .astro-status-label { font-size: 10px; }
+  .astro-status-popover { right: -6px; width: min(320px, calc(100vw - 16px)); }
   .astro-command-search { width: 35px; justify-content: center; margin-left: auto; }
   .astro-command-search kbd { display: none; }
   .astro-activity-rail { width: 39px; flex-basis: 39px; }
@@ -315,7 +336,7 @@ kbd { padding: 1px 5px; border: 1px solid #414752; border-radius: 3px; backgroun
   .astro-canvas-bottom-left { width: 210px; transform: scale(.85); transform-origin: bottom left; }
   .astro-statusbar > div { gap: 7px; }
   .astro-statusbar > div:last-child span:nth-child(-n+2) { display: none; }
-  .astro-terminal.open { height: 105px; }
+  .astro-terminal.open { min-height: 220px; }
 }
 @media (max-width: 520px) {
   .astro-explorer-sidebar { display: none; }

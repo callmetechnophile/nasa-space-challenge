@@ -23,14 +23,21 @@ IRSA_TAP_SYNC_URL = "https://irsa.ipac.caltech.edu/TAP/sync"
 IRSA_TAP_ASYNC_URL = "https://irsa.ipac.caltech.edu/TAP/async"
 IRSA_BASE_URL = "https://irsa.ipac.caltech.edu/"
 
-# 7-State Discovery Taxonomy
+# Canonical Archive & Temporal State Machine (11 Distinct States)
+STATE_NOT_QUERIED = "NOT_QUERIED"
+STATE_QUERYING = "QUERYING"
+STATE_ARCHIVE_QUERY_SUCCESS_WITH_RESULTS = "ARCHIVE_QUERY_SUCCESS_WITH_RESULTS"
+STATE_ARCHIVE_QUERY_SUCCESS_NO_RESULTS = "ARCHIVE_QUERY_SUCCESS_NO_RESULTS"
 STATE_ARCHIVE_QUERY_FAILED = "ARCHIVE_QUERY_FAILED"
 STATE_ARCHIVE_QUERY_TIMEOUT = "ARCHIVE_QUERY_TIMEOUT"
-STATE_ARCHIVE_QUERY_SUCCESS_NO_RESULTS = "ARCHIVE_QUERY_SUCCESS_NO_RESULTS"
-STATE_NO_SPATIAL_COVERAGE = "NO_SPATIAL_COVERAGE"
+STATE_ARCHIVE_QUERY_RATE_LIMITED = "ARCHIVE_QUERY_RATE_LIMITED"
+STATE_ARCHIVE_SERVICE_UNAVAILABLE = "ARCHIVE_SERVICE_UNAVAILABLE"
+STATE_UNVERIFIED = "UNVERIFIED"
 STATE_INSUFFICIENT_TEMPORAL_COVERAGE = "INSUFFICIENT_TEMPORAL_COVERAGE"
 STATE_SUFFICIENT_TEMPORAL_COVERAGE = "SUFFICIENT_TEMPORAL_COVERAGE"
-STATE_UNVERIFIED = "UNVERIFIED"
+
+# Backward compatibility alias
+STATE_NO_SPATIAL_COVERAGE = "ARCHIVE_QUERY_SUCCESS_NO_RESULTS" 
 
 
 def construct_spherex_tap_query(
@@ -146,13 +153,27 @@ class SpherexTapAdapter:
                     attempt_meta["duration_ms"] = duration_ms
 
                     if resp.status_code == 200:
-                        records = self._parse_votable_records(resp.content, ra_deg, dec_deg)
-                        attempts_log.append(attempt_meta)
+                        records, parse_err = self._parse_votable_records(resp.content, ra_deg, dec_deg)
+                        if parse_err:
+                            attempt_meta["error"] = f"Malformed VOTable: {parse_err}"
+                            last_error = attempt_meta["error"]
+                            attempts_log.append(attempt_meta)
+                            return {
+                                "status": "error",
+                                "http_status": 200,
+                                "classification": STATE_ARCHIVE_QUERY_FAILED,
+                                "query_sql": query_sql,
+                                "records_count": 0,
+                                "records": [],
+                                "attempts": attempts_log,
+                                "error": last_error,
+                            }
 
+                        attempts_log.append(attempt_meta)
                         if len(records) == 0:
                             classification = STATE_ARCHIVE_QUERY_SUCCESS_NO_RESULTS
                         else:
-                            classification = "TAP_QUERY_SUCCESS"
+                            classification = STATE_ARCHIVE_QUERY_SUCCESS_WITH_RESULTS
 
                         return {
                             "status": "success",
@@ -213,7 +234,7 @@ class SpherexTapAdapter:
         votable_bytes: bytes,
         target_ra: float,
         target_dec: float,
-    ) -> List[Dict[str, Any]]:
+    ) -> Tuple[List[Dict[str, Any]], Optional[str]]:
         """Parse VOTable XML from TAP service into structured observation records."""
         records: List[Dict[str, Any]] = []
         try:
@@ -278,5 +299,6 @@ class SpherexTapAdapter:
 
         except Exception as exc:
             logger.warning("Error parsing TAP VOTable: %s", exc)
+            return [], str(exc)
 
-        return records
+        return records, None

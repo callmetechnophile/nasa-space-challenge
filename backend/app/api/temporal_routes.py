@@ -25,6 +25,8 @@ async def discover_time_series(
     fov: float = Query(0.5, ge=0.01, le=10.0, description="Field of View in degrees"),
     release: str = Query("all", description="Target release: dr1, qr3, both, or all"),
     detector: Optional[str] = Query(None, description="Optional detector filter: SPHEREx-D1 to D6"),
+    use_cache: bool = Query(True, description="Whether to serve from local query cache"),
+    force_refresh: bool = Query(False, description="Whether to force fresh archive query"),
 ):
     """Milestone 6: Discover chronological multi-epoch observations across DR1 and QR3 with WCS validation."""
     try:
@@ -34,6 +36,8 @@ async def discover_time_series(
             fov_deg=fov,
             release=release,
             detector=detector,
+            use_cache=use_cache,
+            force_refresh=force_refresh,
         )
         return res
     except Exception as e:
@@ -62,13 +66,29 @@ async def get_observations():
 @router.post("/compare")
 async def compare_epochs(request: TemporalCompareRequest):
     """Execute complete scientific temporal comparison and difference imaging between two epochs."""
-    p1 = request.file1 if os.path.isabs(request.file1) else os.path.join(DATA_DIR, request.file1)
-    p2 = request.file2 if os.path.isabs(request.file2) else os.path.join(DATA_DIR, request.file2)
+    p1 = service.resolve_or_fetch_observation_file(request.file1)
+    if not p1:
+        raise HTTPException(
+            status_code=404,
+            detail={
+                "message": f"Reference observation file not found or could not be retrieved from storage or archive: {request.file1}",
+                "filename": request.file1,
+                "stage": "FILE_INGESTION",
+                "category": "MISSING_INPUT_FILE",
+            },
+        )
 
-    if not os.path.exists(p1):
-        raise HTTPException(status_code=404, detail=f"Observation 1 file not found: {request.file1}")
-    if not os.path.exists(p2):
-        raise HTTPException(status_code=404, detail=f"Observation 2 file not found: {request.file2}")
+    p2 = service.resolve_or_fetch_observation_file(request.file2)
+    if not p2:
+        raise HTTPException(
+            status_code=404,
+            detail={
+                "message": f"Comparison observation file not found or could not be retrieved from storage or archive: {request.file2}",
+                "filename": request.file2,
+                "stage": "FILE_INGESTION",
+                "category": "MISSING_INPUT_FILE",
+            },
+        )
 
     try:
         result = service.run_difference_pipeline(
@@ -80,8 +100,24 @@ async def compare_epochs(request: TemporalCompareRequest):
             subtract_background=request.subtract_background,
         )
         return result
+    except ValueError as ve:
+        raise HTTPException(
+            status_code=422,
+            detail={
+                "message": f"Scientific validation failure: {str(ve)}",
+                "stage": "SCIENTIFIC_VALIDATION",
+                "category": "SCIENTIFIC_INCOMPATIBILITY",
+            },
+        )
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error running temporal comparison: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "message": f"Error running temporal comparison: {str(e)}",
+                "stage": "PIPELINE_EXECUTION",
+                "category": "INTERNAL_PROCESSING_ERROR",
+            },
+        )
 
 
 @router.get("/benchmark-pairs")

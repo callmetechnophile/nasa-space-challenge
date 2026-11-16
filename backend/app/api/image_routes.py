@@ -15,6 +15,7 @@ from app.astronomy.wcs_processor import WcsMetadata, validate_round_trip
 from app.astronomy.image_renderer import render_to_data_uri, DisplayStretch
 from app.astronomy.image_footprint import generate_spherical_mesh, SphericalMeshGeometry
 from app.astronomy.sample_data import SAMPLE_FIXTURES, get_sample_fits
+from app.models.provenance import ProvenanceState
 
 router = APIRouter(prefix="/images", tags=["astronomical-images"])
 
@@ -26,6 +27,7 @@ class SampleImageInfo(BaseModel):
     id: str
     title: str
     provenance: str
+    provenance_state: str = "SYNTHETIC_DEMO"
     ra: float
     dec: float
     width: int
@@ -39,6 +41,7 @@ class ImageLayerPayload(BaseModel):
     layer_id: str
     title: str
     provenance: str
+    provenance_state: str = "SYNTHETIC_DEMO"
     metadata: FitsMetadata
     mesh: SphericalMeshGeometry
     texture_data_uri: str
@@ -61,7 +64,8 @@ def list_sample_images():
         SampleImageInfo(
             id=item["id"],
             title=item["title"],
-            provenance=item["provenance"],
+            provenance="SYNTHETIC_DEMO (WCS-CALIBRATED)",
+            provenance_state=ProvenanceState.SYNTHETIC_DEMO.value,
             ra=item["ra"],
             dec=item["dec"],
             width=item["width"],
@@ -92,7 +96,6 @@ def load_sample_image(
     product = get_sample_fits(sample_id)
     width, height = product.metadata.dimensions
 
-    # Cache for fast re-stretching
     IMAGE_CACHE[sample_id] = product
 
     # 1. Generate spherical mesh geometry
@@ -115,7 +118,8 @@ def load_sample_image(
     return ImageLayerPayload(
         layer_id=sample_id,
         title=product.metadata.target_object or f"Sample {sample_id}",
-        provenance="SYNTHETIC DEMONSTRATION DATA (WCS-CALIBRATED)",
+        provenance="SYNTHETIC_DEMO (WCS-CALIBRATED TEST FIXTURE)",
+        provenance_state=ProvenanceState.SYNTHETIC_DEMO.value,
         metadata=product.metadata,
         mesh=mesh,
         texture_data_uri=texture_uri,
@@ -182,10 +186,19 @@ async def process_fits_upload(
         nan_mask=product.nan_mask,
     )
 
+    # Check header for synthetic flag
+    is_synth = False
+    if "PROVENAN" in product.header and "SYNTHETIC" in str(product.header.get("PROVENAN", "")).upper():
+        is_synth = True
+
+    prov_label = "SYNTHETIC_DEMO (UPLOADED FIXTURE)" if is_synth else "REAL_UNVERIFIED (USER UPLOADED FITS)"
+    prov_state = ProvenanceState.SYNTHETIC_DEMO.value if is_synth else ProvenanceState.REAL_UNVERIFIED.value
+
     return ImageLayerPayload(
         layer_id=layer_id,
         title=product.metadata.target_object or file.filename,
-        provenance="USER UPLOADED FITS PRODUCT",
+        provenance=prov_label,
+        provenance_state=prov_state,
         metadata=product.metadata,
         mesh=mesh,
         texture_data_uri=texture_uri,
@@ -200,7 +213,6 @@ def update_display_stretch(request: StretchUpdateRequest):
     """Re-render the display stretch texture for a loaded image layer without recomputing mesh geometry."""
     product = IMAGE_CACHE.get(request.layer_id)
     if not product:
-        # Fall back to regenerating if it is a built-in sample
         if request.layer_id in SAMPLE_FIXTURES:
             product = get_sample_fits(request.layer_id)
             IMAGE_CACHE[request.layer_id] = product
@@ -224,26 +236,4 @@ def update_display_stretch(request: StretchUpdateRequest):
         "stretch": request.stretch,
         "brightness": request.brightness,
         "contrast": request.contrast,
-    }
-
-
-@router.get("/validate-wcs/{sample_id}")
-def validate_wcs_transformation(sample_id: str):
-    """Verify numerical round-trip accuracy for a sample image's WCS."""
-    if sample_id not in SAMPLE_FIXTURES:
-        raise HTTPException(status_code=404, detail="Sample not found")
-
-    product = get_sample_fits(sample_id)
-    width, height = product.metadata.dimensions
-
-    max_res, mean_res = validate_round_trip(product.wcs, width, height, grid_size=9)
-
-    return {
-        "sample_id": sample_id,
-        "wcs_valid": True,
-        "projection": product.metadata.wcs.projection_type,
-        "center_radec": product.metadata.wcs.center_radec,
-        "max_residual_pixels": max_res,
-        "mean_residual_pixels": mean_res,
-        "accuracy_status": "EXCELLENT" if max_res < 1e-4 else "ACCEPTABLE",
     }

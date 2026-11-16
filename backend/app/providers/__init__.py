@@ -10,20 +10,23 @@ _simulated_provider = SimulatedDataProvider()
 _nasa_provider = NASADataConnector()
 
 
-def get_data_provider(mode: str = "auto") -> BaseDataProvider:
+def get_data_provider(mode: str = "curated") -> BaseDataProvider:
     """Return requested data provider instance:
-    - 'curated': Verified NASA sample data (Barnard's Star, WISE 0855, etc.)
-    - 'simulated': Explicit demonstration/synthetic simulator
-    - 'nasa': Live NASA IRSA connector with curated fallback
-    - 'auto': Automatically select curated if in target vicinity, else simulated
+    - 'curated': Curated benchmark targets with real catalog coordinates and demonstration multi-epoch models
+    - 'simulated': Explicit demonstration/synthetic simulator for arbitrary coordinates
+    - 'nasa': Live NASA IRSA & authentic Level-2 product connector (anti-fabrication enforced)
+    - 'production': Strictly authentic scientific provider without silent synthetic fallbacks
+    - 'auto': Selects curated for benchmarks, or nasa for general archive access
     """
     mode_lower = mode.lower()
-    if mode_lower == "curated":
-        return _curated_provider
+    if mode_lower in ("nasa", "production"):
+        return _nasa_provider
     elif mode_lower == "simulated":
         return _simulated_provider
-    elif mode_lower == "nasa":
-        return _nasa_provider
+    elif mode_lower == "curated":
+        return _curated_provider
+    elif mode_lower == "auto":
+        return _curated_provider
     return _curated_provider
 
 

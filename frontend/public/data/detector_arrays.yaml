@@ -1,0 +1,91 @@
+mission: NASA SPHEREx
+focal_plane:
+  description: Six 2048 x 2048 Teledyne H2RG HgCdTe detector arrays with wedged Linear
+    Variable Filters (LVF)
+  pixel_pitch_um: 18.0
+  pixel_scale_arcsec: 6.2
+  field_of_view_deg:
+  - 3.5
+  - 3.5
+  active_pixels:
+  - 2040
+  - 2040
+arrays:
+- array_index: 1
+  detector_id: D1
+  band_range:
+  - 1
+  - 17
+  channel_count: 17
+  wavelength_min_um: 0.75
+  wavelength_max_um: 1.11
+  detector_material: H2RG HgCdTe (2.5 um cutoff)
+  nominal_resolving_power: 41.0
+  spectral_regime: Short-Wavelength Infrared (SWIR)
+  astrophysical_targets: Paschen series (Pa-gamma, Pa-delta), CN, Na I doublet, stellar
+    photospheres, continuum
+- array_index: 2
+  detector_id: D2
+  band_range:
+  - 18
+  - 34
+  channel_count: 17
+  wavelength_min_um: 1.11
+  wavelength_max_um: 1.64
+  detector_material: H2RG HgCdTe (2.5 um cutoff)
+  nominal_resolving_power: 41.0
+  spectral_regime: Near-Infrared (J/H-band)
+  astrophysical_targets: J/H-band continuum, FeH molecular absorption, H2O vapor,
+    Paschen beta
+- array_index: 3
+  detector_id: D3
+  band_range:
+  - 35
+  - 51
+  channel_count: 17
+  wavelength_min_um: 1.64
+  wavelength_max_um: 2.42
+  detector_material: H2RG HgCdTe (2.5 um cutoff)
+  nominal_resolving_power: 41.0
+  spectral_regime: Near-Infrared (H/K-band)
+  astrophysical_targets: H/K-band continuum, CO first overtone (2.3 um), H2 1-0 S(1)
+    (2.12 um), water ice/vapor
+- array_index: 4
+  detector_id: D4
+  band_range:
+  - 52
+  - 68
+  channel_count: 17
+  wavelength_min_um: 2.42
+  wavelength_max_um: 3.82
+  detector_material: H2RG HgCdTe (5.3 um cutoff)
+  nominal_resolving_power: 35.0
+  spectral_regime: Mid-Wavelength Infrared (MWIR)
+  astrophysical_targets: H2O ice absorption (3.05 um), PAH emission (3.3 um), aliphatic
+    C-H, CH4 methane
+- array_index: 5
+  detector_id: D5
+  band_range:
+  - 69
+  - 85
+  channel_count: 17
+  wavelength_min_um: 3.82
+  wavelength_max_um: 4.42
+  detector_material: H2RG HgCdTe (5.3 um cutoff)
+  nominal_resolving_power: 110.0
+  spectral_regime: High-Resolution Mid-Infrared
+  astrophysical_targets: High-resolution CO2 ice band (4.27 um), 13CO2 ice (4.38 um),
+    SO2 (4.07 um), stellar photospheres
+- array_index: 6
+  detector_id: D6
+  band_range:
+  - 86
+  - 102
+  channel_count: 17
+  wavelength_min_um: 4.42
+  wavelength_max_um: 5.0
+  detector_material: H2RG HgCdTe (5.3 um cutoff)
+  nominal_resolving_power: 130.0
+  spectral_regime: High-Resolution Mid-Infrared
+  astrophysical_targets: High-resolution CO fundamental gas/ice (4.67 um), XCN (4.62
+    um), OCS (4.9 um), 13CO fundamental

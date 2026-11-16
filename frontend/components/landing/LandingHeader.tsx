@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Atom, ArrowRight, Menu, X, ChevronDown } from "lucide-react";
+import { ArrowRight, Menu, X, ChevronDown } from "lucide-react";
+import { SkyTraceBrandMark } from "@/components/layout/SkyTraceBrandMark";
 import { TelescopeIcon, PlanetIcon, SpectralIcon, CoordinateIcon } from "@/components/visuals/3d-icons";
 
 export function LandingHeader() {
@@ -38,7 +39,7 @@ export function LandingHeader() {
         {/* Brand identity */}
         <Link href="/" className="flex items-center gap-3 group">
           <div className="w-8 h-8 rounded-lg bg-cyan-950/80 border border-cyan-500/30 flex items-center justify-center text-cyan-400 group-hover:border-cyan-400/60 transition-colors">
-            <Atom className="w-5 h-5" />
+            <SkyTraceBrandMark size={24} />
           </div>
           <div className="flex flex-col">
             <span className="font-corpta text-2xl tracking-wider text-slate-100 group-hover:text-cyan-300 transition-colors">

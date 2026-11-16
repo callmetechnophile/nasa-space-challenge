@@ -1,0 +1,171 @@
+{
+  "synthetic": {
+    "backend_count": 44,
+    "frontend_count": 10,
+    "backend_samples": [
+      "backend/app/api/image_processing.py:11:    create_synthetic_astronomical_cutout,",
+      "backend/app/api/image_processing.py:85:    data, wcs, header = create_synthetic_astronomical_cutout(",
+      "backend/app/api/image_processing.py:121:    data, wcs, header = create_synthetic_astronomical_cutout(",
+      "backend/app/api/image_processing.py:170:    img1, _, _ = create_synthetic_astronomical_cutout(",
+      "backend/app/api/image_processing.py:182:    img2, _, _ = create_synthetic_astronomical_cutout("
+    ],
+    "frontend_samples": [
+      "frontend/app/planet-x/evidence/page.tsx:94:    observationalMethod: \"Rigorous synthetic survey simulator of detection biases\",",
+      "frontend/components/celestial/StarField.tsx:16: * SYNTHETIC DEMONSTRATION DATA.",
+      "frontend/components/controls/ImageLayerControls.tsx:273:                              Synthetic Test Fixture",
+      "frontend/components/layout/StatusPanel.tsx:15: * Reports active rendering engine, synthetic data provenance,",
+      "frontend/components/layout/StatusPanel.tsx:86:        <span>Data Source: Synthetic demonstration data (Procedural ICRS)</span>"
+    ]
+  },
+  "procedural": {
+    "backend_count": 0,
+    "frontend_count": 6,
+    "backend_samples": [],
+    "frontend_samples": [
+      "frontend/components/celestial/CelestialSphere.tsx:31: * Renders an interactive WebGL celestial coordinate sphere with procedural stars,",
+      "frontend/components/celestial/CelestialSphere.tsx:97:          {/* Procedural Demonstration Star Field */}",
+      "frontend/components/celestial/StarField.tsx:13: * Procedural Star Field for SPHEREx Celestial Explorer (Milestone 1).",
+      "frontend/components/celestial/StarField.tsx:17: * Generates 4,500 procedural stars distributed across the unit celestial sphere",
+      "frontend/components/layout/StatusPanel.tsx:86:        <span>Data Source: Synthetic demonstration data (Procedural ICRS)</span>"
+    ]
+  },
+  "mock": {
+    "backend_count": 0,
+    "frontend_count": 6,
+    "backend_samples": [],
+    "frontend_samples": [
+      "frontend/components/landing/WorkspaceShowcase.tsx:48:        {/* Mock IDE Titlebar */}",
+      "frontend/components/landing/WorkspaceShowcase.tsx:67:        {/* Mock IDE Tabstrip */}",
+      "frontend/components/landing/WorkspaceShowcase.tsx:87:        {/* Mock IDE Body Grid */}",
+      "frontend/components/landing/WorkspaceShowcase.tsx:89:          {/* Mock Sidebar */}",
+      "frontend/components/landing/WorkspaceShowcase.tsx:113:          {/* Main Visual Viewport Mock */}"
+    ]
+  },
+  "placeholder": {
+    "backend_count": 0,
+    "frontend_count": 13,
+    "backend_samples": [],
+    "frontend_samples": [
+      "frontend/components/controls/CoordinateSearchPanel.tsx:264:                  placeholder={",
+      "frontend/components/controls/CoordinateSearchPanel.tsx:269:                  } rounded-lg text-xs font-mono focus:outline-none focus:border-cyan-400 transition-colors placeholder:text-slate-600`}",
+      "frontend/components/controls/CoordinateSearchPanel.tsx:293:                  placeholder={",
+      "frontend/components/controls/CoordinateSearchPanel.tsx:298:                  } rounded-lg text-xs font-mono focus:outline-none focus:border-cyan-400 transition-colors placeholder:text-slate-600`}",
+      "frontend/components/controls/FloatingSearchHud.tsx:91:                placeholder=\"08h 55m 10.83s\""
+    ]
+  },
+  "fake": {
+    "backend_count": 0,
+    "frontend_count": 0,
+    "backend_samples": [],
+    "frontend_samples": []
+  },
+  "random": {
+    "backend_count": 13,
+    "frontend_count": 12,
+    "backend_samples": [
+      "backend/app/astronomy/m5_scientific_audit.py:33:    rng = np.random.default_rng(seed)",
+      "backend/app/astronomy/m5_scientific_audit.py:139:    rng = np.random.default_rng(seed)",
+      "backend/app/astronomy/sample_data.py:34:    rng = np.random.default_rng(seed)",
+      "backend/app/astronomy/sample_data.py:58:    # 4. Add random field stars with various magnitudes",
+      "backend/app/astronomy/test_fixtures.py:25:    rng = np.random.default_rng(seed)"
+    ],
+    "frontend_samples": [
+      "frontend/app/planet-x/evidence/page.tsx:96:    result: \"Demonstrated that OSSOS discoveries are fully consistent with an isotropic, random uniform distribution once directional selection bias is modeled.\",",
+      "frontend/app/planet-x/page.tsx:65:                The modern <strong>Planet Nine hypothesis</strong>, proposed in 2016 by Konstantin Batygin and Michael Brown at Caltech, is fundamentally different. It is not based on planetary positions, but on the strange, non-random clustering of orbits observed among extreme trans-Neptunian objects (eTNOs) orbiting hundreds of astronomical units beyond Neptune. Its existence remains purely hypothetical and unconfirmed by direct observation.",
+      "frontend/app/planet-x/page.tsx:105:                  Extreme trans-Neptunian objects have semi-major axes <MathInline math=\"a > 150\\,\\mathrm{AU}\" /> and perihelia well beyond Neptune\u00e2\u20ac\u2122s gravitational reach (<MathInline math=\"q > 30\\,\\mathrm{AU}\" />). If distributed randomly, their orbits should point in all directions evenly.",
+      "frontend/app/science/page.tsx:101:        The statistical significance of an astronomical source measures whether a flux peak is an authentic physical signal or a random noise fluctuation. A standard <MathInline math=\"5\\sigma\" /> threshold corresponds to a false-positive probability of <MathInline math=\"3 \\\\times 10^{-7}\" />.",
+      "frontend/components/landing/HeroStarfield.tsx:32:      x: Math.random() * width,"
+    ]
+  },
+  "fallback": {
+    "backend_count": 51,
+    "frontend_count": 16,
+    "backend_samples": [
+      "backend/app/api/image_processing.py:49:    # Fallback to WISE 0855",
+      "backend/app/api/spherex_routes.py:81:    allow_fallback: bool = Query(True, description=\"Fallback to QR2 if QR3 has no matches\"),",
+      "backend/app/api/spherex_routes.py:89:        allow_fallback=allow_fallback,",
+      "backend/app/astronomy/coordinates.py:54:    - 133.7951 (decimal fallback)",
+      "backend/app/astronomy/coordinates.py:89:    - -7.2451 (decimal fallback)"
+    ],
+    "frontend_samples": [
+      "frontend/app/globals.css:32:  --font-corpta-fallback: 'Corpta', sans-serif;",
+      "frontend/app/globals.css:33:  --font-aeruno-fallback: 'Aeruno', sans-serif;",
+      "frontend/app/globals.css:47:  --font-corpta: var(--font-corpta), var(--font-corpta-fallback);",
+      "frontend/app/globals.css:48:  --font-aeruno: var(--font-aeruno), var(--font-aeruno-fallback);",
+      "frontend/components/celestial/CelestialSphere.tsx:91:        <Suspense fallback={null}>"
+    ]
+  },
+  "generate_stars": {
+    "backend_count": 0,
+    "frontend_count": 0,
+    "backend_samples": [],
+    "frontend_samples": []
+  },
+  "demo": {
+    "backend_count": 29,
+    "frontend_count": 20,
+    "backend_samples": [
+      "backend/app/api/image_routes.py:3:display stretching, and sample demonstration fixtures.",
+      "backend/app/api/image_routes.py:59:    \"\"\"List available pre-configured demonstration FITS fields.\"\"\"",
+      "backend/app/api/image_routes.py:118:        provenance=\"SYNTHETIC DEMONSTRATION DATA (WCS-CALIBRATED)\",",
+      "backend/app/astronomy/sample_data.py:2:Generates verified, calibrated demonstration FITS image products with Astropy WCS.",
+      "backend/app/astronomy/sample_data.py:3:Strictly labeled as SYNTHETIC DEMONSTRATION DATA (not actual SPHEREx flight data)."
+    ],
+    "frontend_samples": [
+      "frontend/app/globals.css:187:.astro-demo-pill { display: flex; gap: 6px; align-items: center; color: #d8b77b; font: 9px var(--font-geist-mono), monospace; letter-spacing: .05em; }",
+      "frontend/app/globals.css:188:.astro-demo-pill span, .astro-status-demo i { width: 6px; height: 6px; border-radius: 50%; background: #d2a65f; }",
+      "frontend/app/globals.css:290:.astro-status-demo { color: #f1d9a6; }",
+      "frontend/app/globals.css:291:.astro-status-demo i { display: inline-block; width: 5px; height: 5px; }",
+      "frontend/app/globals.css:304:  .astro-project-switch, .astro-title-divider, .astro-demo-pill, .astro-command-search span, .astro-title-actions { display: none; }"
+    ]
+  },
+  "fixture": {
+    "backend_count": 39,
+    "frontend_count": 6,
+    "backend_samples": [
+      "backend/app/api/image_routes.py:3:display stretching, and sample demonstration fixtures.",
+      "backend/app/api/image_routes.py:17:from app.astronomy.sample_data import SAMPLE_FIXTURES, get_sample_fits",
+      "backend/app/api/image_routes.py:73:        for item in SAMPLE_FIXTURES.values()",
+      "backend/app/api/image_routes.py:86:    if sample_id not in SAMPLE_FIXTURES:",
+      "backend/app/api/image_routes.py:89:            detail=f\"Sample '{sample_id}' not found. Available: {list(SAMPLE_FIXTURES.keys())}\""
+    ],
+    "frontend_samples": [
+      "frontend/components/controls/ImageLayerControls.tsx:273:                              Synthetic Test Fixture",
+      "frontend/components/temporal/TemporalControlPanel.tsx:139:      } else if (selectedPairId === \"SYNTH_FIXTURES\") {",
+      "frontend/components/temporal/TemporalControlPanel.tsx:140:        file1 = \"fixtures_m5/m5_synthetic_epoch1.fits\";",
+      "frontend/components/temporal/TemporalControlPanel.tsx:141:        file2 = \"fixtures_m5/m5_synthetic_epoch2.fits\";",
+      "frontend/components/temporal/TemporalControlPanel.tsx:381:                <option value=\"SYNTH_FIXTURES\">"
+    ]
+  },
+  "hardcode": {
+    "backend_count": 0,
+    "frontend_count": 0,
+    "backend_samples": [],
+    "frontend_samples": []
+  },
+  "dummy": {
+    "backend_count": 2,
+    "frontend_count": 0,
+    "backend_samples": [
+      "backend/app/astronomy/m5_scientific_audit.py:37:    dummy_hdu_list = None",
+      "backend/app/astronomy/m5_scientific_audit.py:39:        dummy_hdu_list or [],"
+    ],
+    "frontend_samples": []
+  },
+  "simulate": {
+    "backend_count": 21,
+    "frontend_count": 3,
+    "backend_samples": [
+      "backend/app/api/observations.py:20:    provider_mode: str = Query(\"auto\", description=\"Provider mode: 'curated', 'simulated', or 'auto'\"),",
+      "backend/app/api/observations.py:40:        sim_provider = get_data_provider(\"simulated\")",
+      "backend/app/api/spectral.py:54:        sim = get_data_provider(\"simulated\")",
+      "backend/app/models/schemas.py:43:    is_simulated: bool = Field(False, description=\"Explicit flag indicating if data is synthetic/simulated\")",
+      "backend/app/providers/__init__.py:5:from app.providers.simulated_provider import SimulatedDataProvider"
+    ],
+    "frontend_samples": [
+      "frontend/components/landing/MultiSpectralViewer.tsx:102:        {/* Interactive simulated celestial view */}",
+      "frontend/components/landing/MultiSpectralViewer.tsx:106:            <svg viewBox=\"0 0 400 400\" className=\"w-full h-full drop-shadow-xl\" role=\"img\" aria-label={`Simulated celestial view in ${current.name}`}>",
+      "frontend/components/layout/AboutMissionModal.tsx:99:              <span className=\"text-cyan-300 font-semibold\">Demonstration Simulator:</span> When uncatalogued sky coordinates are queried, data is explicitly tagged with <code className=\"text-amber-300 bg-black/40 px-1 py-0.5 rounded\">is_simulated = True</code> and provenance flags."
+    ]
+  }
+}

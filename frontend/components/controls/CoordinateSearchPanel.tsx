@@ -5,21 +5,18 @@ import {
   Search,
   Crosshair,
   RotateCcw,
-  Compass,
   AlertCircle,
   CheckCircle2,
   X,
   ChevronDown,
   ChevronUp,
-  Maximize2,
+  Info,
 } from "lucide-react";
 import {
   parseRA,
   parseDec,
   formatRaHms,
   formatDecDms,
-  raToDegrees,
-  decToDegrees,
 } from "@/utils/coordinates";
 
 export type CoordinateFormat = "decimal" | "sexagesimal";
@@ -40,6 +37,7 @@ export interface CoordinateSearchPanelProps {
   onFovChange: (fov: number) => void;
   activeTarget: TargetCoordinates | null;
   currentFov: number;
+  variant?: "dock" | "floating";
 }
 
 const FOV_PRESETS = [60, 30, 10, 5, 1, 0.5, 0.1];
@@ -51,6 +49,7 @@ export function CoordinateSearchPanel({
   onFovChange,
   activeTarget,
   currentFov,
+  variant = "dock",
 }: CoordinateSearchPanelProps) {
   const [format, setFormat] = useState<CoordinateFormat>("decimal");
   const [raInput, setRaInput] = useState<string>("0.000000");
@@ -190,6 +189,263 @@ export function CoordinateSearchPanel({
     }
   };
 
+  // Format toggle button bar
+  const formatSelector = (
+    <div className="flex items-center space-x-1 p-0.5 bg-[#02050f] rounded-lg border border-cyan-950/60">
+      <button
+        type="button"
+        onClick={() => handleFormatChange("decimal")}
+        className={`flex-1 py-1 text-center rounded text-[11px] font-medium transition-colors ${
+          format === "decimal"
+            ? "bg-cyan-950 text-cyan-300 border border-cyan-700/60 shadow-sm"
+            : "text-slate-400 hover:text-slate-200"
+        }`}
+      >
+        Decimal Degrees
+      </button>
+      <button
+        type="button"
+        onClick={() => handleFormatChange("sexagesimal")}
+        className={`flex-1 py-1 text-center rounded text-[11px] font-medium transition-colors ${
+          format === "sexagesimal"
+            ? "bg-cyan-950 text-cyan-300 border border-cyan-700/60 shadow-sm"
+            : "text-slate-400 hover:text-slate-200"
+        }`}
+      >
+        Sexagesimal (HMS/DMS)
+      </button>
+    </div>
+  );
+
+  // Core coordinate input form
+  const coordinateForm = (
+    <form onSubmit={handleExecuteSearch} className="space-y-2">
+      {/* RA Input */}
+      <div>
+        <div className="flex justify-between items-center mb-0.5">
+          <label className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">
+            Right Ascension (RA)
+          </label>
+          <span className="text-[9px] text-cyan-500 font-mono">
+            {format === "decimal" ? "[0° – 360°)" : "[00h – 24h)"}
+          </span>
+        </div>
+        <input
+          type="text"
+          value={raInput}
+          onChange={handleRaChange}
+          placeholder={format === "decimal" ? "e.g. 133.795129" : "e.g. 08h 55m 10.831s"}
+          className={`w-full px-2.5 py-1 bg-[#02040b] border ${
+            raError ? "border-rose-500/80 text-rose-200" : "border-cyan-900/50 text-cyan-100"
+          } rounded text-xs font-mono focus:outline-none focus:border-cyan-400 transition-colors placeholder:text-slate-600`}
+        />
+        {raError && (
+          <div className="flex items-center space-x-1 mt-0.5 text-[9px] text-rose-400">
+            <AlertCircle className="w-2.5 h-2.5 flex-shrink-0" />
+            <span>{raError}</span>
+          </div>
+        )}
+      </div>
+
+      {/* Dec Input */}
+      <div>
+        <div className="flex justify-between items-center mb-0.5">
+          <label className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">
+            Declination (Dec)
+          </label>
+          <span className="text-[9px] text-cyan-500 font-mono">[-90° – +90°]</span>
+        </div>
+        <input
+          type="text"
+          value={decInput}
+          onChange={handleDecChange}
+          placeholder={format === "decimal" ? "e.g. -7.245147" : "e.g. -07° 14′ 42.53″"}
+          className={`w-full px-2.5 py-1 bg-[#02040b] border ${
+            decError ? "border-rose-500/80 text-rose-200" : "border-cyan-900/50 text-cyan-100"
+          } rounded text-xs font-mono focus:outline-none focus:border-cyan-400 transition-colors placeholder:text-slate-600`}
+        />
+        {decError && (
+          <div className="flex items-center space-x-1 mt-0.5 text-[9px] text-rose-400">
+            <AlertCircle className="w-2.5 h-2.5 flex-shrink-0" />
+            <span>{decError}</span>
+          </div>
+        )}
+      </div>
+
+      {/* Action buttons: Search & Reset */}
+      <div className="flex items-center space-x-2 pt-0.5">
+        <button
+          type="submit"
+          className="flex-1 py-1 px-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-medium rounded text-xs transition-all shadow-[0_0_8px_rgba(6,182,212,0.3)] active:scale-[0.98] flex items-center justify-center space-x-1.5"
+        >
+          <Search className="w-3.5 h-3.5" />
+          <span>Search & Fly</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={onResetCamera}
+          title="Reset Camera Orientation"
+          className="p-1 px-2.5 bg-[#09152e] hover:bg-cyan-950/80 text-slate-300 hover:text-cyan-300 border border-cyan-900/50 rounded transition-colors flex items-center justify-center space-x-1 text-xs"
+        >
+          <RotateCcw className="w-3 h-3" />
+          <span>Reset</span>
+        </button>
+      </div>
+    </form>
+  );
+
+  // Optical FOV controls
+  const fovControls = (
+    <div className="space-y-1.5">
+      <div className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider flex items-center justify-between">
+        <span>Optical Field of View</span>
+        <span className="text-cyan-400 font-bold">{currentFov}°</span>
+      </div>
+
+      {/* Quick preset pills */}
+      <div className="grid grid-cols-4 gap-1">
+        {FOV_PRESETS.map((fov) => (
+          <button
+            key={fov}
+            type="button"
+            onClick={() => onFovChange(fov)}
+            className={`py-0.5 rounded text-[10px] font-mono font-medium transition-colors border ${
+              Math.abs(currentFov - fov) < 0.01
+                ? "bg-cyan-600/30 border-cyan-400 text-cyan-200 font-bold shadow-[0_0_8px_rgba(6,182,212,0.2)]"
+                : "bg-[#040817] border-cyan-950/80 text-slate-400 hover:text-cyan-300 hover:border-cyan-800/60"
+            }`}
+          >
+            {fov}°
+          </button>
+        ))}
+
+        {/* Custom FOV Mini Input */}
+        <form onSubmit={handleCustomFovSubmit} className="col-span-1">
+          <input
+            type="number"
+            step="any"
+            min="0.05"
+            max="120"
+            value={customFovInput}
+            onChange={(e) => setCustomFovInput(e.target.value)}
+            onBlur={handleCustomFovSubmit}
+            className="w-full py-0.5 text-center bg-[#040817] border border-cyan-950/80 rounded text-[10px] text-cyan-200 focus:outline-none focus:border-cyan-400"
+            title="Custom FOV (°)"
+            placeholder="FOV°"
+          />
+        </form>
+      </div>
+    </div>
+  );
+
+  // Target locked card
+  const targetCard = activeTarget ? (
+    <div className="p-2.5 bg-cyan-950/40 border border-cyan-700/50 rounded-lg space-y-1.5 h-full flex flex-col justify-between">
+      <div className="space-y-1">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-1.5 text-cyan-300 font-semibold text-[11px]">
+            <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400" />
+            <span>ACTIVE TARGET LOCKED</span>
+          </div>
+          <button
+            onClick={onClearTarget}
+            title="Clear Active Target"
+            className="text-slate-400 hover:text-rose-300 transition-colors p-0.5 rounded"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
+
+        <div className="text-[10px] text-slate-300 space-y-0.5">
+          <div>
+            <span className="text-slate-500">RA: </span>
+            <span className="font-mono text-cyan-200 font-semibold">
+              {activeTarget.ra.toFixed(6)}°
+            </span>{" "}
+            <span className="text-slate-400">({formatRaHms(activeTarget.ra)})</span>
+          </div>
+          <div>
+            <span className="text-slate-500">Dec: </span>
+            <span className="font-mono text-cyan-200 font-semibold">
+              {activeTarget.dec.toFixed(6)}°
+            </span>{" "}
+            <span className="text-slate-400">({formatDecDms(activeTarget.dec)})</span>
+          </div>
+        </div>
+      </div>
+
+      {activeTarget.sourceLabel && (
+        <div className="text-[9px] text-amber-300/90 italic pt-1 border-t border-cyan-900/40 truncate">
+          Source: {activeTarget.sourceLabel}
+        </div>
+      )}
+    </div>
+  ) : (
+    <div className="p-3 bg-[#080e1c] border border-cyan-950/60 rounded-lg text-slate-400 text-[10px] space-y-1.5 h-full flex flex-col justify-center">
+      <div className="flex items-center space-x-1.5 text-cyan-400 font-semibold text-[11px]">
+        <Info className="w-3.5 h-3.5 shrink-0" />
+        <span>Astrometric Target Guidance</span>
+      </div>
+      <p className="text-slate-300 leading-relaxed">
+        Enter coordinates in either Decimal Degrees (e.g. 133.795129, -7.245147) or standard Sexagesimal notation (e.g. 08h 55m 10.83s, -07° 14′ 42.5″).
+      </p>
+      <div className="text-[9px] text-slate-500 font-mono">
+        Coordinates are automatically synchronized to URL query parameters for reproducible deep-linking.
+      </div>
+    </div>
+  );
+
+  // RENDER DOCK VARIANT (Default)
+  if (variant === "dock") {
+    return (
+      <div className="p-3 font-mono text-xs text-slate-200 select-none">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          {/* Column 1: Format Selector & Coordinate Form */}
+          <div className="space-y-2 bg-[#080e1c] p-2.5 rounded-lg border border-cyan-950/70">
+            {formatSelector}
+            {coordinateForm}
+          </div>
+
+          {/* Column 2: Optical FOV & Quick Presets */}
+          <div className="space-y-3 bg-[#080e1c] p-2.5 rounded-lg border border-cyan-950/70 flex flex-col justify-between">
+            {fovControls}
+
+            {/* Navigation Preset: WISE 0855 */}
+            <div className="pt-2 border-t border-cyan-950/60">
+              <div className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider mb-1 flex items-center justify-between">
+                <span>Quick Verification Preset</span>
+              </div>
+              <button
+                type="button"
+                onClick={applyWise0855Preset}
+                className="w-full text-left p-1.5 bg-[#07132a] hover:bg-cyan-950/70 border border-cyan-800/40 rounded transition-colors text-[11px] group"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold text-cyan-300 group-hover:text-cyan-200">
+                    WISE 0855 Benchmark Target
+                  </span>
+                  <span className="text-[8px] text-amber-400 bg-amber-950/70 border border-amber-800/60 px-1 py-0.2 rounded font-bold">
+                    PRESET
+                  </span>
+                </div>
+                <div className="text-[9px] text-slate-400 mt-0.5">
+                  08h 55m 10.831s &bull; -07° 14′ 42.53″ (α: 133.7951°, δ: -7.2451°)
+                </div>
+              </button>
+            </div>
+          </div>
+
+          {/* Column 3: Active Target Status or Guidance */}
+          <div className="h-full">
+            {targetCard}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // RENDER FLOATING VARIANT (Original legacy fallback)
   return (
     <div className="bg-[#050b1a]/95 backdrop-blur-md border border-cyan-950/80 rounded-xl shadow-2xl font-mono text-xs text-slate-200 select-none overflow-hidden transition-all duration-300">
       {/* Header bar */}
@@ -218,120 +474,11 @@ export function CoordinateSearchPanel({
 
       {!isCollapsed && (
         <div className="p-3 space-y-3">
-          {/* Format selector */}
-          <div className="flex items-center space-x-1 p-0.5 bg-[#02050f] rounded-lg border border-cyan-950/60">
-            <button
-              type="button"
-              onClick={() => handleFormatChange("decimal")}
-              className={`flex-1 py-1 text-center rounded text-[11px] font-medium transition-colors ${
-                format === "decimal"
-                  ? "bg-cyan-950 text-cyan-300 border border-cyan-700/60 shadow-sm"
-                  : "text-slate-400 hover:text-slate-200"
-              }`}
-            >
-              Decimal Degrees
-            </button>
-            <button
-              type="button"
-              onClick={() => handleFormatChange("sexagesimal")}
-              className={`flex-1 py-1 text-center rounded text-[11px] font-medium transition-colors ${
-                format === "sexagesimal"
-                  ? "bg-cyan-950 text-cyan-300 border border-cyan-700/60 shadow-sm"
-                  : "text-slate-400 hover:text-slate-200"
-              }`}
-            >
-              Sexagesimal (HMS/DMS)
-            </button>
-          </div>
+          {formatSelector}
+          {coordinateForm}
 
-          {/* Coordinate Form */}
-          <form onSubmit={handleExecuteSearch} className="space-y-2.5">
-            {/* RA Input */}
-            <div>
-              <div className="flex justify-between items-center mb-1">
-                <label className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">
-                  Right Ascension (RA)
-                </label>
-                <span className="text-[10px] text-cyan-500">
-                  {format === "decimal" ? "[0° – 360°)" : "[00h – 24h)"}
-                </span>
-              </div>
-              <div className="relative">
-                <input
-                  type="text"
-                  value={raInput}
-                  onChange={handleRaChange}
-                  placeholder={
-                    format === "decimal" ? "e.g. 133.795129" : "e.g. 08h 55m 10.831s"
-                  }
-                  className={`w-full px-2.5 py-1.5 bg-[#02040b] border ${
-                    raError ? "border-rose-500/80 text-rose-200" : "border-cyan-900/50 text-cyan-100"
-                  } rounded-lg text-xs font-mono focus:outline-none focus:border-cyan-400 transition-colors placeholder:text-slate-600`}
-                />
-              </div>
-              {raError && (
-                <div className="flex items-center space-x-1 mt-1 text-[10px] text-rose-400">
-                  <AlertCircle className="w-3 h-3 flex-shrink-0" />
-                  <span>{raError}</span>
-                </div>
-              )}
-            </div>
-
-            {/* Dec Input */}
-            <div>
-              <div className="flex justify-between items-center mb-1">
-                <label className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">
-                  Declination (Dec)
-                </label>
-                <span className="text-[10px] text-cyan-500">[-90° – +90°]</span>
-              </div>
-              <div className="relative">
-                <input
-                  type="text"
-                  value={decInput}
-                  onChange={handleDecChange}
-                  placeholder={
-                    format === "decimal" ? "e.g. -7.245147" : "e.g. -07° 14′ 42.53″"
-                  }
-                  className={`w-full px-2.5 py-1.5 bg-[#02040b] border ${
-                    decError ? "border-rose-500/80 text-rose-200" : "border-cyan-900/50 text-cyan-100"
-                  } rounded-lg text-xs font-mono focus:outline-none focus:border-cyan-400 transition-colors placeholder:text-slate-600`}
-                />
-              </div>
-              {decError && (
-                <div className="flex items-center space-x-1 mt-1 text-[10px] text-rose-400">
-                  <AlertCircle className="w-3 h-3 flex-shrink-0" />
-                  <span>{decError}</span>
-                </div>
-              )}
-            </div>
-
-            {/* Action buttons: Search & Reset */}
-            <div className="flex items-center space-x-2 pt-1">
-              <button
-                type="submit"
-                className="flex-1 py-1.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-medium rounded-lg shadow-[0_0_12px_rgba(6,182,212,0.3)] transition-all flex items-center justify-center space-x-1.5 text-xs active:scale-[0.98]"
-              >
-                <Search className="w-3.5 h-3.5" />
-                <span>Search & Fly</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={onResetCamera}
-                title="Reset Camera Orientation"
-                className="p-1.5 bg-[#09152e] hover:bg-cyan-950/80 text-slate-300 hover:text-cyan-300 border border-cyan-900/50 rounded-lg transition-colors flex items-center justify-center"
-              >
-                <RotateCcw className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          </form>
-
-          {/* Test Targets & Preset */}
+          {/* Navigation Presets */}
           <div className="pt-2 border-t border-cyan-950/60">
-            <div className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider mb-1.5 flex items-center justify-between">
-              <span>Navigation Test Presets</span>
-            </div>
             <button
               type="button"
               onClick={applyWise0855Preset}
@@ -342,7 +489,7 @@ export function CoordinateSearchPanel({
                   WISE 0855 Test Target
                 </span>
                 <span className="text-[9px] text-amber-400 bg-amber-950/70 border border-amber-800/60 px-1 py-0.2 rounded">
-                  M2 PRESET
+                  PRESET
                 </span>
               </div>
               <div className="text-[10px] text-slate-400 mt-0.5">
@@ -351,92 +498,13 @@ export function CoordinateSearchPanel({
             </button>
           </div>
 
-          {/* Optical Field of View (FOV) Controls */}
+          {/* FOV Controls */}
           <div className="pt-2 border-t border-cyan-950/60">
-            <div className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider mb-1.5 flex items-center justify-between">
-              <span>Optical Field of View</span>
-              <span className="text-cyan-400 font-bold">{currentFov}°</span>
-            </div>
-
-            {/* Quick preset pills */}
-            <div className="grid grid-cols-4 gap-1">
-              {FOV_PRESETS.map((fov) => (
-                <button
-                  key={fov}
-                  type="button"
-                  onClick={() => onFovChange(fov)}
-                  className={`py-1 rounded text-[10px] font-mono font-medium transition-colors border ${
-                    Math.abs(currentFov - fov) < 0.01
-                      ? "bg-cyan-600/30 border-cyan-400 text-cyan-200 font-bold shadow-[0_0_8px_rgba(6,182,212,0.2)]"
-                      : "bg-[#040817] border-cyan-950/80 text-slate-400 hover:text-cyan-300 hover:border-cyan-800/60"
-                  }`}
-                >
-                  {fov}°
-                </button>
-              ))}
-
-              {/* Custom FOV Mini Input */}
-              <form onSubmit={handleCustomFovSubmit} className="col-span-1">
-                <input
-                  type="number"
-                  step="any"
-                  min="0.05"
-                  max="120"
-                  value={customFovInput}
-                  onChange={(e) => setCustomFovInput(e.target.value)}
-                  onBlur={handleCustomFovSubmit}
-                  className="w-full py-1 text-center bg-[#040817] border border-cyan-950/80 rounded text-[10px] text-cyan-200 focus:outline-none focus:border-cyan-400"
-                  title="Custom FOV (°)"
-                />
-              </form>
-            </div>
+            {fovControls}
           </div>
 
-          {/* Active Target Locked Card */}
-          {activeTarget && (
-            <div className="p-2 bg-cyan-950/40 border border-cyan-700/50 rounded-lg space-y-1.5">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-1 text-cyan-300 font-semibold text-[11px]">
-                  <CheckCircle2 className="w-3 h-3 text-cyan-400" />
-                  <span>TARGET LOCKED</span>
-                </div>
-                <button
-                  onClick={onClearTarget}
-                  title="Clear Active Target"
-                  className="text-slate-400 hover:text-rose-300 transition-colors p-0.5"
-                >
-                  <X className="w-3 h-3" />
-                </button>
-              </div>
-
-              <div className="text-[10px] text-slate-300 space-y-0.5">
-                <div>
-                  <span className="text-slate-500">RA: </span>
-                  <span className="font-mono text-cyan-200">
-                    {activeTarget.ra.toFixed(6)}°
-                  </span>{" "}
-                  <span className="text-slate-400">
-                    ({formatRaHms(activeTarget.ra)})
-                  </span>
-                </div>
-                <div>
-                  <span className="text-slate-500">Dec: </span>
-                  <span className="font-mono text-cyan-200">
-                    {activeTarget.dec.toFixed(6)}°
-                  </span>{" "}
-                  <span className="text-slate-400">
-                    ({formatDecDms(activeTarget.dec)})
-                  </span>
-                </div>
-              </div>
-
-              {activeTarget.sourceLabel && (
-                <div className="text-[9px] text-amber-300/80 italic pt-0.5 border-t border-cyan-900/40">
-                  {activeTarget.sourceLabel}
-                </div>
-              )}
-            </div>
-          )}
+          {/* Active Target Locked */}
+          {targetCard}
         </div>
       )}
     </div>

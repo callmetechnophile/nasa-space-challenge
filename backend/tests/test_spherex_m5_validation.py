@@ -277,3 +277,38 @@ class TestTemporalApiRoutes:
         data = resp.json()
         assert data["candidate_count"] >= 2
         assert data["scientific_disclaimer"] == DISCLAIMER_LABEL
+
+    def test_api_compare_missing_file_structured_error(self):
+        payload = {
+            "file1": "non_existent_epoch_1.fits",
+            "file2": "non_existent_epoch_2.fits",
+            "significance_threshold": 3.5,
+            "spectral_tolerance": 0.02,
+        }
+        resp = client.post("/api/v1/temporal/compare", json=payload)
+        assert resp.status_code == 404
+        detail = resp.json()["detail"]
+        assert isinstance(detail, dict)
+        assert detail["stage"] == "FILE_INGESTION"
+        assert detail["category"] == "MISSING_INPUT_FILE"
+        assert "non_existent_epoch_1.fits" in detail["filename"]
+
+    def test_api_compare_approved_real_pair(self):
+        f1 = "level2_2026W31_2A_0034_3D1_spx_l2b-v27-2026-224.fits"
+        f2 = "level2_2026W32_2A_0338_1D1_spx_l2b-v27-2026-223.fits"
+        payload = {
+            "file1": f1,
+            "file2": f2,
+            "significance_threshold": 3.5,
+            "spectral_tolerance": 0.02,
+            "grid_size": 256,
+        }
+        resp = client.post("/api/v1/temporal/compare", json=payload)
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["comparison_status"] == "SUCCESS"
+        assert "processing_duration_sec" in data
+        assert data["processing_duration_sec"] > 0
+        assert data["valid_pixel_count"] > 0
+        assert data["provenance"]["provenance_state"] == "REAL_VERIFIED"
+        assert data["candidate_count"] > 0

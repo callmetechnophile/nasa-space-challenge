@@ -1,10 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import Link from "next/link";
 import {
-  AudioLines, Atom, ChevronDown, Clock3, Compass, Database, Info, Search, ShieldCheck,
+  AudioLines, ChevronDown, Clock3, Compass, Database, Info, Search, ShieldCheck,
 } from "lucide-react";
 import { useSkyStore } from "@/stores/useSkyStore";
+import { StatusPanel } from "@/components/layout/StatusPanel";
+import { SkyTraceBrandMark } from "@/components/layout/SkyTraceBrandMark";
+import { CameraTelemetry } from "@/components/celestial/CameraController";
+import { ProvenanceState } from "@/types/astronomy";
 
 const navItems = [
   { id: "sky" as const, label: "Sky Explorer", shortcut: "⌘1", icon: Compass },
@@ -13,31 +18,96 @@ const navItems = [
   { id: "targets" as const, label: "Targets", shortcut: "⌘4", icon: ShieldCheck },
 ];
 
-export function TopNavigation() {
+export interface TopNavigationProps {
+  telemetry?: CameraTelemetry | null;
+  starCount?: number;
+  targetCoords?: { ra: number; dec: number } | null;
+  provenanceState?: ProvenanceState;
+}
+
+export function TopNavigation({
+  telemetry = null,
+  starCount = 4500,
+  targetCoords = null,
+  provenanceState = "SYNTHETIC_DEMO",
+}: TopNavigationProps = {}) {
   const activeTab = useSkyStore((s) => s.activeTab);
   const setActiveTab = useSkyStore((s) => s.setActiveTab);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [statusOpen, setStatusOpen] = useState(false);
 
+  const statusContainerRef = useRef<HTMLDivElement>(null);
+  const statusButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Keyboard navigation & global shortcuts
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
         event.preventDefault();
         setSearchOpen((open) => !open);
       }
-      if (event.key === "Escape") setSearchOpen(false);
+      if (event.key === "Escape") {
+        if (searchOpen) setSearchOpen(false);
+        if (statusOpen) {
+          setStatusOpen(false);
+          statusButtonRef.current?.focus();
+        }
+      }
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, []);
+  }, [searchOpen, statusOpen]);
+
+  // Click outside listener for the status popover
+  useEffect(() => {
+    if (!statusOpen) return;
+
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      if (
+        statusContainerRef.current &&
+        !statusContainerRef.current.contains(event.target as Node)
+      ) {
+        setStatusOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
+  }, [statusOpen]);
 
   return (
     <header className="astro-titlebar">
       <div className="astro-brand">
-        <div className="astro-brand-mark"><Atom size={16} /></div>
-        <span className="astro-brand-name font-corpta tracking-wider text-sm">SkyTrace</span>
+        {/* Single interactive Home link containing custom brand mark and wordmark */}
+        <Link
+          href="/"
+          className="astro-brand-link"
+          aria-label="SkyTrace Home"
+          title="SkyTrace Home"
+        >
+          <div className="astro-brand-mark">
+            <SkyTraceBrandMark size={24} />
+          </div>
+          <span className="astro-brand-name font-corpta tracking-wider text-sm">
+            SkyTrace
+          </span>
+        </Link>
+
         <span className="astro-title-divider" />
-        <button className="astro-project-switch" onClick={() => setActiveTab("sky")}>
-          skytrace <ChevronDown size={12} />
+
+        {/* Independent workspace/project selector button */}
+        <button
+          type="button"
+          className="astro-project-switch"
+          onClick={() => setActiveTab("sky")}
+          title="Switch to Sky Explorer workspace"
+          aria-label="Switch to Sky Explorer workspace"
+        >
+          <span>skytrace</span> <ChevronDown size={12} />
         </button>
       </div>
 
@@ -48,20 +118,77 @@ export function TopNavigation() {
       </button>
 
       <div className="astro-title-actions">
-        <span className="astro-demo-pill"><span /> DEMONSTRATION MODE</span>
+        {/* Clickable STATUS control and anchored Telemetry popover */}
+        <div className="astro-status-container" ref={statusContainerRef}>
+          <button
+            ref={statusButtonRef}
+            type="button"
+            onClick={() => setStatusOpen((v) => !v)}
+            className={`astro-status-trigger ${statusOpen ? "active" : ""}`}
+            aria-expanded={statusOpen}
+            aria-haspopup="dialog"
+            aria-controls="telemetry-popover"
+            aria-label="System status and telemetry"
+            title="System status & telemetry"
+          >
+            <span className="astro-status-dot" aria-hidden="true" />
+            <span className="astro-status-label">STATUS</span>
+            <ChevronDown
+              size={11}
+              className={`astro-status-chevron ${statusOpen ? "open" : ""}`}
+            />
+          </button>
+
+          {statusOpen && (
+            <div
+              id="telemetry-popover"
+              role="dialog"
+              aria-label="System Status & Telemetry"
+              className="astro-status-popover"
+            >
+              <StatusPanel
+                telemetry={telemetry}
+                starCount={starCount}
+                targetCoords={targetCoords}
+                provenanceState={provenanceState}
+                onClose={() => {
+                  setStatusOpen(false);
+                  statusButtonRef.current?.focus();
+                }}
+              />
+            </div>
+          )}
+        </div>
+
         <span className="astro-title-divider" />
-        <button className="astro-title-icon" title="Mission information" onClick={() => setActiveTab(activeTab === "about" ? "sky" : "about")}><Info size={15}/></button>
+        <button
+          className="astro-title-icon"
+          title="Mission information"
+          onClick={() => setActiveTab(activeTab === "about" ? "sky" : "about")}
+        >
+          <Info size={15} />
+        </button>
       </div>
 
       {searchOpen && (
         <div className="astro-quick-menu">
           <div className="astro-quick-title">OPEN WORKSPACE</div>
-          {navItems.map(({id,label,shortcut,icon:Icon}) => (
-            <button key={id} onClick={() => {setActiveTab(id);setSearchOpen(false);}}>
-              <Icon size={14}/><span>{label}</span><kbd>{shortcut}</kbd>
+          {navItems.map(({ id, label, shortcut, icon: Icon }) => (
+            <button
+              key={id}
+              onClick={() => {
+                setActiveTab(id);
+                setSearchOpen(false);
+              }}
+            >
+              <Icon size={14} />
+              <span>{label}</span>
+              <kbd>{shortcut}</kbd>
             </button>
           ))}
-          <div className="astro-quick-note">Coordinate search is available in the Explorer panel.</div>
+          <div className="astro-quick-note">
+            Coordinate search is available in the Explorer panel.
+          </div>
         </div>
       )}
     </header>
@@ -73,9 +200,18 @@ export function AstroWorkspaceTabs() {
   const setActiveTab = useSkyStore((s) => s.setActiveTab);
   return (
     <nav className="astro-workspace-tabs" aria-label="Scientific workspaces">
-      {navItems.map(({id,label,icon:Icon}) => (
-        <button key={id} className={activeTab === id ? "astro-workspace-tab active" : "astro-workspace-tab"} onClick={() => setActiveTab(id)}>
-          <Icon size={13}/><span>{label}</span>
+      {navItems.map(({ id, label, icon: Icon }) => (
+        <button
+          key={id}
+          className={
+            activeTab === id
+              ? "astro-workspace-tab active"
+              : "astro-workspace-tab"
+          }
+          onClick={() => setActiveTab(id)}
+        >
+          <Icon size={13} />
+          <span>{label}</span>
         </button>
       ))}
     </nav>

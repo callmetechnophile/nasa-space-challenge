@@ -1,0 +1,269 @@
+{
+  "timestamp": "2026-11-15T19:58:03.764Z",
+  "frontendUrl": "https://skytracebysplinets.vercel.app",
+  "backendUrl": "https://skytrace-backend.bravewave-3f2f8e7c.eastus.azurecontainerapps.io",
+  "browserCorsTest": {
+    "success": true,
+    "status": 200,
+    "headers": {
+      "content-length": "182416",
+      "content-type": "application/json"
+    },
+    "dataLength": 5
+  },
+  "browserCoordsTest": {
+    "success": true,
+    "status": 200,
+    "data": {
+      "ra_deg": 269.452083,
+      "dec_deg": 4.693333,
+      "ra_hms": "17h 57m 48.50s",
+      "dec_dms": "+04° 41' 36.00\"",
+      "cartesian_unit": [
+        -0.009531,
+        -0.996601,
+        0.081823
+      ],
+      "threejs_vector": [
+        -0.9966,
+        0.08182,
+        0.00953
+      ],
+      "galactic_l_deg": 31.0087,
+      "galactic_b_deg": 14.0626,
+      "ecliptic_lon_deg": 269.3808,
+      "ecliptic_lat_deg": 28.1314
+    }
+  },
+  "browserSpectralTest": {
+    "success": true,
+    "status": 200,
+    "bandsCount": 102
+  },
+  "networkTraffic": [
+    {
+      "url": "https://skytrace-backend.bravewave-3f2f8e7c.eastus.azurecontainerapps.io/api/v1/images/samples",
+      "status": 200,
+      "statusText": "",
+      "headers": {
+        "access-control-allow-origin": "https://skytracebysplinets.vercel.app",
+        "content-length": "1549",
+        "date": "Sun, 15 Nov 2026 19:57:40 GMT",
+        "content-type": "application/json",
+        "vary": "Origin",
+        "server": "uvicorn",
+        "access-control-allow-credentials": "true"
+      },
+      "bodyPreview": "[{\"id\":\"wise-0855\",\"title\":\"WISE 0855 Field (Infrared Brown Dwarf Region)\",\"provenance\":\"SYNTHETIC_DEMO (WCS-CALIBRATED)\",\"provenance_state\":\"SYNTHETIC_DEMO\",\"ra\":133.795129,\"dec\":-7.245147,\"width\":256,\"height\":256,\"pixel_scale_arcsec\":2.5,\"projection\":\"TAN\",\"description\":\"Synthetic 2.4um infrared d"
+    },
+    {
+      "url": "https://skytrace-backend.bravewave-3f2f8e7c.eastus.azurecontainerapps.io/api/v1/spectral/bands",
+      "status": 200,
+      "statusText": "",
+      "headers": {
+        "access-control-allow-origin": "https://skytracebysplinets.vercel.app",
+        "content-length": "21912",
+        "date": "Sun, 15 Nov 2026 19:57:40 GMT",
+        "content-type": "application/json",
+        "vary": "Origin",
+        "server": "uvicorn",
+        "access-control-allow-credentials": "true"
+      },
+      "bodyPreview": "[{\"channel_index\":1,\"array_index\":1,\"array_name\":\"Array 1\",\"wavelength_um\":0.7606,\"bandwidth_um\":0.01855,\"resolving_power_r\":41.0,\"key_features\":\"Paschen series, CN absorption, Na I doublet, stellar continuum (~0.76 um)\"},{\"channel_index\":2,\"array_index\":1,\"array_name\":\"Array 1\",\"wavelength_um\":0.78"
+    },
+    {
+      "url": "https://skytrace-backend.bravewave-3f2f8e7c.eastus.azurecontainerapps.io/api/v1/targets",
+      "status": 200,
+      "statusText": "",
+      "headers": {
+        "access-control-allow-origin": "https://skytracebysplinets.vercel.app",
+        "content-length": "182416",
+        "date": "Sun, 15 Nov 2026 19:57:40 GMT",
+        "content-type": "application/json",
+        "vary": "Origin",
+        "server": "uvicorn",
+        "access-control-allow-credentials": "true"
+      },
+      "bodyPreview": "[{\"id\":\"barnards-star\",\"name\":\"Barnard's Star\",\"designation\":\"GJ 699 / HIP 87937\",\"target_type\":\"High-Proper-Motion M Dwarf\",\"description\":\"Nearby red dwarf with the highest known proper motion of any star (10.3 arcsec/yr).\",\"scientific_significance\":\"Primary NASA benchmark for detecting stellar pro"
+    },
+    {
+      "url": "https://skytrace-backend.bravewave-3f2f8e7c.eastus.azurecontainerapps.io/api/v1/images/cutout?ra=133.7951&dec=-7.2451&epoch=EPOCH-PASS1-20250615&channel=50&stretch=asinh&colormap=astronomy&fov_arcmin=6",
+      "status": 200,
+      "statusText": "",
+      "headers": {
+        "x-data-provenance": "SYNTHETIC_DEMO",
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "https://skytracebysplinets.vercel.app",
+        "x-source-product": "SkyTrace_Synthetic_Cutout_Generator",
+        "content-length": "63637",
+        "date": "Sun, 15 Nov 2026 19:57:41 GMT",
+        "content-type": "image/png",
+        "vary": "Origin",
+        "server": "uvicorn",
+        "x-data-classification": "SYNTHETIC"
+      },
+      "bodyPreview": "�PNG\r\n\u001a\n\u0000\u0000\u0000\rIHDR\u0000\u0000\u0000�\u0000\u0000\u0000�\b\u0002\u0000\u0000\u0000���C\u0000\u0000�\\IDATx���ے$I�$\n�&�f�Y�syܟ�������\fw3U��<0D�\"�jfhߖ��\u0004�TgF���BX\u0000\u0006��\u001f���/\u001113��\b��\b��(��m����~����|����ϟ�?f�ݶ�m�n6�����d��x����xF\u0004�_UU�\u0019Q�b����]\u0019�?�x�����?\"b�7���~c�p\u000f��\u0011�Q��Q�UIYU�̬&��&fb��bf�\u0018���fz}����9�9�33EEDE�2�q�y��Lfaaf)\"|��$bQeUQ�̘g̉V�t��T�j��j6�q���m��$\u0012s�{"
+    },
+    {
+      "url": "https://skytrace-backend.bravewave-3f2f8e7c.eastus.azurecontainerapps.io/api/v1/images/cutout?target=wise-0855&epoch=EPOCH-PASS1-20250615&channel=50&stretch=asinh&colormap=astronomy&fov_arcmin=6",
+      "status": 200,
+      "statusText": "",
+      "headers": {
+        "x-data-provenance": "SYNTHETIC_DEMO",
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "https://skytracebysplinets.vercel.app",
+        "x-source-product": "SkyTrace_Synthetic_Cutout_Generator",
+        "content-length": "63637",
+        "date": "Sun, 15 Nov 2026 19:57:41 GMT",
+        "content-type": "image/png",
+        "vary": "Origin",
+        "server": "uvicorn",
+        "x-data-classification": "SYNTHETIC"
+      },
+      "bodyPreview": "�PNG\r\n\u001a\n\u0000\u0000\u0000\rIHDR\u0000\u0000\u0000�\u0000\u0000\u0000�\b\u0002\u0000\u0000\u0000���C\u0000\u0000�\\IDATx���ے$I�$\n�&�f�Y�syܟ�������\fw3U��<0D�\"�jfhߖ��\u0004�TgF���BX\u0000\u0006��\u001f���/\u001113��\b��\b��(��m����~����|����ϟ�?f�ݶ�m�n6�����d��x����xF\u0004�_UU�\u0019Q�b����]\u0019�?�x�����?\"b�7���~c�p\u000f��\u0011�Q��Q�UIYU�̬&��&fb��bf�\u0018���fz}����9�9�33EEDE�2�q�y��Lfaaf)\"|��$bQeUQ�̘g̉V�t��T�j��j6�q���m��$\u0012s�{"
+    },
+    {
+      "url": "https://skytrace-backend.bravewave-3f2f8e7c.eastus.azurecontainerapps.io/api/v1/targets",
+      "status": 200,
+      "statusText": "",
+      "headers": {
+        "access-control-allow-origin": "https://skytracebysplinets.vercel.app",
+        "content-length": "182416",
+        "date": "Sun, 15 Nov 2026 19:58:01 GMT",
+        "content-type": "application/json",
+        "vary": "Origin",
+        "server": "uvicorn",
+        "access-control-allow-credentials": "true"
+      },
+      "bodyPreview": "[{\"id\":\"barnards-star\",\"name\":\"Barnard's Star\",\"designation\":\"GJ 699 / HIP 87937\",\"target_type\":\"High-Proper-Motion M Dwarf\",\"description\":\"Nearby red dwarf with the highest known proper motion of any star (10.3 arcsec/yr).\",\"scientific_significance\":\"Primary NASA benchmark for detecting stellar pro"
+    },
+    {
+      "url": "https://skytrace-backend.bravewave-3f2f8e7c.eastus.azurecontainerapps.io/api/v1/coordinates/convert?ra=269.452083&dec=4.693333",
+      "status": 200,
+      "statusText": "",
+      "headers": {
+        "access-control-allow-origin": "https://skytracebysplinets.vercel.app",
+        "content-length": "292",
+        "date": "Sun, 15 Nov 2026 19:58:02 GMT",
+        "content-type": "application/json",
+        "vary": "Origin",
+        "server": "uvicorn",
+        "access-control-allow-credentials": "true"
+      },
+      "bodyPreview": "{\"ra_deg\":269.452083,\"dec_deg\":4.693333,\"ra_hms\":\"17h 57m 48.50s\",\"dec_dms\":\"+04° 41' 36.00\\\"\",\"cartesian_unit\":[-0.009531,-0.996601,0.081823],\"threejs_vector\":[-0.9966,0.08182,0.00953],\"galactic_l_deg\":31.0087,\"galactic_b_deg\":14.0626,\"ecliptic_lon_deg\":269.3808,\"ecliptic_lat_deg\":28.1314}"
+    }
+  ],
+  "backendCalls": [
+    {
+      "url": "https://skytrace-backend.bravewave-3f2f8e7c.eastus.azurecontainerapps.io/api/v1/images/samples",
+      "status": 200,
+      "statusText": "",
+      "headers": {
+        "access-control-allow-origin": "https://skytracebysplinets.vercel.app",
+        "content-length": "1549",
+        "date": "Sun, 15 Nov 2026 19:57:40 GMT",
+        "content-type": "application/json",
+        "vary": "Origin",
+        "server": "uvicorn",
+        "access-control-allow-credentials": "true"
+      },
+      "bodyPreview": "[{\"id\":\"wise-0855\",\"title\":\"WISE 0855 Field (Infrared Brown Dwarf Region)\",\"provenance\":\"SYNTHETIC_DEMO (WCS-CALIBRATED)\",\"provenance_state\":\"SYNTHETIC_DEMO\",\"ra\":133.795129,\"dec\":-7.245147,\"width\":256,\"height\":256,\"pixel_scale_arcsec\":2.5,\"projection\":\"TAN\",\"description\":\"Synthetic 2.4um infrared d"
+    },
+    {
+      "url": "https://skytrace-backend.bravewave-3f2f8e7c.eastus.azurecontainerapps.io/api/v1/spectral/bands",
+      "status": 200,
+      "statusText": "",
+      "headers": {
+        "access-control-allow-origin": "https://skytracebysplinets.vercel.app",
+        "content-length": "21912",
+        "date": "Sun, 15 Nov 2026 19:57:40 GMT",
+        "content-type": "application/json",
+        "vary": "Origin",
+        "server": "uvicorn",
+        "access-control-allow-credentials": "true"
+      },
+      "bodyPreview": "[{\"channel_index\":1,\"array_index\":1,\"array_name\":\"Array 1\",\"wavelength_um\":0.7606,\"bandwidth_um\":0.01855,\"resolving_power_r\":41.0,\"key_features\":\"Paschen series, CN absorption, Na I doublet, stellar continuum (~0.76 um)\"},{\"channel_index\":2,\"array_index\":1,\"array_name\":\"Array 1\",\"wavelength_um\":0.78"
+    },
+    {
+      "url": "https://skytrace-backend.bravewave-3f2f8e7c.eastus.azurecontainerapps.io/api/v1/targets",
+      "status": 200,
+      "statusText": "",
+      "headers": {
+        "access-control-allow-origin": "https://skytracebysplinets.vercel.app",
+        "content-length": "182416",
+        "date": "Sun, 15 Nov 2026 19:57:40 GMT",
+        "content-type": "application/json",
+        "vary": "Origin",
+        "server": "uvicorn",
+        "access-control-allow-credentials": "true"
+      },
+      "bodyPreview": "[{\"id\":\"barnards-star\",\"name\":\"Barnard's Star\",\"designation\":\"GJ 699 / HIP 87937\",\"target_type\":\"High-Proper-Motion M Dwarf\",\"description\":\"Nearby red dwarf with the highest known proper motion of any star (10.3 arcsec/yr).\",\"scientific_significance\":\"Primary NASA benchmark for detecting stellar pro"
+    },
+    {
+      "url": "https://skytrace-backend.bravewave-3f2f8e7c.eastus.azurecontainerapps.io/api/v1/images/cutout?ra=133.7951&dec=-7.2451&epoch=EPOCH-PASS1-20250615&channel=50&stretch=asinh&colormap=astronomy&fov_arcmin=6",
+      "status": 200,
+      "statusText": "",
+      "headers": {
+        "x-data-provenance": "SYNTHETIC_DEMO",
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "https://skytracebysplinets.vercel.app",
+        "x-source-product": "SkyTrace_Synthetic_Cutout_Generator",
+        "content-length": "63637",
+        "date": "Sun, 15 Nov 2026 19:57:41 GMT",
+        "content-type": "image/png",
+        "vary": "Origin",
+        "server": "uvicorn",
+        "x-data-classification": "SYNTHETIC"
+      },
+      "bodyPreview": "�PNG\r\n\u001a\n\u0000\u0000\u0000\rIHDR\u0000\u0000\u0000�\u0000\u0000\u0000�\b\u0002\u0000\u0000\u0000���C\u0000\u0000�\\IDATx���ے$I�$\n�&�f�Y�syܟ�������\fw3U��<0D�\"�jfhߖ��\u0004�TgF���BX\u0000\u0006��\u001f���/\u001113��\b��\b��(��m����~����|����ϟ�?f�ݶ�m�n6�����d��x����xF\u0004�_UU�\u0019Q�b����]\u0019�?�x�����?\"b�7���~c�p\u000f��\u0011�Q��Q�UIYU�̬&��&fb��bf�\u0018���fz}����9�9�33EEDE�2�q�y��Lfaaf)\"|��$bQeUQ�̘g̉V�t��T�j��j6�q���m��$\u0012s�{"
+    },
+    {
+      "url": "https://skytrace-backend.bravewave-3f2f8e7c.eastus.azurecontainerapps.io/api/v1/images/cutout?target=wise-0855&epoch=EPOCH-PASS1-20250615&channel=50&stretch=asinh&colormap=astronomy&fov_arcmin=6",
+      "status": 200,
+      "statusText": "",
+      "headers": {
+        "x-data-provenance": "SYNTHETIC_DEMO",
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "https://skytracebysplinets.vercel.app",
+        "x-source-product": "SkyTrace_Synthetic_Cutout_Generator",
+        "content-length": "63637",
+        "date": "Sun, 15 Nov 2026 19:57:41 GMT",
+        "content-type": "image/png",
+        "vary": "Origin",
+        "server": "uvicorn",
+        "x-data-classification": "SYNTHETIC"
+      },
+      "bodyPreview": "�PNG\r\n\u001a\n\u0000\u0000\u0000\rIHDR\u0000\u0000\u0000�\u0000\u0000\u0000�\b\u0002\u0000\u0000\u0000���C\u0000\u0000�\\IDATx���ے$I�$\n�&�f�Y�syܟ�������\fw3U��<0D�\"�jfhߖ��\u0004�TgF���BX\u0000\u0006��\u001f���/\u001113��\b��\b��(��m����~����|����ϟ�?f�ݶ�m�n6�����d��x����xF\u0004�_UU�\u0019Q�b����]\u0019�?�x�����?\"b�7���~c�p\u000f��\u0011�Q��Q�UIYU�̬&��&fb��bf�\u0018���fz}����9�9�33EEDE�2�q�y��Lfaaf)\"|��$bQeUQ�̘g̉V�t��T�j��j6�q���m��$\u0012s�{"
+    },
+    {
+      "url": "https://skytrace-backend.bravewave-3f2f8e7c.eastus.azurecontainerapps.io/api/v1/targets",
+      "status": 200,
+      "statusText": "",
+      "headers": {
+        "access-control-allow-origin": "https://skytracebysplinets.vercel.app",
+        "content-length": "182416",
+        "date": "Sun, 15 Nov 2026 19:58:01 GMT",
+        "content-type": "application/json",
+        "vary": "Origin",
+        "server": "uvicorn",
+        "access-control-allow-credentials": "true"
+      },
+      "bodyPreview": "[{\"id\":\"barnards-star\",\"name\":\"Barnard's Star\",\"designation\":\"GJ 699 / HIP 87937\",\"target_type\":\"High-Proper-Motion M Dwarf\",\"description\":\"Nearby red dwarf with the highest known proper motion of any star (10.3 arcsec/yr).\",\"scientific_significance\":\"Primary NASA benchmark for detecting stellar pro"
+    },
+    {
+      "url": "https://skytrace-backend.bravewave-3f2f8e7c.eastus.azurecontainerapps.io/api/v1/coordinates/convert?ra=269.452083&dec=4.693333",
+      "status": 200,
+      "statusText": "",
+      "headers": {
+        "access-control-allow-origin": "https://skytracebysplinets.vercel.app",
+        "content-length": "292",
+        "date": "Sun, 15 Nov 2026 19:58:02 GMT",
+        "content-type": "application/json",
+        "vary": "Origin",
+        "server": "uvicorn",
+        "access-control-allow-credentials": "true"
+      },
+      "bodyPreview": "{\"ra_deg\":269.452083,\"dec_deg\":4.693333,\"ra_hms\":\"17h 57m 48.50s\",\"dec_dms\":\"+04° 41' 36.00\\\"\",\"cartesian_unit\":[-0.009531,-0.996601,0.081823],\"threejs_vector\":[-0.9966,0.08182,0.00953],\"galactic_l_deg\":31.0087,\"galactic_b_deg\":14.0626,\"ecliptic_lon_deg\":269.3808,\"ecliptic_lat_deg\":28.1314}"
+    }
+  ]
+}

@@ -1,3 +1,27 @@
+export type ProvenanceState =
+  | "REAL_VERIFIED"
+  | "REAL_UNVERIFIED"
+  | "SYNTHETIC_DEMO"
+  | "MOCK_TEST"
+  | "ARCHIVE_ERROR"
+  | "NO_DATA";
+
+export interface ScientificDatasetProvenance {
+  provenance_state: ProvenanceState;
+  data_source: string;
+  product_or_catalogue_id: string;
+  observation_id?: string;
+  archive_release?: string;
+  pipeline_version?: string;
+  observation_timestamp?: string;
+  fits_hdu_or_table?: string;
+  sha256_checksum?: string;
+  processing_steps: string[];
+  synthetic_real_classification: "REAL" | "SYNTHETIC" | "MOCK" | "NONE";
+  validation_status: "VERIFIED" | "UNVERIFIED" | "SIMULATED" | "TEST_FIXTURE" | "ERROR" | "EMPTY";
+  scientific_notes?: string;
+}
+
 export interface CoordinateResponse {
   ra_deg: number;
   dec_deg: number;
@@ -26,6 +50,7 @@ export interface ObservationEpoch {
   quality_flags: string[];
   is_simulated: boolean;
   data_provider: string;
+  provenance?: ScientificDatasetProvenance;
 }
 
 export interface SpectralBand {
@@ -47,6 +72,8 @@ export interface SpectralMeasurement {
   flux_err_mjy: number | null;
   flux_is_available: boolean;
   key_features: string;
+  is_simulated?: boolean;
+  provenance_state?: ProvenanceState;
 }
 
 export interface TransientCandidate {
@@ -61,6 +88,7 @@ export interface TransientCandidate {
   significance_sigma: number;
   flag: string;
   quality_assessment: string;
+  is_simulated_injection?: boolean;
 }
 
 export interface DifferenceAnalysisResult {
@@ -82,6 +110,7 @@ export interface DifferenceAnalysisResult {
   candidates_found: number;
   candidates: TransientCandidate[];
   algorithm_notes: string;
+  provenance?: ScientificDatasetProvenance;
 }
 
 export interface CatalogCrossMatch {
@@ -105,8 +134,8 @@ export interface AstronomicalTargetDetail {
   target_type: string;
   description: string;
   scientific_significance: string;
-  ra_deg: number;
-  dec_deg: number;
+  ra_deg: float;
+  dec_deg: float;
   ra_hms: string;
   dec_dms: string;
   proper_motion_ra_mas_yr?: number;
@@ -119,4 +148,6 @@ export interface AstronomicalTargetDetail {
   available_epochs: ObservationEpoch[];
   spectral_profile: SpectralMeasurement[];
   catalog_crossmatches: CatalogCrossMatch[];
+  provenance?: ScientificDatasetProvenance;
 }
+type float = number;

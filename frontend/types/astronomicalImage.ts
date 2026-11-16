@@ -4,6 +4,14 @@
 
 export type DisplayStretchType = "asinh" | "log" | "linear" | "sqrt";
 
+export type ProvenanceStateType =
+  | "REAL_VERIFIED"
+  | "REAL_UNVERIFIED"
+  | "SYNTHETIC_DEMO"
+  | "MOCK_TEST"
+  | "ARCHIVE_ERROR"
+  | "NO_DATA";
+
 export interface WcsMetadata {
   wcs_valid: boolean;
   projection_type: string;
@@ -63,6 +71,7 @@ export interface SampleImageInfo {
   id: string;
   title: string;
   provenance: string;
+  provenance_state?: ProvenanceStateType;
   ra: number;
   dec: number;
   width: number;
@@ -76,6 +85,7 @@ export interface AstronomicalImageLayerData {
   layer_id: string;
   title: string;
   provenance: string;
+  provenance_state?: ProvenanceStateType;
   is_real_data?: boolean;
   observation_id?: string;
   detector?: string;

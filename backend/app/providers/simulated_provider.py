@@ -13,6 +13,7 @@ from app.models.schemas import (
     SpectralMeasurement,
     CatalogCrossMatch,
 )
+from app.models.provenance import ScientificDatasetProvenance, ProvenanceState
 from app.providers.base import BaseDataProvider
 from app.spectral.bands import SPHEREX_BANDS
 from app.astronomy.coordinates import deg_to_hms, deg_to_dms
@@ -53,10 +54,20 @@ class SimulatedDataProvider(BaseDataProvider):
         ]
 
         epochs = []
-        # Realistic background for coordinates
         base_flux = 0.25 + 0.1 * math.sin(math.radians(ra_deg)) * math.cos(math.radians(dec_deg))
 
         for ep_id, dt_str, mjd, pass_name in sim_epochs:
+            prov = ScientificDatasetProvenance(
+                provenance_state=ProvenanceState.SYNTHETIC_DEMO,
+                data_source="SkyTrace Arbitrary Sky Simulator",
+                product_or_catalogue_id=f"SIM-{ra_deg:.2f}_{dec_deg:.2f}-{ep_id}",
+                observation_id=ep_id,
+                observation_timestamp=dt_str,
+                synthetic_real_classification="SYNTHETIC",
+                validation_status="SIMULATED",
+                scientific_notes="Procedural simulation for arbitrary unobserved sky position. NOT real flight data.",
+            )
+
             epochs.append(
                 ObservationEpoch(
                     epoch_id=ep_id,
@@ -70,9 +81,10 @@ class SimulatedDataProvider(BaseDataProvider):
                     mean_flux_mjy_sr=round(max(0.05, base_flux), 4),
                     cutout_png_url=f"/api/v1/images/cutout?ra={ra_deg}&dec={dec_deg}&epoch={ep_id}&channel={channel_index}",
                     cutout_fits_url=f"/api/v1/images/fits?ra={ra_deg}&dec={dec_deg}&epoch={ep_id}&channel={channel_index}",
-                    quality_flags=["DEMONSTRATION_ONLY", "SYNTHETIC_PSF", "SIMULATED_NOISE_FLOOR"],
+                    quality_flags=["SYNTHETIC_DEMO", "SIMULATED_NOISE_FLOOR"],
                     is_simulated=True,
                     data_provider="DEMONSTRATION_MISSION_SIMULATOR",
+                    provenance=prov,
                 )
             )
         return epochs
@@ -87,7 +99,6 @@ class SimulatedDataProvider(BaseDataProvider):
         profile = []
         for band in SPHEREX_BANDS:
             wl = band.wavelength_um
-            # Generic cool diffuse background spectrum
             bg_flux = 0.15 * ((wl / 2.0) ** (-1.8)) + 0.05 * math.sin(wl * 3.0)
             err = bg_flux * 0.05
             profile.append(
@@ -100,6 +111,8 @@ class SimulatedDataProvider(BaseDataProvider):
                     flux_err_mjy=round(float(err), 4),
                     flux_is_available=True,
                     key_features=band.key_features,
+                    is_simulated=True,
+                    provenance_state=ProvenanceState.SYNTHETIC_DEMO,
                 )
             )
         return profile

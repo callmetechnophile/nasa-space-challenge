@@ -1,0 +1,209 @@
+[
+  {
+    "category": "wcs-verification-fits",
+    "container": "fits-raw",
+    "blob_name": "10_nan_pixels.fits",
+    "local_path": "data/fits\\10_nan_pixels.fits",
+    "size_bytes": 1054080,
+    "sha256": "bacd9b050f7d7266925ef30e856862ded1994b7dc30c42130c446742cf2af436",
+    "verified": true
+  },
+  {
+    "category": "wcs-verification-fits",
+    "container": "fits-raw",
+    "blob_name": "1_standard_1024_tan.fits",
+    "local_path": "data/fits\\1_standard_1024_tan.fits",
+    "size_bytes": 4199040,
+    "sha256": "958b021b87df9e9a18e4c19e03ad6107f3e12029544d491cf6177606dd46c416",
+    "verified": true
+  },
+  {
+    "category": "wcs-verification-fits",
+    "container": "fits-raw",
+    "blob_name": "2_rotated_tan.fits",
+    "local_path": "data/fits\\2_rotated_tan.fits",
+    "size_bytes": 1054080,
+    "sha256": "7326aecbeec9bad10ea84c806a0ce8c0bf49045cb275a09feba6e4f1bb976d6b",
+    "verified": true
+  },
+  {
+    "category": "wcs-verification-fits",
+    "container": "fits-raw",
+    "blob_name": "3_nonsquare.fits",
+    "local_path": "data/fits\\3_nonsquare.fits",
+    "size_bytes": 1284480,
+    "sha256": "35e568b168e7ddc92f83726b0541d6212124789ef24905b3238561a2bfd08d4d",
+    "verified": true
+  },
+  {
+    "category": "wcs-verification-fits",
+    "container": "fits-raw",
+    "blob_name": "4_negative_pixel_scale.fits",
+    "local_path": "data/fits\\4_negative_pixel_scale.fits",
+    "size_bytes": 1054080,
+    "sha256": "623b7cd86bda4dfd182d85fde1e9248181c72a2f48ca6783e726b9466d0992d6",
+    "verified": true
+  },
+  {
+    "category": "wcs-verification-fits",
+    "container": "fits-raw",
+    "blob_name": "5_cd_matrix.fits",
+    "local_path": "data/fits\\5_cd_matrix.fits",
+    "size_bytes": 1054080,
+    "sha256": "ae650adfc561fd8446876d2637495de7bfb64db4b5c9aaf5ed96e35cd3d340dd",
+    "verified": true
+  },
+  {
+    "category": "wcs-verification-fits",
+    "container": "fits-raw",
+    "blob_name": "6_pc_matrix.fits",
+    "local_path": "data/fits\\6_pc_matrix.fits",
+    "size_bytes": 1054080,
+    "sha256": "c58946f0002a946d48e3329cc7b4e6e582c828e3323ecdb0d90aa74f25e9271f",
+    "verified": true
+  },
+  {
+    "category": "wcs-verification-fits",
+    "container": "fits-raw",
+    "blob_name": "7_ra_wraparound.fits",
+    "local_path": "data/fits\\7_ra_wraparound.fits",
+    "size_bytes": 1054080,
+    "sha256": "eca8d122c7c27e82bf8922a8bdd8b5b5bf2eeaf7dfb33ffd46f4d5a2a80c1128",
+    "verified": true
+  },
+  {
+    "category": "wcs-verification-fits",
+    "container": "fits-raw",
+    "blob_name": "8_invalid_wcs.fits",
+    "local_path": "data/fits\\8_invalid_wcs.fits",
+    "size_bytes": 267840,
+    "sha256": "c8941f9e0c1fbba04661cd39e927e61e1876e793f69d3590df33fc2bf7c7d44e",
+    "verified": true
+  },
+  {
+    "category": "wcs-verification-fits",
+    "container": "fits-raw",
+    "blob_name": "9_no_wcs.fits",
+    "local_path": "data/fits\\9_no_wcs.fits",
+    "size_bytes": 267840,
+    "sha256": "161f45cc05d54d8a48051cd8d743b356a1c55b57066012feffff915e7b7438a8",
+    "verified": true
+  },
+  {
+    "category": "wcs-verification-fits",
+    "container": "fits-raw",
+    "blob_name": "equatorial-cal.fits",
+    "local_path": "data/fits\\equatorial-cal.fits",
+    "size_bytes": 198720,
+    "sha256": "b0c63d7a2bb32b32259ab1e46cabe35af6270fde7a809be652b1171d4f49a1a4",
+    "verified": true
+  },
+  {
+    "category": "wcs-verification-fits",
+    "container": "fits-raw",
+    "blob_name": "polar-demonstration.fits",
+    "local_path": "data/fits\\polar-demonstration.fits",
+    "size_bytes": 233280,
+    "sha256": "a85c3119485c14eab52e97113b3d11bb36b28cbbe41208194ca539a8feeb7fdb",
+    "verified": true
+  },
+  {
+    "category": "wcs-verification-fits",
+    "container": "fits-raw",
+    "blob_name": "ra-wraparound.fits",
+    "local_path": "data/fits\\ra-wraparound.fits",
+    "size_bytes": 267840,
+    "sha256": "dd8baef75d9992bfdaadd4b84de263025ce5043f1755ce862210d3ad6318115a",
+    "verified": true
+  },
+  {
+    "category": "wcs-verification-fits",
+    "container": "fits-raw",
+    "blob_name": "wise-0855.fits",
+    "local_path": "data/fits\\wise-0855.fits",
+    "size_bytes": 267840,
+    "sha256": "7b765bd64c0a6f9c5895a8e010de8210bc5f77e42519c428e0d3edf5c62e4f53",
+    "verified": true
+  },
+  {
+    "category": "spherex-level2-flight-fits",
+    "container": "fits-raw",
+    "blob_name": "level2_2025W44_2B_0322_4D1_spx_l2b-v20-2025-307.fits",
+    "local_path": "data/spherex\\level2_2025W44_2B_0322_4D1_spx_l2b-v20-2025-307.fits",
+    "size_bytes": 71634240,
+    "sha256": "36b330b5ed45161383aedc7e9199619c6ca1873e213a5fdc8ff027274190caf6",
+    "verified": true
+  },
+  {
+    "category": "spherex-level2-flight-fits",
+    "container": "fits-raw",
+    "blob_name": "level2_2026W31_2A_0034_3D1_spx_l2b-v27-2026-224.fits",
+    "local_path": "data/spherex\\level2_2026W31_2A_0034_3D1_spx_l2b-v27-2026-224.fits",
+    "size_bytes": 65488320,
+    "sha256": "b920109af38753669179ed249ea704f16ae7e6742ae6ab44abf20f2a29e7dac1",
+    "verified": true
+  },
+  {
+    "category": "spherex-level2-flight-fits",
+    "container": "fits-raw",
+    "blob_name": "level2_2026W32_2A_0338_1D1_spx_l2b-v27-2026-223.fits",
+    "local_path": "data/spherex\\level2_2026W32_2A_0338_1D1_spx_l2b-v27-2026-223.fits",
+    "size_bytes": 65488320,
+    "sha256": "60c423814b38c19943b7b4b15e09b7ac6e9557c078ca35a74bf13d250ccf3c3e",
+    "verified": true
+  },
+  {
+    "category": "spherex-epsf-calibrations",
+    "container": "calibrations",
+    "blob_name": "epsf_D1_spx_cal-epsf-v1-2026-191.fits",
+    "local_path": "data/spherex/calibrations\\epsf_D1_spx_cal-epsf-v1-2026-191.fits",
+    "size_bytes": 7943040,
+    "sha256": "f5eacb19eb90cb96a1684e9116b85f43f615ae5724c0aa26ac0c0ed45fa309e9",
+    "verified": true
+  },
+  {
+    "category": "spherex-epsf-calibrations",
+    "container": "calibrations",
+    "blob_name": "epsf_D2_spx_cal-epsf-v1-2026-191.fits",
+    "local_path": "data/spherex/calibrations\\epsf_D2_spx_cal-epsf-v1-2026-191.fits",
+    "size_bytes": 7943040,
+    "sha256": "7b94af0250aa7e56a9e78af34ca2c1373985926c0a0f3263218d1b0ddc94a926",
+    "verified": true
+  },
+  {
+    "category": "spherex-epsf-calibrations",
+    "container": "calibrations",
+    "blob_name": "epsf_D3_spx_cal-epsf-v2-2026-191.fits",
+    "local_path": "data/spherex/calibrations\\epsf_D3_spx_cal-epsf-v2-2026-191.fits",
+    "size_bytes": 8118720,
+    "sha256": "6c753e5e322e9905fe44be6505e492f1943e3b115e5dea49b010140570dad2a1",
+    "verified": true
+  },
+  {
+    "category": "spherex-epsf-calibrations",
+    "container": "calibrations",
+    "blob_name": "epsf_D4_spx_cal-epsf-v1-2026-191.fits",
+    "local_path": "data/spherex/calibrations\\epsf_D4_spx_cal-epsf-v1-2026-191.fits",
+    "size_bytes": 7943040,
+    "sha256": "b37cb9423746477427121e2c3b3f4b8291c1df9cadba6f770ea1a7f962748b4c",
+    "verified": true
+  },
+  {
+    "category": "spherex-epsf-calibrations",
+    "container": "calibrations",
+    "blob_name": "epsf_D5_spx_cal-epsf-v1-2026-191.fits",
+    "local_path": "data/spherex/calibrations\\epsf_D5_spx_cal-epsf-v1-2026-191.fits",
+    "size_bytes": 7943040,
+    "sha256": "73847447802363cbae37078d404a39f266ec3cca863461cacaae730e18facfe7",
+    "verified": true
+  },
+  {
+    "category": "spherex-epsf-calibrations",
+    "container": "calibrations",
+    "blob_name": "epsf_D6_spx_cal-epsf-v1-2026-191.fits",
+    "local_path": "data/spherex/calibrations\\epsf_D6_spx_cal-epsf-v1-2026-191.fits",
+    "size_bytes": 7943040,
+    "sha256": "52f85faeb93d67ed2020b68a628fc947c1f0b78cbf9282ca193ec6d588ac1a36",
+    "verified": true
+  }
+]

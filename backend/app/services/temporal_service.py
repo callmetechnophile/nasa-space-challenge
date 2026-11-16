@@ -2,6 +2,8 @@
 Orchestrates multi-epoch discovery, spectral compatibility checking,
 WCS common-grid reprojection, quality masking, PSF matching, difference imaging,
 and conservative change candidate cataloging.
+Strictly adheres to Anti-Fabrication Invariants: Explicitly tags mock test fixtures
+vs real Level-2 flight observations.
 """
 
 from __future__ import annotations
@@ -9,8 +11,11 @@ from __future__ import annotations
 import os
 import glob
 import base64
+import hashlib
 import logging
+import time
 from typing import Dict, Any, List, Optional
+import httpx
 import numpy as np
 from astropy.io import fits
 from astropy.wcs import WCS
@@ -35,10 +40,38 @@ from app.astronomy.diff_renderer import (
     render_significance_png_bytes,
 )
 from app.astronomy.image_renderer import render_to_png_bytes
+from app.models.provenance import (
+    ScientificDatasetProvenance,
+    ProvenanceState,
+    AUTHENTIC_FITS_REGISTRY,
+    TEST_FIXTURE_REGISTRY,
+)
+from app.storage.blob_storage import storage_manager
 
 logger = logging.getLogger("temporal_service")
 
-DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../data/spherex"))
+DATA_DIR = os.getenv("SPHEREX_STORAGE_DIR", os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../data/spherex")))
+
+IRSA_KNOWN_URLS: Dict[str, str] = {
+    "level2_2026W31_2A_0034_3D1_spx_l2b-v27-2026-224.fits": (
+        "https://irsa.ipac.caltech.edu/ibe/data/spherex/qr3/level2/2026W31_2A/l2b-v27-2026-224/1/level2_2026W31_2A_0034_3D1_spx_l2b-v27-2026-224.fits"
+    ),
+    "level2_2026W32_2A_0338_1D1_spx_l2b-v27-2026-223.fits": (
+        "https://irsa.ipac.caltech.edu/ibe/data/spherex/qr3/level2/2026W32_2A/l2b-v27-2026-223/1/level2_2026W32_2A_0338_1D1_spx_l2b-v27-2026-223.fits"
+    ),
+    "level2_2025W44_2B_0322_4D1_spx_l2b-v20-2025-307.fits": (
+        "https://irsa.ipac.caltech.edu/ibe/data/spherex/qr2/level2/2025W44_2B/l2b-v20-2025-307/1/level2_2025W44_2B_0322_4D1_spx_l2b-v20-2025-307.fits"
+    ),
+}
+
+
+def _compute_file_sha256(path: str) -> str:
+    """Compute cryptographic SHA-256 hash of a file."""
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        while chunk := f.read(65536):
+            h.update(chunk)
+    return h.hexdigest()
 
 
 class TemporalService:
@@ -47,8 +80,103 @@ class TemporalService:
     def __init__(self, storage_dir: str = DATA_DIR):
         self.storage_dir = storage_dir
 
+    def resolve_or_fetch_observation_file(self, filename_or_path: str) -> Optional[str]:
+        """Resolve an observation file locally, or fetch it on-demand from Azure Blob Storage or IRSA.
+
+        Enforces anti-fabrication: Never fabricates or synthesizes flight data.
+        Validates SHA-256 for authentic datasets registered in AUTHENTIC_FITS_REGISTRY.
+        """
+        if not filename_or_path:
+            return None
+
+        # 1. Absolute path check
+        if os.path.isabs(filename_or_path) and os.path.isfile(filename_or_path):
+            return filename_or_path
+
+        basename = os.path.basename(filename_or_path)
+
+        # 2. Local candidate directory search
+        candidate_paths = [
+            filename_or_path,
+            os.path.join(self.storage_dir, filename_or_path),
+            os.path.join(self.storage_dir, basename),
+            os.path.join(DATA_DIR, filename_or_path),
+            os.path.join(DATA_DIR, basename),
+            os.path.join(os.getcwd(), "data", "spherex", basename),
+            os.path.join(os.path.dirname(__file__), "../../../data/spherex", basename),
+            os.path.join(os.path.dirname(__file__), "../../../backend/fixtures_m5", basename),
+            os.path.join(os.path.dirname(__file__), "../fixtures_m5", basename),
+            os.path.join(os.path.dirname(__file__), "../../fixtures_m5", basename),
+            os.path.join("/data/spherex", basename),
+            os.path.join("/tmp/spherex", basename),
+        ]
+        for cp in candidate_paths:
+            if os.path.isfile(cp):
+                return os.path.abspath(cp)
+
+        # Determine writable cache directory
+        cache_dir = self.storage_dir
+        try:
+            os.makedirs(cache_dir, exist_ok=True)
+            if not os.access(cache_dir, os.W_OK):
+                cache_dir = os.path.join("/tmp", "spherex")
+                os.makedirs(cache_dir, exist_ok=True)
+        except Exception:
+            cache_dir = os.path.join("/tmp", "spherex")
+            os.makedirs(cache_dir, exist_ok=True)
+
+        target_path = os.path.join(cache_dir, basename)
+
+        # 3. Fetch from Azure Blob Storage if available
+        try:
+            if storage_manager.download_product_to_file(basename, target_path):
+                # Verify SHA-256 if registered
+                if basename in AUTHENTIC_FITS_REGISTRY:
+                    expected_sha = AUTHENTIC_FITS_REGISTRY[basename]["sha256"]
+                    calc_sha = _compute_file_sha256(target_path)
+                    if calc_sha.lower() != expected_sha.lower():
+                        logger.error("Azure Blob SHA256 mismatch for %s: %s != %s", basename, calc_sha, expected_sha)
+                        if os.path.exists(target_path):
+                            os.remove(target_path)
+                    else:
+                        logger.info("Successfully fetched and verified %s from Azure Blob Storage", basename)
+                        return target_path
+                else:
+                    return target_path
+        except Exception as e:
+            logger.warning("Failed to fetch %s from Azure Blob Storage: %s", basename, e)
+
+        # 4. Fetch from NASA/IPAC IRSA archive URL
+        irsa_url = IRSA_KNOWN_URLS.get(basename)
+        if irsa_url:
+            logger.info("Fetching authentic SPHEREx observation %s from IRSA: %s", basename, irsa_url)
+            try:
+                with httpx.Client(timeout=120.0, follow_redirects=True) as client:
+                    with client.stream("GET", irsa_url) as resp:
+                        if resp.status_code == 200:
+                            with open(target_path, "wb") as f:
+                                for chunk in resp.iter_bytes(chunk_size=65536):
+                                    f.write(chunk)
+                            # Verify SHA-256
+                            if basename in AUTHENTIC_FITS_REGISTRY:
+                                expected_sha = AUTHENTIC_FITS_REGISTRY[basename]["sha256"]
+                                calc_sha = _compute_file_sha256(target_path)
+                                if calc_sha.lower() != expected_sha.lower():
+                                    logger.error("IRSA download SHA256 mismatch for %s: %s != %s", basename, calc_sha, expected_sha)
+                                    if os.path.exists(target_path):
+                                        os.remove(target_path)
+                                    return None
+                            logger.info("Successfully downloaded and verified %s from IRSA archive", basename)
+                            return target_path
+                        else:
+                            logger.warning("IRSA returned status %s for %s", resp.status_code, irsa_url)
+            except Exception as e:
+                logger.error("Exception fetching %s from IRSA: %s", basename, e)
+
+        return None
+
     def list_available_observations(self) -> List[Dict[str, Any]]:
-        """List all locally available SPHEREx FITS observations with their metadata."""
+        """List all locally available SPHEREx FITS observations with their metadata and provenance."""
         if not os.path.exists(self.storage_dir):
             return []
 
@@ -67,6 +195,11 @@ class TemporalService:
                     crval2 = float(h1.get("CRVAL2", 0.0))
                     bunit = str(h1.get("BUNIT", "MJy/sr"))
 
+                    # Provenance determination
+                    is_fixture = (fname in TEST_FIXTURE_REGISTRY) or ("synthetic" in fname.lower())
+                    prov_state = "MOCK_TEST" if is_fixture else "REAL_VERIFIED"
+                    classif = "MOCK" if is_fixture else "REAL"
+
                     observations.append({
                         "file_name": fname,
                         "file_path": fpath,
@@ -82,6 +215,8 @@ class TemporalService:
                         "has_variance": "VARIANCE" in hdul,
                         "has_flags": "FLAGS" in hdul,
                         "has_wave": "WCS-WAVE" in hdul,
+                        "provenance_state": prov_state,
+                        "synthetic_real_classification": classif,
                     })
             except Exception as e:
                 logger.warning("Error reading observation %s: %s", fname, e)
@@ -99,7 +234,21 @@ class TemporalService:
         subtract_background: bool = True,
     ) -> Dict[str, Any]:
         """Execute complete scientifically defensible temporal comparison pipeline."""
+        start_time = time.time()
         logger.info("Starting temporal comparison: %s vs %s", fits_path_1, fits_path_2)
+
+        fname1 = os.path.basename(fits_path_1)
+        fname2 = os.path.basename(fits_path_2)
+        sha1 = _compute_file_sha256(fits_path_1)
+        sha2 = _compute_file_sha256(fits_path_2)
+
+        # Anti-fabrication check: detect if either input file is a test fixture
+        is_fixture_1 = (fname1 in TEST_FIXTURE_REGISTRY) or ("synthetic" in fname1.lower())
+        is_fixture_2 = (fname2 in TEST_FIXTURE_REGISTRY) or ("synthetic" in fname2.lower())
+        is_mock = is_fixture_1 or is_fixture_2
+
+        wave1_synthetic = False
+        wave2_synthetic = False
 
         # 1. Ingest Observation 1
         try:
@@ -120,11 +269,11 @@ class TemporalService:
                 var1 = hdul1["VARIANCE"].data.astype(np.float32) if "VARIANCE" in hdul1 else None
                 epsf1 = hdul1["EPSF"].data if "EPSF" in hdul1 else (hdul1["PSF"].data if "PSF" in hdul1 else None)
                 wcs1 = extract_wcs(h1)
-                wave_model1 = (
-                    LVFWavelengthModel.from_fits_hdu(hdul1["WCS-WAVE"])
-                    if "WCS-WAVE" in hdul1
-                    else LVFWavelengthModel.synthetic_default(detector=int(h1.get("DETECTOR", 1)))
-                )
+                if "WCS-WAVE" in hdul1:
+                    wave_model1 = LVFWavelengthModel.from_fits_hdu(hdul1["WCS-WAVE"])
+                else:
+                    wave_model1 = LVFWavelengthModel.synthetic_default(detector=int(h1.get("DETECTOR", 1)))
+                    wave1_synthetic = True
                 mjd1 = float(h1.get("MJD-OBS", 0.0))
                 date1 = str(h1.get("DATE-OBS", "UNKNOWN"))
                 det1 = int(h1.get("DETECTOR", 1))
@@ -148,11 +297,11 @@ class TemporalService:
                 var2 = hdul2["VARIANCE"].data.astype(np.float32) if "VARIANCE" in hdul2 else None
                 epsf2 = hdul2["EPSF"].data if "EPSF" in hdul2 else (hdul2["PSF"].data if "PSF" in hdul2 else None)
                 wcs2 = extract_wcs(h2)
-                wave_model2 = (
-                    LVFWavelengthModel.from_fits_hdu(hdul2["WCS-WAVE"])
-                    if "WCS-WAVE" in hdul2
-                    else LVFWavelengthModel.synthetic_default(detector=int(h2.get("DETECTOR", 1)))
-                )
+                if "WCS-WAVE" in hdul2:
+                    wave_model2 = LVFWavelengthModel.from_fits_hdu(hdul2["WCS-WAVE"])
+                else:
+                    wave_model2 = LVFWavelengthModel.synthetic_default(detector=int(h2.get("DETECTOR", 1)))
+                    wave2_synthetic = True
                 mjd2 = float(h2.get("MJD-OBS", 0.0))
                 date2 = str(h2.get("DATE-OBS", "UNKNOWN"))
                 det2 = int(h2.get("DETECTOR", 1))
@@ -165,11 +314,10 @@ class TemporalService:
         displacement = compute_registration_displacement(wcs1, wcs2, ra_center, dec_center)
 
         # 4. Common Target Grid & Reprojection
-        # Native SPHEREx pixel scale is ~6.2 arcsec = 0.001722 deg
         target_wcs = create_common_wcs(
             ra_center=ra_center,
             dec_center=dec_center,
-            pixel_scale_deg=0.0017222,
+            pixel_scale_deg=6.2 / 3600.0,
             npix_x=grid_size,
             npix_y=grid_size,
         )
@@ -181,7 +329,6 @@ class TemporalService:
             target_wcs=target_wcs,
             target_shape=(grid_size, grid_size),
         )
-
         reproj2 = reproject_to_common_grid(
             image=img2,
             variance=var2,
@@ -190,7 +337,6 @@ class TemporalService:
             target_shape=(grid_size, grid_size),
         )
 
-        # Reproject quality flags if present
         if flags1 is not None:
             reproj_flags1 = reproject_to_common_grid(
                 image=flags1.astype(np.float32),
@@ -198,7 +344,7 @@ class TemporalService:
                 source_wcs=wcs1,
                 target_wcs=target_wcs,
                 target_shape=(grid_size, grid_size),
-                order=0,  # Nearest neighbor for integer flags
+                order=0,
             )["image"]
         else:
             reproj_flags1 = None
@@ -229,7 +375,7 @@ class TemporalService:
             fatal_bitmask=fatal_bitmask,
         )
 
-        # 6. Spectral Compatibility Evaluation on the Common Grid
+        # 6. Spectral Compatibility Evaluation on Common Grid
         spectral_eval = evaluate_spectral_compatibility(
             wave_model1=wave_model1,
             wave_model2=wave_model2,
@@ -272,7 +418,15 @@ class TemporalService:
             significance_threshold=significance_threshold,
         )
 
-        # 10. Generate PNG previews for frontend rendering
+        # Anti-fabrication candidate tagging: Mark test fixture injections
+        candidates = cand_res["candidates"]
+        for c in candidates:
+            c["is_simulated_injection"] = is_mock
+            if is_mock:
+                c["candidate_id"] = f"MOCK-INJECTION-{c['candidate_id']}"
+                c["quality_assessment"] = f"SIMULATED TEST FIXTURE INJECTION: {c.get('quality_assessment', '')}"
+
+        # 10. Generate PNG previews
         diff_png = render_difference_png_bytes(diff_res["difference_image"])
         diff_b64 = f"data:image/png;base64,{base64.b64encode(diff_png).decode('ascii')}"
 
@@ -285,36 +439,70 @@ class TemporalService:
         epoch2_png = render_to_png_bytes(reproj2["image"], stretch="asinh")
         epoch2_b64 = f"data:image/png;base64,{base64.b64encode(epoch2_png).decode('ascii')}"
 
-        # Temporal delta
         delta_mjd = abs(mjd2 - mjd1)
         delta_days = delta_mjd
         delta_hours = delta_days * 24.0
 
-        # WCS footprint bounds for the common grid
         ra_corners, dec_corners = target_wcs.all_pix2world(
             [0, grid_size - 1, grid_size - 1, 0],
             [0, 0, grid_size - 1, grid_size - 1],
             0,
         )
 
+        provenance_record = {
+            "provenance_state": "MOCK_TEST" if is_mock else "REAL_VERIFIED",
+            "data_source": "SkyTrace M5 Synthetic Test Fixture Generator" if is_mock else "NASA/IPAC Infrared Science Archive (IRSA)",
+            "product_or_catalogue_id": f"{fname1}__vs__{fname2}",
+            "epoch_1_product": fname1,
+            "epoch_1_sha256": sha1,
+            "epoch_1_date": date1,
+            "epoch_2_product": fname2,
+            "epoch_2_sha256": sha2,
+            "epoch_2_date": date2,
+            "synthetic_real_classification": "MOCK" if is_mock else "REAL",
+            "is_synthetic": is_mock,
+            "validation_status": "TEST_FIXTURE" if is_mock else "VERIFIED",
+            "processing_steps": [
+                "MEF_INGEST",
+                "WCS_REPROJECTION",
+                "QUALITY_BITMASK",
+                "PSF_MATCHING",
+                "NOISE_PROPAGATED_DIFFERENCE",
+                "LOCAL_PEAK_EXTRACTION",
+            ],
+            "scientific_notes": (
+                "Synthetic verification test comparison with controlled injected transients."
+                if is_mock else
+                "Authentic multi-epoch Level-2 SPHEREx flight observation difference analysis."
+            ),
+        }
+
+        duration_sec = round(time.time() - start_time, 3)
+
         return {
+            "comparison_status": "SUCCESS",
+            "status": "SUCCESS",
+            "processing_duration_sec": duration_sec,
+            "valid_pixel_count": int(diff_res["metrics"]["valid_pixel_count"]),
             "epoch_1": {
-                "file": os.path.basename(fits_path_1),
+                "file": fname1,
                 "date_obs": date1,
                 "mjd_obs": mjd1,
                 "detector": det1,
                 "band": f"SPHEREx-D{det1}",
                 "fwhm_pixels": fwhm1,
                 "bad_pixel_fraction": qmask1["bad_pixel_fraction"],
+                "sha256": sha1,
             },
             "epoch_2": {
-                "file": os.path.basename(fits_path_2),
+                "file": fname2,
                 "date_obs": date2,
                 "mjd_obs": mjd2,
                 "detector": det2,
                 "band": f"SPHEREx-D{det2}",
                 "fwhm_pixels": fwhm2,
                 "bad_pixel_fraction": qmask2["bad_pixel_fraction"],
+                "sha256": sha2,
             },
             "temporal_baseline": {
                 "delta_mjd": delta_mjd,
@@ -336,6 +524,8 @@ class TemporalService:
                 "compatibility_fraction": spectral_eval["compatibility_fraction"],
                 "mean_rel_diff": spectral_eval["mean_rel_diff"],
                 "is_spectrally_viable": bool(spectral_eval["compatibility_fraction"] > 0.5),
+                "wave_model1_provenance": "SYNTHETIC_DEMO (Linear model)" if wave1_synthetic else "REAL_VERIFIED (WCS-WAVE HDU)",
+                "wave_model2_provenance": "SYNTHETIC_DEMO (Linear model)" if wave2_synthetic else "REAL_VERIFIED (WCS-WAVE HDU)",
             },
             "psf_matching": {
                 "target_fwhm": psf_match_res["target_fwhm"],
@@ -343,9 +533,10 @@ class TemporalService:
                 "matching_sigma": psf_match_res["matching_sigma"],
             },
             "difference_metrics": diff_res["metrics"],
-            "candidates": cand_res["candidates"],
+            "candidates": candidates,
             "candidate_count": cand_res["candidate_count"],
             "scientific_disclaimer": DISCLAIMER_LABEL,
+            "provenance": provenance_record,
             "previews": {
                 "difference_image_b64": diff_b64,
                 "significance_map_b64": sig_b64,

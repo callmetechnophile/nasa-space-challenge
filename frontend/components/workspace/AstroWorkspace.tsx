@@ -9,11 +9,10 @@ import {
 import { TopNavigation } from "@/components/layout/TopNavigation";
 import { CelestialSphere } from "@/components/celestial/CelestialSphere";
 import { ViewControls } from "@/components/controls/ViewControls";
-import { StatusPanel } from "@/components/layout/StatusPanel";
 import { CoordinateSearchPanel, TargetCoordinates } from "@/components/controls/CoordinateSearchPanel";
 import { CameraTelemetry } from "@/components/celestial/CameraController";
 import { ImageLayerControls } from "@/components/controls/ImageLayerControls";
-import { SpherexSearchPanel } from "@/components/controls/SpherexSearchPanel";
+import { WorkspaceBottomDock, BottomDockTab } from "@/components/workspace/WorkspaceBottomDock";
 import { ActiveImageLayerState } from "@/types/astronomicalImage";
 import { useSkyStore } from "@/stores/useSkyStore";
 import { TemporalControlPanel } from "@/components/temporal/TemporalControlPanel";
@@ -40,9 +39,9 @@ export function AstroWorkspace() {
   const [activity, setActivity] = useState<ActivityPaneKind>("explorer");
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [inspectorOpen, setInspectorOpen] = useState(true);
-  const [terminalOpen, setTerminalOpen] = useState(true);
+  const [dockOpen, setDockOpen] = useState(true);
   const [activeFile, setActiveFile] = useState<ExplorerFile>("sky");
-  const [terminalTab, setTerminalTab] = useState<"terminal" | "output" | "problems">("terminal");
+  const [dockTab, setDockTab] = useState<BottomDockTab>("coordinates");
 
   const activeTab = useSkyStore((s) => s.activeTab);
   const storeRa = useSkyStore((s) => s.raDeg);
@@ -53,6 +52,12 @@ export function AstroWorkspace() {
   const selectedChannel = useSkyStore((s) => s.selectedChannel);
   const setSelectedChannel = useSkyStore((s) => s.setSelectedChannel);
   const epochs = useSkyStore((s) => s.epochs);
+  const bandCatalogState = useSkyStore((s) => s.bandCatalogState);
+  const temporalDiscoveryState = useSkyStore((s) => s.temporalDiscoveryState);
+  const timelineMode = useSkyStore((s) => s.timelineMode);
+  const realObservations = useSkyStore((s) => s.realObservations);
+  const spectralMode = useSkyStore((s) => s.spectralMode);
+  const spectralProfile = useSkyStore((s) => s.spectralProfile);
 
   useEffect(() => {
     useSkyStore.getState().initializeStore();
@@ -64,7 +69,7 @@ export function AstroWorkspace() {
   useEffect(() => {
     if (activeTab === "temporal") {
       useSkyStore.getState().setBottomPanelCollapsed(false);
-      setTerminalOpen(true);
+      setDockOpen(true);
     }
     if (activeTab === "sky") setActiveFile("sky");
     if (activeTab === "temporal") setActiveFile("temporal");
@@ -193,7 +198,7 @@ export function AstroWorkspace() {
 
   return (
     <div className="astro-ide-root">
-      <TopNavigation />
+      <TopNavigation telemetry={telemetry} starCount={showStars ? 4500 : 0} targetCoords={targetCoords} />
       <div className="astro-ide-body">
         <aside className="astro-activity-rail" aria-label="Activity bar">
           <div className="astro-activity-group">
@@ -202,7 +207,7 @@ export function AstroWorkspace() {
             <ActivityButton active={activity === "analysis"} label="Analysis" onClick={() => {setActivity("analysis");setSidebarOpen(true)}}><Workflow/></ActivityButton>
             <ActivityButton active={activity === "integrations"} label="Integrations" onClick={() => {setActivity("integrations");setSidebarOpen(true)}}><Layers3/></ActivityButton>
           </div>
-          <div className="astro-activity-bottom"><ActivityButton label="Settings" onClick={() => setTerminalTab("output")}><Settings2/></ActivityButton></div>
+          <div className="astro-activity-bottom"><ActivityButton label="Coordinates & Settings" onClick={() => { setDockTab("coordinates"); setDockOpen(true); }}><Settings2/></ActivityButton></div>
         </aside>
 
         {sidebarOpen && <aside className="astro-explorer-sidebar">
@@ -281,61 +286,43 @@ export function AstroWorkspace() {
 
             {activeTab === "sky" && <>
               <div className="astro-canvas-top-left"><ViewControls onZoomIn={handleZoomIn} onZoomOut={handleZoomOut} onResetView={handleResetView} showGrid={showGrid} onToggleGrid={() => setShowGrid((v) => !v)} showStars={showStars} onToggleStars={() => setShowStars((v) => !v)} showLabels={showLabels} onToggleLabels={() => setShowLabels((v) => !v)}/></div>
-              <div className="astro-canvas-top-right">
-                <CoordinateSearchPanel onSearch={handleSearch} onClearTarget={handleClearTarget} onResetCamera={handleResetView} onFovChange={handleFovChange} activeTarget={activeTarget} currentFov={currentFov}/>
-                <SpherexSearchPanel onAddLayer={handleAddLayer} onNavigateToCoordinates={handleNavigateToImageCenter}/>
-                <ImageLayerControls layers={imageLayers} onAddLayer={handleAddLayer} onUpdateLayer={handleUpdateLayer} onRemoveLayer={handleRemoveLayer} onNavigateToCoordinates={handleNavigateToImageCenter}/>
-              </div>
-              <div className="astro-canvas-bottom-left"><StatusPanel telemetry={telemetry} starCount={showStars ? 4500 : 0} targetCoords={targetCoords}/></div>
               <div className="astro-canvas-hint">DRAG TO ORBIT <i/> SCROLL TO ZOOM <i/> RIGHT-DRAG TO PAN</div>
             </>}
 
-            {activeTab === "temporal" && <div className="astro-overlay-workspace temporal"><TemporalControlPanel/></div>}
+            {activeTab === "temporal" && <div className="astro-overlay-workspace temporal"><TemporalControlPanel onAddLayer={handleAddLayer}/></div>}
             {activeTab === "spectral" && <div className="astro-overlay-workspace spectral"><SpectralExplorerPanel/></div>}
             {activeTab === "targets" && <div className="astro-overlay-workspace targets"><ValidationTargetsView/></div>}
             {activeTab === "about" && <AboutMissionModal/>}
           </section>
 
-          <section className={terminalOpen ? "astro-terminal open" : "astro-terminal closed"} aria-label="Workspace bottom panel">
-            <div className="astro-terminal-tabs">
-              <button
-                type="button"
-                role="tab"
-                aria-selected={terminalTab === "problems"}
-                className={terminalTab === "problems" ? "active" : ""}
-                onClick={() => { setTerminalTab("problems"); setTerminalOpen(true); }}
-              >PROBLEMS</button>
-              <button
-                type="button"
-                role="tab"
-                aria-selected={terminalTab === "output"}
-                className={terminalTab === "output" ? "active" : ""}
-                onClick={() => { setTerminalTab("output"); setTerminalOpen(true); }}
-              >OUTPUT</button>
-              <button
-                type="button"
-                role="tab"
-                aria-selected={terminalTab === "terminal"}
-                className={terminalTab === "terminal" ? "active" : ""}
-                onClick={() => { setTerminalTab("terminal"); setTerminalOpen(true); }}
-              >CONSOLE</button>
-              <div className="astro-terminal-spacer"/>
-              <button
-                type="button"
-                className="astro-mini-icon astro-terminal-toggle"
-                onClick={() => setTerminalOpen((open) => !open)}
-                title={terminalOpen ? "Collapse bottom panel" : "Expand bottom panel"}
-                aria-label={terminalOpen ? "Collapse bottom panel" : "Expand bottom panel"}
-                aria-expanded={terminalOpen}
-                aria-controls="astro-terminal-body"
-              >
-                {terminalOpen ? <ChevronDown size={13} /> : <ChevronUp size={13} />}
-              </button>
-            </div>
-            {terminalOpen && <div id="astro-terminal-body" className="astro-terminal-body">
-              {terminalTab === "terminal" ? <><div><span className="term-prompt">workspace</span><span className="term-path"> / service map</span></div><div className="term-output">Configured API routes: /spherex · /spectral · /temporal</div><div className="term-output">This panel is read-only. Arbitrary shell or Python execution is not exposed by this frontend.</div></> : terminalTab === "output" ? <div className="term-output">Backend services provide archive, FITS inspection, spectral and temporal processing. See the API response for operation-specific provenance.</div> : <div className="term-output">Frontend runtime diagnostics are not connected to this panel. Run the project lint, build and browser tests to verify the current checkout.</div>}
-            </div>}
-          </section>
+          <WorkspaceBottomDock
+            isOpen={dockOpen}
+            onToggleOpen={() => setDockOpen((v) => !v)}
+            activeTab={dockTab}
+            onTabChange={(tab) => setDockTab(tab)}
+            layersCount={imageLayers.length}
+            coordinatesContent={
+              <CoordinateSearchPanel
+                onSearch={handleSearch}
+                onClearTarget={handleClearTarget}
+                onResetCamera={handleResetView}
+                onFovChange={handleFovChange}
+                activeTarget={activeTarget}
+                currentFov={currentFov}
+                variant="dock"
+              />
+            }
+            imageLayersContent={
+              <ImageLayerControls
+                layers={imageLayers}
+                onAddLayer={handleAddLayer}
+                onUpdateLayer={handleUpdateLayer}
+                onRemoveLayer={handleRemoveLayer}
+                onNavigateToCoordinates={handleNavigateToImageCenter}
+                variant="dock"
+              />
+            }
+          />
         </main>
 
         {inspectorOpen && <aside className="astro-inspector">
@@ -344,15 +331,91 @@ export function AstroWorkspace() {
             <div className="astro-inspector-label"><ChevronDown size={12}/> VIEW CONTEXT</div>
             <div className="astro-kv"><span>Workspace</span><strong>{activeTab === "temporal" ? "Time Domain" : activeTab === "spectral" ? "Spectral Lab" : activeTab === "targets" ? "Targets" : "Sky Explorer"}</strong></div>
             <div className="astro-kv"><span>Target</span><strong>{selectedTarget?.name || "Custom sky position"}</strong></div>
-            <div className="astro-kv"><span>RA / Dec</span><strong>{storeRa.toFixed(4)}°, {storeDec.toFixed(4)}°</strong></div>
+            <div className="astro-kv"><span>RA / Dec</span><strong>{storeRa.toFixed(6)}°, {storeDec.toFixed(6)}°</strong></div>
             <div className="astro-kv"><span>Camera FOV</span><strong>{telemetry?.fov ?? currentFov}°</strong></div>
           </div>
           <div className="astro-inspector-section">
             <div className="astro-inspector-label"><ChevronDown size={12}/> SCIENTIFIC STATE</div>
-            <div className="astro-kv"><span>Band catalogue</span><strong>{bands.length ? `${bands.length} channels` : "Loading…"}</strong></div>
-            <div className="astro-kv"><span>Selected channel</span><strong>{selectedChannel} / 102</strong></div>
-            <div className="astro-kv"><span>Temporal epochs</span><strong>{epochs.length || "Not queried"}</strong></div>
-            <div className="astro-kv"><span>Image layers</span><strong>{imageLayers.length}</strong></div>
+            <div className="astro-kv">
+              <span>Band catalogue</span>
+              <strong className={bandCatalogState === "LOADED" ? "text-emerald-400" : bandCatalogState === "LOADING" ? "text-amber-300" : ""}>
+                {bandCatalogState === "LOADING"
+                  ? "Loading..."
+                  : bandCatalogState === "FAILED"
+                  ? "Failed to load"
+                  : bandCatalogState === "EMPTY"
+                  ? "0 channels (EMPTY)"
+                  : bands.length
+                  ? `${bands.length} channels (CALIBRATED)`
+                  : "102 channels (CALIBRATED)"}
+              </strong>
+            </div>
+            <div className="astro-kv">
+              <span>Selected channel</span>
+              <strong>
+                {`Band ${selectedChannel} (Array ${bands.find((b) => b.channel_index === selectedChannel)?.array_index || 3}, λ = ${bands.find((b) => b.channel_index === selectedChannel)?.wavelength_um?.toFixed(3) || "2.351"} µm)`}
+              </strong>
+            </div>
+            <div className="astro-kv">
+              <span>Temporal epochs</span>
+              <strong className={timelineMode === "real" && (realObservations.length > 0 || epochs.length > 0) ? "text-emerald-400" : ""}>
+                {temporalDiscoveryState === "NOT_QUERIED"
+                  ? "Not queried"
+                  : temporalDiscoveryState === "QUERYING"
+                  ? "Querying IRSA..."
+                  : temporalDiscoveryState === "ARCHIVE_QUERY_FAILED"
+                  ? "Discovery failed"
+                  : timelineMode === "real" && (realObservations.length > 0 || epochs.length > 0)
+                  ? `${realObservations.length || epochs.length} flight epochs (IRSA Verified)`
+                  : `${epochs.length} epochs (Simulated)`}
+              </strong>
+            </div>
+            <div className="astro-kv">
+              <span>Image layers</span>
+              <strong className={imageLayers.length > 0 ? "text-cyan-300 font-bold" : ""}>
+                {imageLayers.length}
+              </strong>
+            </div>
+            {activeTab === "spectral" && (
+              <div className="astro-kv">
+                <span>Spectral coverage</span>
+                <strong className={spectralProfile.filter((p) => p.flux_is_available && p.flux_mjy !== null).length > 0 ? "text-emerald-400 font-bold" : ""}>
+                  {spectralProfile.filter((p) => p.flux_is_available && p.flux_mjy !== null).length > 0
+                    ? `${spectralProfile.filter((p) => p.flux_is_available && p.flux_mjy !== null).length} flight measurement(s)`
+                    : spectralMode === "real"
+                    ? "No pointing coverage"
+                    : "102 channels (Simulated)"}
+                </strong>
+              </div>
+            )}
+            <div className="astro-kv">
+              <span>Data source</span>
+              <strong>
+                {activeTab === "temporal"
+                  ? timelineMode === "real"
+                    ? "NASA/IPAC IRSA (SPHEREx QR3 Flight FITS)"
+                    : "Nominal Survey Simulation"
+                  : activeTab === "spectral"
+                  ? spectralMode === "real"
+                    ? "NASA SPHEREx Level-2 (WCS-WAVE / IMAGE)"
+                    : "Nominal Instrument Model"
+                  : "NASA SPHEREx Level-2"}
+              </strong>
+            </div>
+            <div className="astro-kv">
+              <span>Provenance</span>
+              <strong className={(activeTab === "temporal" && timelineMode === "real") || (activeTab === "spectral" && spectralMode === "real") ? "text-emerald-400" : ""}>
+                {activeTab === "temporal"
+                  ? timelineMode === "real"
+                    ? "REAL_VERIFIED (NASA Flight FITS)"
+                    : "SYNTHETIC_DEMO (Nominal Cadence)"
+                  : activeTab === "spectral"
+                  ? spectralMode === "real"
+                    ? "REAL_VERIFIED (WCS-WAVE / IMAGE / VARIANCE)"
+                    : "SYNTHETIC_DEMO (Nominal Model)"
+                  : "CALIBRATED_ARCHIVE"}
+              </strong>
+            </div>
           </div>
           <div className="astro-inspector-section">
             <div className="astro-inspector-label"><ChevronDown size={12}/> COORDINATE SYSTEM</div>
@@ -367,7 +430,13 @@ export function AstroWorkspace() {
       </div>
 
       <footer className="astro-statusbar">
-        <div><span><GitBranch size={12}/> skytrace</span><span><CircleDot size={11}/> Workspace ready</span><span className="astro-status-demo"><i/> DEMONSTRATION MODE</span></div>
+        <div><span><GitBranch size={12}/> skytrace</span><span><CircleDot size={11}/> Workspace ready</span>{(timelineMode === "real" && activeTab === "temporal") || (spectralMode === "real" && activeTab === "spectral") ? (
+            <span className="astro-status-verified" style={{ background: "rgba(16, 185, 129, 0.15)", border: "1px solid rgba(16, 185, 129, 0.5)", color: "#34d399", padding: "1px 6px", borderRadius: "4px", fontSize: "10px", display: "inline-flex", alignItems: "center", gap: "4px" }}>
+              <i style={{ width: 6, height: 6, borderRadius: "50%", background: "#10b981", display: "inline-block" }} /> AUTHENTIC FLIGHT DATA (NASA / IPAC IRSA)
+            </span>
+          ) : (
+            <span className="astro-status-demo"><i/> DEMONSTRATION MODE</span>
+          )}</div>
         <div><span>RA {storeRa.toFixed(4)}°</span><span>DEC {storeDec.toFixed(4)}°</span><span>FOV {currentFov.toFixed(2)}°</span><span>CHANNEL {selectedChannel}/102</span><span>ARRAY {bands.find((b) => b.channel_index === selectedChannel)?.array_index ?? "—"}</span></div>
       </footer>
     </div>

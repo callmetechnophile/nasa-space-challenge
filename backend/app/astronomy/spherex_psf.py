@@ -29,8 +29,12 @@ from scipy.signal import fftconvolve
 logger = logging.getLogger("spherex_psf")
 
 # Local cache directory for official ePSF calibrations
-CALIB_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../data/spherex/calibrations"))
-os.makedirs(CALIB_DIR, exist_ok=True)
+CALIB_DIR = os.getenv("SPHEREX_CALIB_DIR", os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../data/spherex/calibrations")))
+try:
+    os.makedirs(CALIB_DIR, exist_ok=True)
+except Exception:
+    CALIB_DIR = os.path.join("/tmp", "spherex", "calibrations")
+    os.makedirs(CALIB_DIR, exist_ok=True)
 
 
 class SpherexPsfError(Exception):

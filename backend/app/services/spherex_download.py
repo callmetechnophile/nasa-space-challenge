@@ -18,14 +18,19 @@ from app.models.spherex_observation import SpherexDownloadRequest, SpherexDownlo
 
 logger = logging.getLogger("spherex_download")
 
-SPHEREx_STORAGE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../data/spherex"))
+SPHEREx_STORAGE_DIR = os.getenv("SPHEREX_STORAGE_DIR", os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../data/spherex")))
 MAX_STORAGE_BYTES = 1024 * 1024 * 1024  # 1 GB local cache limit
 ALLOWED_DOMAINS = ["irsa.ipac.caltech.edu"]
 
 
 def ensure_storage_dir() -> str:
     """Ensure data/spherex directory exists."""
-    os.makedirs(SPHEREx_STORAGE_DIR, exist_ok=True)
+    global SPHEREx_STORAGE_DIR
+    try:
+        os.makedirs(SPHEREx_STORAGE_DIR, exist_ok=True)
+    except Exception:
+        SPHEREx_STORAGE_DIR = os.path.join("/tmp", "spherex")
+        os.makedirs(SPHEREx_STORAGE_DIR, exist_ok=True)
     return SPHEREx_STORAGE_DIR
 
 

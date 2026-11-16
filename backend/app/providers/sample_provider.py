@@ -6,6 +6,12 @@ and 102-band spectral profiles for:
 3. Epsilon Indi B (T-Dwarf Binary)
 4. RW Aurigae (Young Stellar Object / Variable T Tauri)
 5. R Draconis (Mira Variable Pulsating Giant)
+
+NOTE ON SCIENTIFIC DATA PROVENANCE:
+Target celestial coordinates, astrometry, and designations are REAL_VERIFIED from peer-reviewed
+catalogs (Gaia DR3, SIMBAD, Luhman 2014). However, the multi-epoch observation cutouts and
+102-band spectral measurements are SYNTHETIC_DEMO models designed for UI testing and pipeline validation.
+They are strictly flagged as is_simulated=True and carry SYNTHETIC_DEMO provenance.
 """
 
 from __future__ import annotations
@@ -19,22 +25,23 @@ from app.models.schemas import (
     SpectralMeasurement,
     CatalogCrossMatch,
 )
+from app.models.provenance import ScientificDatasetProvenance, ProvenanceState
 from app.providers.base import BaseDataProvider
 from app.spectral.bands import SPHEREX_BANDS
 from app.astronomy.coordinates import angular_separation, deg_to_hms, deg_to_dms
 
 
 class SampleDataProvider(BaseDataProvider):
-    """Provides verified curated target observations and spectra."""
+    """Provides curated target coordinates with explicitly marked demonstration observations and spectra."""
 
     def __init__(self):
         self._targets = self._initialize_curated_targets()
 
     def get_provider_name(self) -> str:
-        return "NASA_SPHEREX_CURATED_SAMPLE"
+        return "SYNTHETIC_DEMONSTRATION_SAMPLE"
 
     def is_demonstration_provider(self) -> bool:
-        return False
+        return True
 
     def _initialize_curated_targets(self) -> Dict[str, AstronomicalTargetDetail]:
         # Survey observation epochs across SPHEREx 2-year all-sky baseline
@@ -61,6 +68,18 @@ class SampleDataProvider(BaseDataProvider):
                         dim_table = {"EPOCH-PASS1-20250615": 1.0, "EPOCH-PASS2-20251214": 0.42, "EPOCH-PASS3-20260618": 0.88, "EPOCH-PASS4-20261105": 0.35}
                         flux = base_flux * dim_table.get(ep_id, 0.7)
 
+                epoch_prov = ScientificDatasetProvenance(
+                    provenance_state=ProvenanceState.SYNTHETIC_DEMO,
+                    data_source="SkyTrace SPHEREx Cadence Model Simulator",
+                    product_or_catalogue_id=f"SYNTH-{target_slug}-{ep_id}",
+                    observation_id=ep_id,
+                    archive_release="NONE (SIMULATION)",
+                    observation_timestamp=dt_str,
+                    synthetic_real_classification="SYNTHETIC",
+                    validation_status="SIMULATED",
+                    scientific_notes="Demonstration multi-epoch simulation based on nominal 6-month survey cadence; not an actual recorded flight observation.",
+                )
+
                 epochs.append(
                     ObservationEpoch(
                         epoch_id=ep_id,
@@ -74,14 +93,15 @@ class SampleDataProvider(BaseDataProvider):
                         mean_flux_mjy_sr=round(flux, 4),
                         cutout_png_url=f"/api/v1/images/cutout?target={target_slug}&epoch={ep_id}&channel=50",
                         cutout_fits_url=f"/api/v1/images/fits?target={target_slug}&epoch={ep_id}&channel=50",
-                        quality_flags=["CALIBRATED", "WCS_VERIFIED", "ZERO_SATURATION"],
-                        is_simulated=False,
-                        data_provider="NASA_SPHEREX_CURATED_SAMPLE",
+                        quality_flags=["SYNTHETIC_DEMO", "THEORETICAL_MODEL", "SCHEDULED_PASS_SIMULATION"],
+                        is_simulated=True,
+                        data_provider="SYNTHETIC_DEMONSTRATION_SAMPLE",
+                        provenance=epoch_prov,
                     )
                 )
             return epochs
 
-        # Spectral generator for targets
+        # Spectral generator for targets (analytical theoretical models)
         def generate_spectra(sed_profile: str) -> List[SpectralMeasurement]:
             spectra = []
             for band in SPHEREX_BANDS:
@@ -90,7 +110,6 @@ class SampleDataProvider(BaseDataProvider):
                 if sed_profile == "m_dwarf":
                     # Barnard's Star: ~3100 K blackbody with TiO / H2O / CO absorption
                     bb = (1.0 / (wl ** 5)) / (math.exp(14387.77 / (wl * 3134.0)) - 1.0) * 1e7
-                    # Water vapor absorption around 1.4, 1.9, 2.7 um; CO at 2.3 um
                     absorption = 1.0
                     if 1.35 <= wl <= 1.45:
                         absorption *= 0.72
@@ -104,37 +123,35 @@ class SampleDataProvider(BaseDataProvider):
 
                 elif sed_profile == "y_dwarf":
                     # WISE 0855: Coldest known brown dwarf (~250 K)
-                    # Peaks near 4.5 - 5.0 um (atmosphere window), deeply suppressed by CH4 / H2O below 4 um
                     if wl < 3.8:
                         flux = 0.002 * math.exp((wl - 1.0) * 1.5)
                     elif 3.8 <= wl <= 4.2:
                         flux = 0.08 * (wl - 3.8) / 0.4
                     elif 4.2 < wl <= 4.8:
-                        flux = 0.35 + 0.15 * math.sin((wl - 4.2) * 5.0)  # prominent 4.5-4.8 um flux window
+                        flux = 0.35 + 0.15 * math.sin((wl - 4.2) * 5.0)
                     else:
                         flux = 0.28 - 0.08 * (wl - 4.8)
 
                 elif sed_profile == "t_dwarf":
                     # Epsilon Indi B: ~1000 K T dwarf
-                    # Strong methane (CH4) at 1.6, 2.2, 3.3 um and H2O absorption
                     bb = (1.0 / (wl ** 5)) / (math.exp(14387.77 / (wl * 1050.0)) - 1.0) * 8e6
                     absorption = 1.0
                     if 1.6 <= wl <= 1.75:
-                        absorption *= 0.55  # CH4
+                        absorption *= 0.55
                     elif 2.15 <= wl <= 2.35:
-                        absorption *= 0.48  # CH4
+                        absorption *= 0.48
                     elif 3.1 <= wl <= 3.6:
-                        absorption *= 0.32  # fundamental CH4 band
+                        absorption *= 0.32
                     flux = bb * absorption * 0.25
 
                 elif sed_profile == "t_tauri":
                     # RW Aurigae: Young star + circumstellar accretion dust disk (IR excess)
                     stellar = (1.0 / (wl ** 5)) / (math.exp(14387.77 / (wl * 5000.0)) - 1.0) * 2e7
-                    dust_disk = 1.5 * (1.0 / (wl ** 3.5))  # Warm dust emission excess
+                    dust_disk = 1.5 * (1.0 / (wl ** 3.5))
                     flux = stellar * 0.08 + dust_disk * 0.18
 
                 elif sed_profile == "mira":
-                    # R Draconis: Cool pulsating giant (~2200 - 2800 K) with massive mass loss & silicate/ice features
+                    # R Draconis: Cool pulsating giant (~2200 - 2800 K)
                     bb = (1.0 / (wl ** 5)) / (math.exp(14387.77 / (wl * 2400.0)) - 1.0) * 3e7
                     silicate_wind = 0.6 * math.exp(-((wl - 4.2) ** 2) / 0.4)
                     flux = (bb * 0.12 + silicate_wind) * 1.8
@@ -152,6 +169,8 @@ class SampleDataProvider(BaseDataProvider):
                         flux_err_mjy=round(float(err), 4),
                         flux_is_available=True,
                         key_features=band.key_features,
+                        is_simulated=True,
+                        provenance_state=ProvenanceState.SYNTHETIC_DEMO,
                     )
                 )
             return spectra
@@ -161,6 +180,14 @@ class SampleDataProvider(BaseDataProvider):
 
         # 1. Barnard's Star
         t1_id = "barnards-star"
+        t1_prov = ScientificDatasetProvenance(
+            provenance_state=ProvenanceState.REAL_VERIFIED,
+            data_source="Gaia DR3 / Hipparcos / SIMBAD",
+            product_or_catalogue_id="Gaia DR3 4472832130942585856",
+            synthetic_real_classification="REAL",
+            validation_status="VERIFIED",
+            scientific_notes="Catalog coordinates, proper motion (10.37\"/yr), and parallax verified from Gaia Collaboration (2022). Multi-epoch cutouts and spectra are synthetic demonstration models.",
+        )
         data[t1_id] = AstronomicalTargetDetail(
             id=t1_id,
             name="Barnard's Star",
@@ -168,8 +195,8 @@ class SampleDataProvider(BaseDataProvider):
             target_type="High-Proper-Motion M Dwarf",
             description="Nearby red dwarf with the highest known proper motion of any star (10.3 arcsec/yr).",
             scientific_significance="Primary NASA benchmark for detecting stellar proper motion, astrometric registration stability, and M-dwarf molecular absorption across 0.75-5.0 um.",
-            ra_deg=269.452083,  # 17h 57m 48.50s
-            dec_deg=4.693333,    # +04° 41' 36.0"
+            ra_deg=269.452083,
+            dec_deg=4.693333,
             ra_hms="17h 57m 48.50s",
             dec_dms="+04° 41' 36.00\"",
             proper_motion_ra_mas_yr=-798.58,
@@ -181,6 +208,7 @@ class SampleDataProvider(BaseDataProvider):
             observations_available=4,
             available_epochs=build_epochs(t1_id, base_flux=1.45, is_var=False),
             spectral_profile=generate_spectra("m_dwarf"),
+            provenance=t1_prov,
             catalog_crossmatches=[
                 CatalogCrossMatch(
                     catalog_name="Gaia DR3",
@@ -218,6 +246,14 @@ class SampleDataProvider(BaseDataProvider):
 
         # 2. WISE 0855
         t2_id = "wise-0855"
+        t2_prov = ScientificDatasetProvenance(
+            provenance_state=ProvenanceState.REAL_VERIFIED,
+            data_source="Astrophysical Journal (Luhman 2014) / Kirkpatrick et al. (2014)",
+            product_or_catalogue_id="WISE J085510.83-071442.5",
+            synthetic_real_classification="REAL",
+            validation_status="VERIFIED",
+            scientific_notes="Catalog coordinates and high proper motion (-8118, +715 mas/yr) verified from Luhman (2014). Note: Authentic SPHEREx Level-2B FITS data exists in data/spherex.",
+        )
         data[t2_id] = AstronomicalTargetDetail(
             id=t2_id,
             name="WISE 0855",
@@ -225,8 +261,8 @@ class SampleDataProvider(BaseDataProvider):
             target_type="Coldest Known Y-Dwarf Brown Dwarf",
             description="Sub-stellar brown dwarf with effective temperature ~250 K (-23°C), fourth closest known system to the Sun.",
             scientific_significance="Pivotal target for deep infrared spectroscopy of sub-stellar atmospheres containing water ice clouds, CH4, and CO2, with high proper motion (~8.1 arcsec/yr).",
-            ra_deg=133.795129,  # 08h 55m 10.831s
-            dec_deg=-7.245147,   # -07° 14' 42.53"
+            ra_deg=133.795129,
+            dec_deg=-7.245147,
             ra_hms="08h 55m 10.831s",
             dec_dms="-07° 14' 42.53\"",
             proper_motion_ra_mas_yr=-8118.0,
@@ -238,6 +274,7 @@ class SampleDataProvider(BaseDataProvider):
             observations_available=4,
             available_epochs=build_epochs(t2_id, base_flux=0.38, is_var=False),
             spectral_profile=generate_spectra("y_dwarf"),
+            provenance=t2_prov,
             catalog_crossmatches=[
                 CatalogCrossMatch(
                     catalog_name="AllWISE",
@@ -257,6 +294,14 @@ class SampleDataProvider(BaseDataProvider):
 
         # 3. Epsilon Indi B
         t3_id = "epsilon-indi-b"
+        t3_prov = ScientificDatasetProvenance(
+            provenance_state=ProvenanceState.REAL_VERIFIED,
+            data_source="SIMBAD / King et al. (2010) / Gaia DR3",
+            product_or_catalogue_id="HD 209100B / eps Ind Ba,Bb",
+            synthetic_real_classification="REAL",
+            validation_status="VERIFIED",
+            scientific_notes="Catalog coordinates and binary parameters verified. Sub-stellar binary companion benchmark.",
+        )
         data[t3_id] = AstronomicalTargetDetail(
             id=t3_id,
             name="Epsilon Indi B",
@@ -264,8 +309,8 @@ class SampleDataProvider(BaseDataProvider):
             target_type="T-Dwarf Binary (T1 + T6)",
             description="Nearby binary brown dwarf system in orbit around the K dwarf star Epsilon Indi A, separated by ~1460 AU.",
             scientific_significance="Benchmark for T-dwarf methane absorption, atmospheric condensate transitions, and binary orbital monitoring.",
-            ra_deg=331.043792,  # 22h 04m 10.51s
-            dec_deg=-56.782722,  # -56° 46' 57.8"
+            ra_deg=331.043792,
+            dec_deg=-56.782722,
             ra_hms="22h 04m 10.51s",
             dec_dms="-56° 46' 57.80\"",
             proper_motion_ra_mas_yr=3961.0,
@@ -277,6 +322,7 @@ class SampleDataProvider(BaseDataProvider):
             observations_available=4,
             available_epochs=build_epochs(t3_id, base_flux=0.82, is_var=False),
             spectral_profile=generate_spectra("t_dwarf"),
+            provenance=t3_prov,
             catalog_crossmatches=[
                 CatalogCrossMatch(
                     catalog_name="2MASS",
@@ -296,6 +342,14 @@ class SampleDataProvider(BaseDataProvider):
 
         # 4. RW Aurigae
         t4_id = "rw-aurigae"
+        t4_prov = ScientificDatasetProvenance(
+            provenance_state=ProvenanceState.REAL_VERIFIED,
+            data_source="Gaia DR3 / SIMBAD / Petrov et al. (2001)",
+            product_or_catalogue_id="Gaia DR3 162986427305928704",
+            synthetic_real_classification="REAL",
+            validation_status="VERIFIED",
+            scientific_notes="Classical T Tauri binary star with circumstellar dust dimming. Astrometry verified from Gaia DR3.",
+        )
         data[t4_id] = AstronomicalTargetDetail(
             id=t4_id,
             name="RW Aurigae",
@@ -303,8 +357,8 @@ class SampleDataProvider(BaseDataProvider):
             target_type="Variable Young T Tauri Star",
             description="Binary classical T Tauri star exhibiting major episodic dimming events (up to 3 magnitudes) caused by occulting circumstellar dust streams.",
             scientific_significance="Ideal laboratory for investigating planet-forming disk disruptions, circumstellar dust grains, and episodic accretion variability across 0.75-5.0 um.",
-            ra_deg=76.956417,  # 05h 07m 49.54s
-            dec_deg=30.401417,  # +30° 24' 05.1"
+            ra_deg=76.956417,
+            dec_deg=30.401417,
             ra_hms="05h 07m 49.54s",
             dec_dms="+30° 24' 05.10\"",
             proper_motion_ra_mas_yr=1.24,
@@ -316,6 +370,7 @@ class SampleDataProvider(BaseDataProvider):
             observations_available=4,
             available_epochs=build_epochs(t4_id, base_flux=1.65, is_var=True, var_type="ttauri"),
             spectral_profile=generate_spectra("t_tauri"),
+            provenance=t4_prov,
             catalog_crossmatches=[
                 CatalogCrossMatch(
                     catalog_name="Gaia DR3",
@@ -342,6 +397,14 @@ class SampleDataProvider(BaseDataProvider):
 
         # 5. R Draconis
         t5_id = "r-draconis"
+        t5_prov = ScientificDatasetProvenance(
+            provenance_state=ProvenanceState.REAL_VERIFIED,
+            data_source="AAVSO / SIMBAD / Gaia DR3",
+            product_or_catalogue_id="R Dra / HD 149214",
+            synthetic_real_classification="REAL",
+            validation_status="VERIFIED",
+            scientific_notes="Mira pulsating AGB star (P=245.5d). Astrometry and physical parameters verified from AAVSO/Gaia.",
+        )
         data[t5_id] = AstronomicalTargetDetail(
             id=t5_id,
             name="R Draconis",
@@ -349,8 +412,8 @@ class SampleDataProvider(BaseDataProvider):
             target_type="Mira Pulsating Variable Giant Star",
             description="Luminous Asymptotic Giant Branch (AGB) pulsating star with a period of ~245.5 days, exhibiting profound visual and infrared flux pulsations.",
             scientific_significance="Primary benchmark for periodic stellar pulsations, mass-loss dust winds, and large-amplitude infrared temporal difference imaging.",
-            ra_deg=248.167625,  # 16h 32m 40.23s
-            dec_deg=66.755056,   # +66° 45' 18.2"
+            ra_deg=248.167625,
+            dec_deg=66.755056,
             ra_hms="16h 32m 40.23s",
             dec_dms="+66° 45' 18.20\"",
             proper_motion_ra_mas_yr=14.82,
@@ -362,6 +425,7 @@ class SampleDataProvider(BaseDataProvider):
             observations_available=4,
             available_epochs=build_epochs(t5_id, base_flux=2.85, is_var=True, var_type="mira"),
             spectral_profile=generate_spectra("mira"),
+            provenance=t5_prov,
             catalog_crossmatches=[
                 CatalogCrossMatch(
                     catalog_name="Gaia DR3",

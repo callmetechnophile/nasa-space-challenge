@@ -2,7 +2,8 @@
 
 import React from "react";
 import Link from "next/link";
-import { Atom, ExternalLink, Code2, Telescope } from "lucide-react";
+import { ExternalLink, Code2, Telescope } from "lucide-react";
+import { SkyTraceBrandMark } from "@/components/layout/SkyTraceBrandMark";
 
 export function LandingFooter() {
   return (
@@ -12,7 +13,7 @@ export function LandingFooter() {
         <div className="md:col-span-4 space-y-4">
           <div className="flex items-center gap-3">
             <div className="w-7 h-7 rounded-lg bg-cyan-950/80 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
-              <Atom className="w-4 h-4" />
+              <SkyTraceBrandMark size={18} />
             </div>
             <span className="font-corpta text-2xl tracking-wider text-slate-100">
               SkyTrace
