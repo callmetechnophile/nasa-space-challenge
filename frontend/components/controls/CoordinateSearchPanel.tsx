@@ -18,6 +18,7 @@ import {
   formatRaHms,
   formatDecDms,
 } from "@/utils/coordinates";
+import { useSkyStore } from "@/stores/useSkyStore";
 
 export type CoordinateFormat = "decimal" | "sexagesimal";
 
@@ -29,6 +30,64 @@ export interface TargetCoordinates {
   rawDec: string;
   sourceLabel?: string;
 }
+
+export interface SearchPreset {
+  id: string;
+  name: string;
+  designation: string;
+  raDeg: number;
+  decDeg: number;
+  raHms: string;
+  decDms: string;
+}
+
+export const SEARCH_PRESETS: SearchPreset[] = [
+  {
+    id: "barnards-star",
+    name: "Barnard's Star",
+    designation: "GJ 699",
+    raDeg: 269.452083,
+    decDeg: 4.693333,
+    raHms: "17h 57m 48.50s",
+    decDms: "+04° 41′ 36.00″",
+  },
+  {
+    id: "wise-0855",
+    name: "WISE 0855",
+    designation: "WISE J085510.83-071442.5",
+    raDeg: 133.795129,
+    decDeg: -7.245147,
+    raHms: "08h 55m 10.831s",
+    decDms: "-07° 14′ 42.53″",
+  },
+  {
+    id: "epsilon-indi-b",
+    name: "Epsilon Indi B",
+    designation: "HD 209100 B",
+    raDeg: 331.043792,
+    decDeg: -56.782722,
+    raHms: "22h 04m 10.51s",
+    decDms: "-56° 46′ 57.80″",
+  },
+  {
+    id: "rw-aurigae",
+    name: "RW Aurigae",
+    designation: "RW Aur",
+    raDeg: 76.956417,
+    decDeg: 30.401417,
+    raHms: "05h 07m 49.54s",
+    decDms: "+30° 24′ 05.10″",
+  },
+  {
+    id: "r-draconis",
+    name: "R Draconis",
+    designation: "R Dra",
+    raDeg: 248.167625,
+    decDeg: 66.755056,
+    raHms: "16h 32m 40.23s",
+    decDms: "+66° 45′ 18.20″",
+  },
+];
 
 export interface CoordinateSearchPanelProps {
   onSearch: (target: TargetCoordinates) => void;
@@ -63,6 +122,21 @@ export function CoordinateSearchPanel({
   useEffect(() => {
     setCustomFovInput(currentFov.toString());
   }, [currentFov]);
+
+  // Synchronize input fields when activeTarget changes
+  useEffect(() => {
+    if (activeTarget) {
+      if (format === "sexagesimal") {
+        setRaInput(formatRaHms(activeTarget.ra));
+        setDecInput(formatDecDms(activeTarget.dec));
+      } else {
+        setRaInput(activeTarget.ra.toFixed(6));
+        setDecInput(activeTarget.dec.toFixed(6));
+      }
+      setRaError(null);
+      setDecError(null);
+    }
+  }, [activeTarget, format]);
 
   // When format switches, convert current valid values between formats
   const handleFormatChange = (newFormat: CoordinateFormat) => {
@@ -158,26 +232,29 @@ export function CoordinateSearchPanel({
     });
   };
 
-  // Preset: WISE 0855 test target
-  const applyWise0855Preset = () => {
-    if (format === "sexagesimal") {
-      setRaInput("08h 55m 10.831s");
-      setDecInput("-07° 14′ 42.53″");
-    } else {
-      setRaInput("133.795129");
-      setDecInput("-7.245147");
-    }
+  // Unified Preset Application for all 5 NASA Targets
+  const applyPreset = (preset: SearchPreset) => {
+    const rawRa = format === "sexagesimal" ? preset.raHms : preset.raDeg.toFixed(6);
+    const rawDec = format === "sexagesimal" ? preset.decDms : preset.decDeg.toFixed(6);
+    setRaInput(rawRa);
+    setDecInput(rawDec);
     setRaError(null);
     setDecError(null);
 
+    useSkyStore.getState().selectTarget(preset.id);
     onSearch({
-      ra: 133.795129,
-      dec: -7.245147,
+      ra: preset.raDeg,
+      dec: preset.decDeg,
       format,
-      rawRa: format === "sexagesimal" ? "08h 55m 10.831s" : "133.795129",
-      rawDec: format === "sexagesimal" ? "-07° 14′ 42.53″" : "-7.245147",
-      sourceLabel: "COORDINATE NAVIGATION TEST — WISE 0855",
+      rawRa,
+      rawDec,
+      sourceLabel: preset.name,
     });
+  };
+
+  const applyWise0855Preset = () => {
+    const p = SEARCH_PRESETS.find((t) => t.id === "wise-0855")!;
+    applyPreset(p);
   };
 
   // Custom FOV handler
@@ -411,28 +488,39 @@ export function CoordinateSearchPanel({
           <div className="space-y-3 bg-[#080e1c] p-2.5 rounded-lg border border-cyan-950/70 flex flex-col justify-between">
             {fovControls}
 
-            {/* Navigation Preset: WISE 0855 */}
+            {/* Navigation Presets: NASA SPHEREx 5 Validation Targets */}
             <div className="pt-2 border-t border-cyan-950/60">
               <div className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider mb-1 flex items-center justify-between">
-                <span>Quick Verification Preset</span>
+                <span>NASA Challenge Validation Presets</span>
+                <span className="text-[9px] text-cyan-400 font-mono">5 Targets</span>
               </div>
-              <button
-                type="button"
-                onClick={applyWise0855Preset}
-                className="w-full text-left p-1.5 bg-[#07132a] hover:bg-cyan-950/70 border border-cyan-800/40 rounded transition-colors text-[11px] group"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="font-semibold text-cyan-300 group-hover:text-cyan-200">
-                    WISE 0855 Benchmark Target
-                  </span>
-                  <span className="text-[8px] text-amber-400 bg-amber-950/70 border border-amber-800/60 px-1 py-0.2 rounded font-bold">
-                    PRESET
-                  </span>
-                </div>
-                <div className="text-[9px] text-slate-400 mt-0.5">
-                  08h 55m 10.831s &bull; -07° 14′ 42.53″ (α: 133.7951°, δ: -7.2451°)
-                </div>
-              </button>
+              <div className="grid grid-cols-2 gap-1">
+                {SEARCH_PRESETS.map((p) => {
+                  const isSelected = activeTarget && (
+                    activeTarget.sourceLabel === p.name ||
+                    (Math.abs(activeTarget.ra - p.raDeg) < 0.005 && Math.abs(activeTarget.dec - p.decDeg) < 0.005)
+                  );
+                  return (
+                    <button
+                      key={p.id}
+                      type="button"
+                      onClick={() => applyPreset(p)}
+                      className={`text-left p-1 rounded transition-all text-[10px] font-mono border ${
+                        isSelected
+                          ? "bg-cyan-950/90 border-cyan-400 text-cyan-200 shadow-[0_0_6px_rgba(6,182,212,0.3)] ring-1 ring-cyan-400/50"
+                          : "bg-[#07132a] hover:bg-cyan-950/70 border-cyan-900/60 text-slate-400 hover:text-slate-200"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="font-semibold text-cyan-300 truncate">{p.name}</span>
+                      </div>
+                      <div className="text-[8px] text-slate-500 truncate">
+                        {p.raDeg.toFixed(2)}°, {p.decDeg.toFixed(2)}°
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
 

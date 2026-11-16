@@ -48,6 +48,124 @@ export type SpectralCoverageState =
 
 export type SpectralMode = "real" | "synthetic";
 
+export const CANONICAL_TARGET_PRESETS: AstronomicalTargetDetail[] = [
+  {
+    id: "barnards-star",
+    name: "Barnard's Star",
+    designation: "GJ 699",
+    target_type: "High-Proper-Motion M Dwarf",
+    description: "Nearby red dwarf with the highest known proper motion of any star (10.3 arcsec/yr).",
+    scientific_significance: "Primary NASA benchmark for detecting stellar proper motion, astrometric registration stability, and M-dwarf molecular absorption across 0.75-5.0 um.",
+    ra_deg: 269.452083,
+    dec_deg: 4.693333,
+    ra_hms: "17h 57m 48.50s",
+    dec_dms: "+04° 41' 36.00\"",
+    proper_motion_ra_mas_yr: -798.58,
+    proper_motion_dec_mas_yr: 10328.12,
+    parallax_mas: 546.98,
+    distance_pc: 1.83,
+    spectral_class: "M4.0V",
+    test_validation_role: "Proper motion tracking & astrometric stability verification across multi-epoch surveys.",
+    observations_available: 4,
+  } as AstronomicalTargetDetail,
+  {
+    id: "wise-0855",
+    name: "WISE 0855",
+    designation: "WISE J085510.83-071442.5",
+    target_type: "Coldest Known Y-Dwarf Brown Dwarf",
+    description: "Sub-stellar brown dwarf with effective temperature ~250 K (-23°C), fourth closest known system to the Sun.",
+    scientific_significance: "Pivotal target for deep infrared spectroscopy of sub-stellar atmospheres containing water ice clouds, CH4, and CO2, with high proper motion (~8.1 arcsec/yr).",
+    ra_deg: 133.795129,
+    dec_deg: -7.245147,
+    ra_hms: "08h 55m 10.831s",
+    dec_dms: "-07° 14' 42.53\"",
+    proper_motion_ra_mas_yr: -8118.0,
+    proper_motion_dec_mas_yr: 715.0,
+    parallax_mas: 448.0,
+    distance_pc: 2.23,
+    spectral_class: "Y2.0",
+    test_validation_role: "Extreme red infrared color, Y-dwarf atmospheric window (4.5-5.0 um), and high-proper motion brown dwarf testing.",
+    observations_available: 4,
+  } as AstronomicalTargetDetail,
+  {
+    id: "epsilon-indi-b",
+    name: "Epsilon Indi B",
+    designation: "HD 209100 B",
+    target_type: "T-Dwarf Binary (T1 + T6)",
+    description: "Nearby binary brown dwarf system in orbit around the K dwarf star Epsilon Indi A, separated by ~1460 AU.",
+    scientific_significance: "Benchmark for T-dwarf methane absorption, atmospheric condensate transitions, and binary orbital monitoring.",
+    ra_deg: 331.043792,
+    dec_deg: -56.782722,
+    ra_hms: "22h 04m 10.51s",
+    dec_dms: "-56° 46' 57.80\"",
+    proper_motion_ra_mas_yr: 3961.0,
+    proper_motion_dec_mas_yr: -2538.0,
+    parallax_mas: 275.8,
+    distance_pc: 3.63,
+    spectral_class: "T1 + T6",
+    test_validation_role: "T-dwarf methane and water vapor absorption benchmark; cool sub-stellar spectroscopic verification.",
+    observations_available: 4,
+  } as AstronomicalTargetDetail,
+  {
+    id: "rw-aurigae",
+    name: "RW Aurigae",
+    designation: "RW Aur",
+    target_type: "Variable Young T Tauri Star",
+    description: "Binary classical T Tauri star exhibiting major episodic dimming events (up to 3 magnitudes) caused by occulting circumstellar dust streams.",
+    scientific_significance: "Ideal laboratory for investigating planet-forming disk disruptions, circumstellar dust grains, and episodic accretion variability across 0.75-5.0 um.",
+    ra_deg: 76.956417,
+    dec_deg: 30.401417,
+    ra_hms: "05h 07m 49.54s",
+    dec_dms: "+30° 24' 05.10\"",
+    proper_motion_ra_mas_yr: 1.24,
+    proper_motion_dec_mas_yr: -21.43,
+    parallax_mas: 6.12,
+    distance_pc: 163.4,
+    spectral_class: "K3e + K6e",
+    test_validation_role: "Episodic dust occultation dimming, difference imaging test for erratic transient flux drop.",
+    observations_available: 4,
+  } as AstronomicalTargetDetail,
+  {
+    id: "r-draconis",
+    name: "R Draconis",
+    designation: "R Dra",
+    target_type: "Mira Pulsating Variable Giant Star",
+    description: "Luminous Asymptotic Giant Branch (AGB) pulsating star with a period of ~245.5 days, exhibiting profound visual and infrared flux pulsations.",
+    scientific_significance: "Primary benchmark for periodic stellar pulsations, mass-loss dust winds, and large-amplitude infrared temporal difference imaging.",
+    ra_deg: 248.167625,
+    dec_deg: 66.755056,
+    ra_hms: "16h 32m 40.23s",
+    dec_dms: "+66° 45' 18.20\"",
+    proper_motion_ra_mas_yr: 14.82,
+    proper_motion_dec_mas_yr: -18.45,
+    parallax_mas: 1.29,
+    distance_pc: 775.0,
+    spectral_class: "M5e-M9e",
+    test_validation_role: "Mira periodic pulsation variability and large-amplitude infrared difference imaging.",
+    observations_available: 4,
+  } as AstronomicalTargetDetail,
+];
+
+export function findMatchingTarget(
+  ra: number,
+  dec: number,
+  targets: AstronomicalTargetDetail[]
+): AstronomicalTargetDetail | null {
+  const allTargets = targets && targets.length > 0 ? targets : CANONICAL_TARGET_PRESETS;
+  for (const t of allTargets) {
+    const dRa = Math.abs(t.ra_deg - ra);
+    const dDec = Math.abs(t.dec_deg - dec);
+    const matchesRa = dRa < 0.005 || Math.abs(dRa - 360) < 0.005;
+    const matchesDec = dDec < 0.005;
+    if (matchesRa && matchesDec) {
+      return t;
+    }
+  }
+  return null;
+}
+
+let activeDiscoverySeq = 0;
+
 interface SkyStoreState {
   // Navigation & Coordinates
   raDeg: number;
@@ -197,9 +315,13 @@ export const useSkyStore = create<SkyStoreState>((set, get) => ({
   setCoordinates: (ra, dec, fov) => {
     const cleanRa = ((ra % 360) + 360) % 360;
     const cleanDec = Math.max(-90, Math.min(90, dec));
+    const matched = findMatchingTarget(cleanRa, cleanDec, get().validationTargets);
     set((state) => ({
       raDeg: cleanRa,
       decDeg: cleanDec,
+      selectedTarget: matched,
+      raHms: matched ? matched.ra_hms : state.raHms,
+      decDms: matched ? matched.dec_dms : state.decDms,
       fovDeg: fov !== undefined ? fov : state.fovDeg,
       cameraFlightTrigger: state.cameraFlightTrigger + 1,
     }));
@@ -241,7 +363,7 @@ export const useSkyStore = create<SkyStoreState>((set, get) => ({
         selectedEpoch: epochs[0] || null,
         comparisonEpoch: epochs[1] || null,
         spectralProfile: spectra,
-        selectedTarget: null,
+        selectedTarget: findMatchingTarget(parsed.ra_deg, parsed.dec_deg, get().validationTargets),
       });
 
       // Also trigger temporal discovery
@@ -257,8 +379,11 @@ export const useSkyStore = create<SkyStoreState>((set, get) => ({
     try {
       let target: AstronomicalTargetDetail | null = null;
       if (typeof targetInput === "string") {
-        const found = get().validationTargets.find(
-          (t) => t.id === targetInput || t.name.toLowerCase() === targetInput.toLowerCase()
+        const targets = get().validationTargets.length > 0 ? get().validationTargets : CANONICAL_TARGET_PRESETS;
+        const found = targets.find(
+          (t) => t.id === targetInput ||
+                 t.name.toLowerCase() === targetInput.toLowerCase() ||
+                 (t.designation && t.designation.toLowerCase().includes(targetInput.toLowerCase()))
         );
         target = found || null;
       } else {
@@ -273,7 +398,7 @@ export const useSkyStore = create<SkyStoreState>((set, get) => ({
           raHms: target.ra_hms,
           decDms: target.dec_dms,
           syntheticEpochs: target.available_epochs || [],
-          spectralProfile: target.spectral_profile,
+          spectralProfile: target.spectral_profile || state.spectralProfile,
           cameraFlightTrigger: state.cameraFlightTrigger + 1,
           diffResult: null,
         }));
@@ -282,8 +407,8 @@ export const useSkyStore = create<SkyStoreState>((set, get) => ({
           set({
             epochs: target.available_epochs || [],
             epochIndex: 0,
-            selectedEpoch: target.available_epochs[0] || null,
-            comparisonEpoch: target.available_epochs[1] || null,
+            selectedEpoch: target.available_epochs ? target.available_epochs[0] || null : null,
+            comparisonEpoch: target.available_epochs ? target.available_epochs[1] || null : null,
           });
         }
 
@@ -477,9 +602,11 @@ export const useSkyStore = create<SkyStoreState>((set, get) => ({
   queryTemporalDiscovery: async (customRa?: number, customDec?: number) => {
     const ra = customRa !== undefined ? customRa : get().raDeg;
     const dec = customDec !== undefined ? customDec : get().decDeg;
+    const seq = ++activeDiscoverySeq;
     set({ temporalDiscoveryState: "QUERYING", isDiscoveryLoading: true, discoveryError: null });
     try {
       const res = await discoverTimeSeries({ ra, dec, release: "all" });
+      if (seq !== activeDiscoverySeq) return;
       const state = (res.discovery_state as TemporalDiscoveryState) || "ARCHIVE_QUERY_SUCCESS_WITH_RESULTS";
       set({ temporalDiscoveryState: state });
 
@@ -524,14 +651,18 @@ export const useSkyStore = create<SkyStoreState>((set, get) => ({
         });
       }
     } catch (err: any) {
+      if (seq !== activeDiscoverySeq) return;
       console.warn("Temporal discovery failed:", err);
       const isTimeout = err?.message?.toLowerCase().includes("timeout") || err?.message?.toLowerCase().includes("timed out");
+      const is502 = err?.message?.includes("502") || err?.message?.includes("503") || err?.message?.toLowerCase().includes("unavailable");
       set({
-        temporalDiscoveryState: isTimeout ? "ARCHIVE_QUERY_TIMEOUT" : "ARCHIVE_QUERY_FAILED",
+        temporalDiscoveryState: isTimeout ? "ARCHIVE_QUERY_TIMEOUT" : is502 ? "ARCHIVE_SERVICE_UNAVAILABLE" : "ARCHIVE_QUERY_FAILED",
         discoveryError: err?.message || "Archive query failed",
       });
     } finally {
-      set({ isDiscoveryLoading: false });
+      if (seq === activeDiscoverySeq) {
+        set({ isDiscoveryLoading: false });
+      }
     }
   },
 

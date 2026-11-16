@@ -84,7 +84,7 @@ export function AstroWorkspace() {
       setActiveTarget({
         ra: storeRa, dec: storeDec, format: "decimal",
         rawRa: storeRa.toFixed(6), rawDec: storeDec.toFixed(6),
-        sourceLabel: selectedTarget ? selectedTarget.name : "STORE TARGET",
+        sourceLabel: selectedTarget ? selectedTarget.name : "CUSTOM SKY COORDINATES",
       });
     }
   }, [cameraFlightTrigger, storeRa, storeDec, selectedTarget]);
@@ -393,7 +393,13 @@ export function AstroWorkspace() {
               <strong>
                 {activeTab === "temporal"
                   ? timelineMode === "real"
-                    ? "NASA/IPAC IRSA (SPHEREx QR3 Flight FITS)"
+                    ? ["ARCHIVE_QUERY_FAILED", "ARCHIVE_QUERY_TIMEOUT", "ARCHIVE_SERVICE_UNAVAILABLE"].includes(temporalDiscoveryState)
+                      ? "NASA/IPAC IRSA (Discovery Failed)"
+                      : (realObservations.length > 0 || epochs.length > 0)
+                      ? "NASA/IPAC IRSA (SPHEREx QR3 Flight FITS)"
+                      : temporalDiscoveryState === "ARCHIVE_QUERY_SUCCESS_NO_RESULTS"
+                      ? "NASA/IPAC IRSA (0 Observations Found)"
+                      : "NASA/IPAC IRSA (Query In Flight)"
                     : "Nominal Survey Simulation"
                   : activeTab === "spectral"
                   ? spectralMode === "real"
@@ -404,14 +410,29 @@ export function AstroWorkspace() {
             </div>
             <div className="astro-kv">
               <span>Provenance</span>
-              <strong className={(activeTab === "temporal" && timelineMode === "real") || (activeTab === "spectral" && spectralMode === "real") ? "text-emerald-400" : ""}>
+              <strong className={
+                (activeTab === "temporal" && timelineMode === "real" && (realObservations.length > 0 || epochs.length > 0)) ||
+                (activeTab === "spectral" && spectralMode === "real" && spectralProfile.some((p) => p.flux_is_available && p.flux_mjy !== null))
+                  ? "text-emerald-400"
+                  : ["ARCHIVE_QUERY_FAILED", "ARCHIVE_QUERY_TIMEOUT", "ARCHIVE_SERVICE_UNAVAILABLE"].includes(temporalDiscoveryState)
+                  ? "text-rose-400"
+                  : ""
+              }>
                 {activeTab === "temporal"
                   ? timelineMode === "real"
-                    ? "REAL_VERIFIED (NASA Flight FITS)"
+                    ? ["ARCHIVE_QUERY_FAILED", "ARCHIVE_QUERY_TIMEOUT", "ARCHIVE_SERVICE_UNAVAILABLE"].includes(temporalDiscoveryState)
+                      ? "UNVERIFIED (Remote Query Failed)"
+                      : (realObservations.length > 0 || epochs.length > 0)
+                      ? "REAL_VERIFIED (NASA Flight FITS)"
+                      : temporalDiscoveryState === "ARCHIVE_QUERY_SUCCESS_NO_RESULTS"
+                      ? "ARCHIVE_VERIFIED (0 Products)"
+                      : "UNVERIFIED (Pending Discovery)"
                     : "SYNTHETIC_DEMO (Nominal Cadence)"
                   : activeTab === "spectral"
                   ? spectralMode === "real"
-                    ? "REAL_VERIFIED (WCS-WAVE / IMAGE / VARIANCE)"
+                    ? spectralProfile.some((p) => p.flux_is_available && p.flux_mjy !== null)
+                      ? "REAL_VERIFIED (WCS-WAVE / IMAGE / VARIANCE)"
+                      : "ARCHIVE_VERIFIED (No Spectral Coverage)"
                     : "SYNTHETIC_DEMO (Nominal Model)"
                   : "CALIBRATED_ARCHIVE"}
               </strong>

@@ -94,6 +94,8 @@ export function TimeSeriesPlayer() {
   const imageStretch = useSkyStore((s) => s.imageStretch);
   const imageColormap = useSkyStore((s) => s.imageColormap);
   const selectedChannel = useSkyStore((s) => s.selectedChannel);
+  const selectedTarget = useSkyStore((s) => s.selectedTarget);
+  const selectTarget = useSkyStore((s) => s.selectTarget);
 
   // Discovery state with 6-decimal precision
   const [inputRa, setInputRa] = useState<string>(raDeg.toFixed(6));
@@ -129,6 +131,13 @@ export function TimeSeriesPlayer() {
     setInputRa(raDeg.toFixed(6));
     setInputDec(decDeg.toFixed(6));
   }, [raDeg, decDeg]);
+
+  // Sync active target name when store target changes
+  useEffect(() => {
+    if (selectedTarget) {
+      setActiveTargetName(selectedTarget.name);
+    }
+  }, [selectedTarget]);
 
   // Load initial discovery for default coordinates on mount
   useEffect(() => {
@@ -216,11 +225,11 @@ export function TimeSeriesPlayer() {
     }
   };
 
-  const handleSelectPreset = (target: TargetPreset) => {
+  const handleSelectPreset = async (target: TargetPreset) => {
     setInputRa(target.raDeg.toFixed(6));
     setInputDec(target.decDeg.toFixed(6));
     setActiveTargetName(target.name);
-    setCoordinates(target.raDeg, target.decDeg, 0.5);
+    await selectTarget(target.id);
     executeDiscovery(target.raDeg, target.decDeg, target.name, false);
   };
 
@@ -339,7 +348,10 @@ export function TimeSeriesPlayer() {
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-1.5 font-mono">
           {NASA_5_TARGETS.map((t) => {
-            const isSelected = activeTargetName === t.name;
+            const isSelected =
+              selectedTarget?.name === t.name ||
+              activeTargetName === t.name ||
+              (Math.abs(raDeg - t.raDeg) < 0.005 && Math.abs(decDeg - t.decDeg) < 0.005);
             return (
               <button
                 key={t.id}
