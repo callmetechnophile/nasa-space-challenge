@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, ExternalLink, AlertTriangle, Telescope, HelpCircle, Compass, Search } from "lucide-react";
+import { ArrowRight, ExternalLink, AlertTriangle, Telescope, HelpCircle, Compass, Search, X } from "lucide-react";
 import { LandingHeader } from "@/components/landing/LandingHeader";
 import { LandingFooter } from "@/components/landing/LandingFooter";
 import { Breadcrumbs } from "@/components/landing/Breadcrumbs";
@@ -11,6 +11,25 @@ import { PlanetIcon, OrbitIcon, EvidenceIcon } from "@/components/visuals/3d-ico
 import { MathInline, MathDisplay } from "@/components/ui/MathView";
 
 export default function PlanetXPage() {
+  const [isNoticeDismissed, setIsNoticeDismissed] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        return sessionStorage.getItem("skytrace_planetx_notice_dismissed") === "true";
+      } catch {
+        return false;
+      }
+    }
+    return false;
+  });
+
+  const handleDismissNotice = () => {
+    setIsNoticeDismissed(true);
+    if (typeof window !== "undefined") {
+      try {
+        sessionStorage.setItem("skytrace_planetx_notice_dismissed", "true");
+      } catch {}
+    }
+  };
   return (
     <div className="skytrace-public relative min-h-screen bg-[#02040a] text-slate-100 selection:bg-cyan-500/30 selection:text-cyan-100 flex flex-col overflow-x-hidden">
       <LandingHeader />
@@ -23,10 +42,20 @@ export default function PlanetXPage() {
 
         {/* Hero Section */}
         <section className="px-6 py-12 md:py-16 max-w-5xl mx-auto text-center space-y-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-rose-950/40 border border-rose-500/30 text-xs font-mono text-rose-300">
-            <PlanetIcon size={20} className="shrink-0" />
-            <span>UNRESOLVED DYNAMICAL HYPOTHESIS · STATUS: NOT CONFIRMED</span>
-          </div>
+          {!isNoticeDismissed && (
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-rose-950/40 border border-rose-500/40 text-xs font-mono text-rose-300 transition-all">
+              <PlanetIcon size={18} className="shrink-0 text-rose-400" />
+              <span>UNRESOLVED DYNAMICAL HYPOTHESIS · STATUS: NOT CONFIRMED</span>
+              <button
+                onClick={handleDismissNotice}
+                className="text-rose-400 hover:text-rose-100 hover:bg-rose-900/50 rounded-full p-0.5 ml-1 transition-colors"
+                title="Dismiss notice"
+                aria-label="Dismiss notice"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
 
           <h1 className="font-aeruno text-4xl sm:text-6xl lg:text-7xl font-bold tracking-normal text-slate-100 leading-[1.08] [text-wrap:balance]">
             A World Beyond Neptune?
