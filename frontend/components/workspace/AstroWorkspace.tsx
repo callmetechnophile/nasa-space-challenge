@@ -451,13 +451,42 @@ export function AstroWorkspace() {
       </div>
 
       <footer className="astro-statusbar">
-        <div><span><GitBranch size={12}/> skytrace</span><span><CircleDot size={11}/> Workspace ready</span>{(timelineMode === "real" && activeTab === "temporal") || (spectralMode === "real" && activeTab === "spectral") ? (
-            <span className="astro-status-verified" style={{ background: "rgba(16, 185, 129, 0.15)", border: "1px solid rgba(16, 185, 129, 0.5)", color: "#34d399", padding: "1px 6px", borderRadius: "4px", fontSize: "10px", display: "inline-flex", alignItems: "center", gap: "4px" }}>
-              <i style={{ width: 6, height: 6, borderRadius: "50%", background: "#10b981", display: "inline-block" }} /> AUTHENTIC FLIGHT DATA (NASA / IPAC IRSA)
-            </span>
-          ) : (
-            <span className="astro-status-demo"><i/> DEMONSTRATION MODE</span>
-          )}</div>
+        <div><span><GitBranch size={12}/> skytrace</span><span><CircleDot size={11}/> Workspace ready</span>{(() => {
+            const isRealTemporal = timelineMode === "real" && activeTab === "temporal";
+            const isRealSpectral = spectralMode === "real" && activeTab === "spectral";
+            const hasVerifiedTemporalData = isRealTemporal && (realObservations.length > 0 || epochs.length > 0);
+            const hasVerifiedSpectralData = isRealSpectral && spectralProfile.some((p) => p.flux_is_available && p.flux_mjy !== null);
+            const isQueryFailed = isRealTemporal && [
+              "ARCHIVE_QUERY_FAILED", "ARCHIVE_QUERY_TIMEOUT", "ARCHIVE_SERVICE_UNAVAILABLE", "UNVERIFIED", "ARCHIVE_QUERY_RATE_LIMITED"
+            ].includes(temporalDiscoveryState);
+            if (hasVerifiedTemporalData || hasVerifiedSpectralData) {
+              return (
+                <span className="astro-status-verified" style={{ background: "rgba(16, 185, 129, 0.15)", border: "1px solid rgba(16, 185, 129, 0.5)", color: "#34d399", padding: "1px 6px", borderRadius: "4px", fontSize: "10px", display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                  <i style={{ width: 6, height: 6, borderRadius: "50%", background: "#10b981", display: "inline-block" }} /> AUTHENTIC FLIGHT DATA (NASA / IPAC IRSA)
+                </span>
+              );
+            } else if (isQueryFailed) {
+              return (
+                <span className="astro-status-demo" style={{ color: "#fb923c" }}>
+                  <i style={{ width: 6, height: 6, borderRadius: "50%", background: "#fb923c", display: "inline-block", marginRight: 4 }} /> COVERAGE UNVERIFIED (Archive Query Failed)
+                </span>
+              );
+            } else if (isRealTemporal && temporalDiscoveryState === "QUERYING") {
+              return (
+                <span className="astro-status-demo" style={{ color: "#60a5fa" }}>
+                  <i style={{ width: 6, height: 6, borderRadius: "50%", background: "#60a5fa", display: "inline-block", marginRight: 4 }} /> QUERYING IRSA ARCHIVE…
+                </span>
+              );
+            } else if (isRealTemporal || isRealSpectral) {
+              return (
+                <span className="astro-status-demo" style={{ color: "#94a3b8" }}>
+                  <i /> AWAITING ARCHIVE RESPONSE
+                </span>
+              );
+            } else {
+              return <span className="astro-status-demo"><i /> DEMONSTRATION MODE</span>;
+            }
+          })()}</div>
         <div><span>RA {storeRa.toFixed(4)}°</span><span>DEC {storeDec.toFixed(4)}°</span><span>FOV {currentFov.toFixed(2)}°</span><span>CHANNEL {selectedChannel}/102</span><span>ARRAY {bands.find((b) => b.channel_index === selectedChannel)?.array_index ?? "—"}</span></div>
       </footer>
     </div>

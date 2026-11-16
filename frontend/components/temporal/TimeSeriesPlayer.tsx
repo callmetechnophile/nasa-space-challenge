@@ -139,10 +139,7 @@ export function TimeSeriesPlayer() {
     }
   }, [selectedTarget]);
 
-  // Load initial discovery for default coordinates on mount
-  useEffect(() => {
-    executeDiscovery(raDeg, decDeg, "WISE 0855");
-  }, []);
+  // Mount discovery is handled by useSkyStore.initializeStore(); removed duplicate call.
 
   const executeDiscovery = async (
     ra: number,
